@@ -7,4 +7,3 @@ Our motto is:
 
 We include support for:
 *JasperReports (at least API version 6.0.0)
-
