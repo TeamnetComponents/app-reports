@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public class BeanCollectionJasperDataSourceConverter<B> implements Converter<Collection<B>, JRDataSource> {
+public final class BeanCollectionJasperDataSourceConverter<B> implements Converter<Collection<B>, JRDataSource> {
 
     @Override
     public JRDataSource convert(Collection<B> inputSource) {

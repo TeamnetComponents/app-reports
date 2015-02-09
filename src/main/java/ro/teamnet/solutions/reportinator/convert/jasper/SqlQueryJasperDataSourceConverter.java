@@ -4,6 +4,7 @@ import net.sf.jasperreports.engine.JRDataSource;
 import ro.teamnet.solutions.reportinator.convert.Converter;
 
 import java.sql.Connection;
+import java.util.Collection;
 
 /**
  * Converts the results of a SQL query string execution to a {@link net.sf.jasperreports.engine.JRDataSource} (specific to
@@ -23,6 +24,12 @@ public final class SqlQueryJasperDataSourceConverter implements Converter<String
     @Override
     public JRDataSource convert(String sqlString) {
         // TODO Implement this
+        return null;
+    }
+
+    @Override
+    public Collection<String> getFieldMetanames() {
+        // TODO
         return null;
     }
 

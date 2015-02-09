@@ -6,6 +6,7 @@ import net.sf.jasperreports.engine.JRField;
 import ro.teamnet.solutions.reportinator.convert.Converter;
 
 import java.sql.ResultSet;
+import java.util.Collection;
 
 /**
  * Converts a {@link java.sql.ResultSet} to a {@link net.sf.jasperreports.engine.JRDataSource}, specific to
@@ -36,5 +37,11 @@ public final class SqlResultSetJasperDataSourceConverter implements Converter<Re
     public JRDataSource convert(ResultSet inputSource) {
         // TODO Implement this
         return new SqlResultSetJasperAdapter();
+    }
+
+    @Override
+    public Collection<String> getFieldMetanames() {
+        // TODO
+        return null;
     }
 }

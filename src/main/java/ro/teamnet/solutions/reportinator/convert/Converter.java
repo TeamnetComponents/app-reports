@@ -1,9 +1,13 @@
 package ro.teamnet.solutions.reportinator.convert;
 
+import java.util.Collection;
+
 /**
  * An interface to be implemented by wrapper classes which translate from an {@code IN}put format, to a custom
- * {@code OUT}put format. This follows the principles of an <em>adapter design pattern</em> combined with enforced
+ * {@code OUT}put format.
+ * <p>This usually follows the principles of an <em>adapter design pattern</em> combined with enforced
  * compile-time consistency checking through <em>generics</em>.
+ * </p>
  * <p>
  * Note: Type parameters are used to enforce type checking at compile type.
  * </p>
@@ -21,5 +25,12 @@ public interface Converter<IN, OUT> {
      * @param inputSource The original input source of data.
      * @return An source of data to be used by an report's dataset.
      */
-    OUT convert(IN inputSource);
+    OUT convert(IN inputSource) throws ConversionException;
+
+    /**
+     * A collection of metadata representing a data source's field names, to be used as column names at run-time binding.
+     *
+     * @return An ordered collection of field names.
+     */
+    Collection<String> getFieldMetanames();
 }

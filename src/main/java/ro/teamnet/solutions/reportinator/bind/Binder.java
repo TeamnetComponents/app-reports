@@ -9,10 +9,11 @@ package ro.teamnet.solutions.reportinator.bind;
 public interface Binder<WHAT, TO> {
 
     /**
-     * Binds a data source ({@code WHAT }) to a report ({@code TO }) using implementation pecific internal heuristics.
+     * Binds an item (e.g. <em>data source metadata</em>), at logical level, to a another item (i.e. a report template)
+     * using implementation specific internal heuristics.
      *
-     * @param dataSource A source of data.
-     * @return A report abstraction with the data source bound to it.
+     * @param item The item to bind.
+     * @return An implementation specific representation with the {@code item} bound to it.
      */
-    TO bind(WHAT dataSource);
+    TO bind(WHAT item);
 }
