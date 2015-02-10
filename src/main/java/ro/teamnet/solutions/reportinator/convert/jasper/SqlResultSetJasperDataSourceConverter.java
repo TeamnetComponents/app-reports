@@ -40,7 +40,7 @@ public final class SqlResultSetJasperDataSourceConverter implements Converter<Re
     }
 
     @Override
-    public Collection<String> getFieldMetanames() {
+    public Collection<String> getFieldMetadata() {
         // TODO
         return null;
     }

@@ -24,17 +24,17 @@ import java.util.*;
  */
 public final class MapCollectionJasperDataSourceConverter implements Converter<List<Map<String, ?>>, JRDataSource> {
 
-    private final Collection<String> fieldMetanames;
+    private final Collection<String> fieldMetadata;
     private List<Map<String, ?>> rowsCollection;
 
     /**
      * Instantiates and assigns required field metadata to a converter. This is then matched with
      * {@link #convert(java.util.List)}'s contained metadata.
      *
-     * @param fieldMetanames A collection representing the required metadata.
+     * @param fieldMetadata A collection representing the required metadata.
      */
-    public MapCollectionJasperDataSourceConverter(Collection<String> fieldMetanames) {
-        this.fieldMetanames = fieldMetanames;
+    public MapCollectionJasperDataSourceConverter(Collection<String> fieldMetadata) {
+        this.fieldMetadata = fieldMetadata;
     }
 
     /**
@@ -53,10 +53,10 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
             );
         }
         // Collection lacking required metadata?
-        if (!this.rowsCollection.get(0).keySet().containsAll(this.fieldMetanames)) {
+        if (!this.rowsCollection.get(0).keySet().containsAll(this.fieldMetadata)) {
             throw new ConversionException(  // TODO ----.    Maybe map message below to an i18n key?
                     MessageFormat.format("Input source metadata {0} does not contain all converter required " +
-                            "metadata {1}!", inputSource.size(), this.fieldMetanames)
+                            "metadata {1}!", inputSource.size(), this.fieldMetadata)
             );
         }
 
@@ -70,8 +70,8 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
      * {@inheritDoc}
      */
     @Override
-    public Collection<String> getFieldMetanames() {
-        return this.fieldMetanames;
+    public Collection<String> getFieldMetadata() {
+        return this.fieldMetadata;
     }
 
     /**

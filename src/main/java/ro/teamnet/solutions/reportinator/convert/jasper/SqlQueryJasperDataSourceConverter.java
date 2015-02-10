@@ -28,7 +28,7 @@ public final class SqlQueryJasperDataSourceConverter implements Converter<String
     }
 
     @Override
-    public Collection<String> getFieldMetanames() {
+    public Collection<String> getFieldMetadata() {
         // TODO
         return null;
     }

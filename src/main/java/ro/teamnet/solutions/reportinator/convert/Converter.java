@@ -28,9 +28,10 @@ public interface Converter<IN, OUT> {
     OUT convert(IN inputSource) throws ConversionException;
 
     /**
-     * A collection of metadata representing a data source's field names, to be used as column names at run-time binding.
+     * A collection of metadata representing a data source's field names, to be used as fields during binding, as
+     * column names for dynamically generated tables as well as a source id for data during runtime filling.
      *
      * @return An ordered collection of field names.
      */
-    Collection<String> getFieldMetanames();
+    Collection<String> getFieldMetadata();
 }

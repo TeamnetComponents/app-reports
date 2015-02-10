@@ -15,6 +15,13 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements Convert
 
     @Override
     public JRDataSource convert(Collection<B> inputSource) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public Collection<String> getFieldMetadata() {
+        // TODO
         return null;
     }
 }
