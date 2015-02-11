@@ -23,4 +23,6 @@ public class ConstantsConfig {
     public static final String JASPER_TABLE_IDENTIFIER_KEY = "ReportinatorTable";
 
     public static final Integer TABLE_MAXIMUM_WIDTH = 700;
+
+    public static final String DEFAULT_RESOURCE_PATH = "resource/template/default_template.jrxml"; // to be modified with explicit Path
 }
