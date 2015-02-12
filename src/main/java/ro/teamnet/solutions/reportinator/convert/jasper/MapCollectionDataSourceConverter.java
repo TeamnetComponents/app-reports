@@ -3,7 +3,6 @@ package ro.teamnet.solutions.reportinator.convert.jasper;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
 import ro.teamnet.solutions.reportinator.convert.Converter;
@@ -23,7 +22,7 @@ import java.util.*;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class MapCollectionJasperDataSourceConverter implements Converter<List<Map<String, ?>>, JRDataSource> {
+public final class MapCollectionDataSourceConverter implements Converter<List<Map<String, ?>>, JRDataSource> {
 
     private final Collection<String> fieldMetadata;
     private List<Map<String, ?>> rowsCollection;
@@ -34,7 +33,7 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
      *
      * @param fieldMetadata A collection representing the required metadata.
      */
-    public MapCollectionJasperDataSourceConverter(Collection<String> fieldMetadata) {
+    public MapCollectionDataSourceConverter(Collection<String> fieldMetadata) {
         this.fieldMetadata = fieldMetadata;
     }
 
@@ -48,14 +47,14 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
         );
         // Empty collection of items?
         if (this.rowsCollection.size() == 0) {
-            throw new ConversionException(  // TODO ----.    Maybe map message below to an i18n key?
+            throw new ConversionException(
                     MessageFormat.format("Input source was empty (size = {0}). Cannot convert to a valid " +
                             "Jasper data source!", inputSource.size())
             );
         }
         // Collection lacking required metadata?
         if (!this.rowsCollection.get(0).keySet().containsAll(this.fieldMetadata)) {
-            throw new ConversionException(  // TODO ----.    Maybe map message below to an i18n key?
+            throw new ConversionException(
                     MessageFormat.format("Input source metadata {0} does not contain all converter required " +
                             "metadata {1}!", inputSource.size(), this.fieldMetadata)
             );
@@ -87,7 +86,7 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
         private Map<String, ?> currentRow;
 
         public JasperDataSourceAdapter() {
-            this.rowIterator = MapCollectionJasperDataSourceConverter.this.rowsCollection.iterator();
+            this.rowIterator = MapCollectionDataSourceConverter.this.rowsCollection.iterator();
 
         }
 
@@ -116,7 +115,7 @@ public final class MapCollectionJasperDataSourceConverter implements Converter<L
                     Objects.requireNonNull(field, "Field must not be null!").getName()
             );
             if (retValue == null) {
-                throw new JRException( // TODO ----.    Maybe map message below to an i18n key?
+                throw new JRException(
                         MessageFormat.format("Given field {0} cannot be matched to a " +
                                 "valid key of the current row.", field.getName()));
             }

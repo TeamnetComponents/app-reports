@@ -1,8 +1,8 @@
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
-import ro.teamnet.solutions.reportinator.load.utils.Loader;
-import ro.teamnet.solutions.reportinator.load.utils.LoaderException;
+import ro.teamnet.solutions.reportinator.load.Loader;
+import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,11 +1,8 @@
-package ro.teamnet.solutions.reportinator.load;
+package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
 import org.springframework.core.io.Resource;
-import ro.teamnet.solutions.reportinator.load.jasper.ClassPathLoader;
-import ro.teamnet.solutions.reportinator.load.jasper.FileLoader;
-import ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader;
-import ro.teamnet.solutions.reportinator.load.utils.LoaderException;
+import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 import java.io.InputStream;

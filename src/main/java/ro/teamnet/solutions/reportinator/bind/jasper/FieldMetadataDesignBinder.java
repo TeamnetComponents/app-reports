@@ -9,7 +9,7 @@ import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 import net.sf.jasperreports.engine.type.WhenResourceMissingTypeEnum;
 import ro.teamnet.solutions.reportinator.bind.Binder;
 import ro.teamnet.solutions.reportinator.bind.BindingException;
-import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
+import ro.teamnet.solutions.reportinator.config.JasperConstants;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -52,7 +52,7 @@ public final class FieldMetadataDesignBinder implements Binder<Collection<String
     public JRReport bind(Collection<String> fieldNames) throws BindingException {
         // As a new dataset
         JRDesignDataset dataset = new JRDesignDataset(false); // As a sub-dataset
-        dataset.setName(ConstantsConfig.JASPER_DATASET_IDENTIFIER_KEY);
+        dataset.setName(JasperConstants.JASPER_DATASET_IDENTIFIER_KEY);
         dataset.setWhenResourceMissingType(WhenResourceMissingTypeEnum.KEY);
         try {
             // Attach fields to dataset
@@ -87,14 +87,14 @@ public final class FieldMetadataDesignBinder implements Binder<Collection<String
      * @return A band to be used as a "No Data" replacement band, for a design.
      */
     private static JRBand noData() {
-        // TODO Configure a proper no data
+        // TODO Configure a proper "No data band"
         JRDesignBand noDataBand = new JRDesignBand();
         JRStaticText staticText;
 
         staticText = new JRDesignStaticText();
 //        staticText.setX(0);
         staticText.setPrintWhenDetailOverflows(true);
-        staticText.setText("No items."); // Future extract this message as a i18n key
+        staticText.setText("No items to display.");
         noDataBand.addElement(staticText);
 
         noDataBand.setHeight(20); // pixels

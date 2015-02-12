@@ -13,11 +13,11 @@ import java.util.Collection;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class SqlQueryJasperDataSourceConverter implements Converter<String, JRDataSource> {
+public final class SqlQueryDataSourceConverter implements Converter<String, JRDataSource> {
 
     private Connection connection;
 
-    public SqlQueryJasperDataSourceConverter(Connection connection) {
+    public SqlQueryDataSourceConverter(Connection connection, Collection<String> fieldMetadata) {
         this.connection = connection;
     }
 

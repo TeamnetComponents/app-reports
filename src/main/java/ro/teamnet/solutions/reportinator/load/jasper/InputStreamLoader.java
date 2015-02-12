@@ -4,8 +4,8 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import ro.teamnet.solutions.reportinator.load.utils.Loader;
-import ro.teamnet.solutions.reportinator.load.utils.LoaderException;
+import ro.teamnet.solutions.reportinator.load.Loader;
+import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.InputStream;
 

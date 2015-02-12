@@ -6,7 +6,7 @@ package ro.teamnet.solutions.reportinator.bind;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
  */
-public class BindingException extends Exception {
+public class BindingException extends RuntimeException {
 
     public BindingException() {
         super();

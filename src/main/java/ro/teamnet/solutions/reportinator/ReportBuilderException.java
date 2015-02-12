@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator;
 
 /**
- * TODO Doc
+ * An exception, denoting build failures.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015

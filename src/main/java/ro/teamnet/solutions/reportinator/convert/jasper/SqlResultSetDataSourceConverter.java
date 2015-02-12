@@ -15,7 +15,7 @@ import java.util.Collection;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class SqlResultSetJasperDataSourceConverter implements Converter<ResultSet, JRDataSource> {
+public final class SqlResultSetDataSourceConverter implements Converter<ResultSet, JRDataSource> {
 
     /**
      * A helper class which adapts a {@link java.sql.ResultSet} to a {@link net.sf.jasperreports.engine.JRDataSource}.

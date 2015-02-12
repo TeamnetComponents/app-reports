@@ -1,10 +1,8 @@
 package ro.teamnet.solutions.reportinator.convert.jasper;
 
-import net.sf.jasperreports.data.ds.DataSourceDataAdapterImpl;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.Converter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -93,7 +91,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements Convert
             int index = fields.indexOf(Objects.requireNonNull(jrField, "Field must not be null!").getName());
             Object retValue = this.currentRow.get(index);
             if (retValue == null) {
-                throw new JRException( // TODO ----.    Maybe map message below to an i18n key?
+                throw new JRException(
                         MessageFormat.format("Given field {0} cannot be matched to a " +
                                 "valid key of the current row.", jrField.getName()));
             }

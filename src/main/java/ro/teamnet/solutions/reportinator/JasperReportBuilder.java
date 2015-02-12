@@ -1,6 +1,9 @@
 package ro.teamnet.solutions.reportinator;
 
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRReport;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 import java.util.HashMap;
@@ -25,6 +28,18 @@ public class JasperReportBuilder {
         return this;
     }
 
+    public JasperReportBuilder withPageHeader(String headerText) {
+        // TODO Attach header as a parameter
+
+        return this;
+    }
+
+    public JasperReportBuilder withPageFooter(String footerText) {
+        // TODO Attach footer as a parameter
+
+        return this;
+    }
+
     public JasperReportBuilder withTitle(String title) {
         // TODO Attach title as a parameter
 
@@ -36,8 +51,8 @@ public class JasperReportBuilder {
         return this;
     }
 
-    public JasperReportBuilder withTableComponent(JRComponentElement tableComponent) {
-        // TODO Attach table from creator
+    public JasperReportBuilder withTableColumns(Map<String, String> tableColumnsMetadata) {
+        // TODO Attach as a dictionary
         return this;
     }
 
@@ -47,6 +62,7 @@ public class JasperReportBuilder {
     }
 
     public JRReport build() throws ReportBuilderException {
+        // TODO Other pre-processing and other algorithms here
         try {
             return JasperCompileManager.compileReport(this.reportDesign);
         } catch (JRException e) {

@@ -1,4 +1,4 @@
-package ro.teamnet.solutions.reportinator.load.utils;
+package ro.teamnet.solutions.reportinator.load;
 
 /**
  * An interface to be implemented by classes as a loader for static (template) report data.

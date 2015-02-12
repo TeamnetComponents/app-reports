@@ -6,7 +6,7 @@ package ro.teamnet.solutions.reportinator.convert;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/9/2015
  */
-public class ConversionException extends Exception {
+public class ConversionException extends RuntimeException {
 
     public ConversionException(String message) {
         super(message);
