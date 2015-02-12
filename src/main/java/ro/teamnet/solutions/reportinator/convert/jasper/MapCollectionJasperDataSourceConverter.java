@@ -3,6 +3,7 @@ package ro.teamnet.solutions.reportinator.convert.jasper;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
 import ro.teamnet.solutions.reportinator.convert.Converter;
