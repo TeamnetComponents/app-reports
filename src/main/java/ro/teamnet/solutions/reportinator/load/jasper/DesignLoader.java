@@ -8,9 +8,10 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Created by Andrei.Marica on 2/11/2015.
- *
  * Acts as a facade for the Loader implemented classes , it's similar to JrxmlLoader class.
+ *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/11/2015
  */
 public class DesignLoader {
 

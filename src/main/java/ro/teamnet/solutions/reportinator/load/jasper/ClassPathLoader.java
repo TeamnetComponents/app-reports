@@ -12,6 +12,9 @@ import java.io.IOException;
 
 /**
  * Created by Andrei.Marica on 2/11/2015.
+ *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/11/2015
  */
 public class ClassPathLoader implements Loader<Resource, JRReport> {
 
