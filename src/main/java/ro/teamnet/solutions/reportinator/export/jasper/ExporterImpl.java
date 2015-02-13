@@ -1,0 +1,23 @@
+package ro.teamnet.solutions.reportinator.export.jasper;
+
+import net.sf.jasperreports.engine.JasperPrint;
+import ro.teamnet.solutions.reportinator.export.ExportType;
+
+import java.io.OutputStream;
+
+/**
+ * Class that exports a report to the given format
+ * Created by Bogdan.Iancu on 13-Feb-15.
+ */
+public class ExporterImpl {
+
+    /**
+     * Converts a JasperPrint object to the desired format
+     * @param inputSource the JasperPrint object ta
+     * @param outputSource
+     * @param type desired format
+     */
+    public void export(JasperPrint inputSource, OutputStream outputSource, ExportType type){
+        type.getExporter().export(inputSource,outputSource);
+    }
+}
