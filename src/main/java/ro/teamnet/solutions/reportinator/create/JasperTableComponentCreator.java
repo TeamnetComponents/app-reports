@@ -79,7 +79,7 @@ public final class JasperTableComponentCreator {
             dynamicTextField.setStretchWithOverflow(true);
             dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
             // TODO Style ---.
-//            dynamicTextField.setStyle(columnHeaderStyle???);
+//            dynamicTextField.setStyle(JasperStylesEnum.TABLE_HEADER);
             // TODO Width calculation ---.
 //            dynamicTextField.setWidth(???);
             // A holder 'box'

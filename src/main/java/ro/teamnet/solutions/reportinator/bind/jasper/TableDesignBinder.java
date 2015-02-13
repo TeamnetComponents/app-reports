@@ -13,9 +13,15 @@ import ro.teamnet.solutions.reportinator.bind.BindingException;
  */
 public final class TableDesignBinder implements Binder<JRComponentElement, JRReport> {
 
+    private final JRReport reportDesign;
+
+    public TableDesignBinder(JRReport reportDesign) {
+        this.reportDesign = reportDesign;
+    }
+
     @Override
     public JRReport bind(JRComponentElement item) throws BindingException {
-        // TODO
+        // TODO We are assuming that the design does not contain a "Detail 1" band
         return null;
     }
 }

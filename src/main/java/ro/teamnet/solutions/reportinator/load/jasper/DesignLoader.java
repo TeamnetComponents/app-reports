@@ -15,15 +15,36 @@ import java.io.InputStream;
  */
 public class DesignLoader {
 
-    public JRReport load(File file) throws LoaderException {
+    /**
+     * TODO Doc
+     *
+     * @param file
+     * @return
+     * @throws LoaderException If loading the template from a {@code File} fails.
+     */
+    public static JRReport load(File file) throws LoaderException {
         return new FileLoader().load(file);
     }
 
-    public JRReport load(InputStream inputStream) throws LoaderException {
+    /**
+     * TODO Doc
+     *
+     * @param inputStream
+     * @return
+     * @throws LoaderException If loading the template from an {@code InputStream} fails.
+     */
+    public static JRReport load(InputStream inputStream) throws LoaderException {
         return new InputStreamLoader().load(inputStream);
     }
 
-    public JRReport load(Resource resource) throws LoaderException {
+    /**
+     * TODO Doc
+     *
+     * @param resource
+     * @return
+     * @throws LoaderException If loading the template from a {@code Resource} fails.
+     */
+    public static JRReport load(Resource resource) throws LoaderException {
         return new ClassPathLoader().load(resource);
     }
 }
