@@ -22,4 +22,8 @@ public class ConstantsConfig {
      */
     public static final Integer TABLE_MAXIMUM_WIDTH_PORTRAIT = 545;
 
+    /**
+     * Standard Table Border width.
+     */
+    public static final Float TABLE_BORDER_WIDTH = 0.7f; //usage for styles
 }
