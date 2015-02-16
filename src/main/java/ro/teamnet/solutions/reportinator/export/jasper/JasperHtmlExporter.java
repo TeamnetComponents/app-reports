@@ -19,6 +19,9 @@ public class JasperHtmlExporter implements Exporter<JasperPrint> {
 
     @Override
     public void export(JasperPrint inputSource, OutputStream outputSource){
+        if(inputSource == null || outputSource == null){
+            throw new ExporterException("input and output should not be null");
+        }
         HtmlExporter exporter = new HtmlExporter();
 
         exporter.setExporterInput(new SimpleExporterInput(inputSource));
@@ -27,7 +30,7 @@ public class JasperHtmlExporter implements Exporter<JasperPrint> {
         try {
             exporter.exportReport();
         } catch (JRException e) {
-            throw new ExporterException("Exception exporting raport", e);
+            throw new ExporterException("Exception exporting report", e);
         }
 
     }

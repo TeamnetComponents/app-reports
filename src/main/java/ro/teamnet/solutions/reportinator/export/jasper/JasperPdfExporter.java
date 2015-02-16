@@ -16,12 +16,13 @@ public class JasperPdfExporter implements Exporter<JasperPrint> {
 
     @Override
     public void export(JasperPrint inputSource, OutputStream outputSource){
+        if(inputSource == null || outputSource == null){
+            throw new ExporterException("input and output should not be null");
+        }
         try {
             JasperExportManager.exportReportToPdfStream(inputSource, outputSource);
         } catch (JRException e) {
-            throw new ExporterException("Exception exporting raport", e);
+            throw new ExporterException("Exception exporting report", e);
         }
-
     }
-
 }

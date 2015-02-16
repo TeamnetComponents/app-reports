@@ -26,6 +26,9 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements Convert
      * @param fieldMetadata collection which specifies what fields of the bean will be added to the data source
      */
     public BeanCollectionJasperDataSourceConverter(Collection<String> fieldMetadata) {
+        if(fieldMetadata == null || fieldMetadata.size()==0 ){
+            throw new ConversionException("Field Metadata should not be null");
+        }
         this.fieldMetadata = new ArrayList<>(fieldMetadata);
     }
 
@@ -54,13 +57,11 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements Convert
     private List<String> parseRow(Object o){
         List<String> args = new ArrayList<>();
         for (String fieldName : fieldMetadata) {
-            System.out.print(fieldName + ": ");
             String arg = null;
             try {
                 Field field = o.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
                 arg = field.get(o).toString();
-                System.out.println(arg);
                 args.add(arg);
             } catch (Exception e) {
                 throw new ConversionException("Exception parsing : " + o + " object", e);
