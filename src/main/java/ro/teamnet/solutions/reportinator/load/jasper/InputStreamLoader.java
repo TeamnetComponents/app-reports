@@ -7,6 +7,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import ro.teamnet.solutions.reportinator.load.Loader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -33,8 +34,8 @@ public class InputStreamLoader implements Loader<InputStream, JRReport> {
         JasperDesign jasperDesign;
         if (loadSource != null) {     // Is this condition enough to pass?
             try {
-                jasperDesign = JRXmlLoader.load(loadSource);
-            } catch (JRException e) {
+                jasperDesign = JRXmlLoader.load(loadSource.available() != 0 ? loadSource : null);
+            } catch (JRException | IOException e) {
                 //Re-throw
                 throw new LoaderException("Can't load " + loadSource.getClass().getCanonicalName()
                         , e);

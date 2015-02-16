@@ -20,10 +20,11 @@ import java.io.FileNotFoundException;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public final class FileLoader implements Loader<File,JRReport> {
+public final class FileLoader implements Loader<File, JRReport> {
 
     private final String FILE_EXTENSION = ".jrxml"; // Se poate scoate nu ? pentru ca verificarea se poate realiza
-                                                    // si in respectiva metoda fara sa initializez variabila asta
+    // si in respectiva metoda fara sa initializez variabila asta
+
     /**
      * Method to load an File in a JRReport using its InputStream.
      *
@@ -36,7 +37,7 @@ public final class FileLoader implements Loader<File,JRReport> {
 
         JRReport jasperDesign;
 
-        if (checkIfJrxml(loadSource)) {
+        if (loadSource != null && checkIfJrxml(loadSource)) {
             try {
 
                 jasperDesign = new InputStreamLoader().load(new FileInputStream(loadSource));
@@ -64,15 +65,15 @@ public final class FileLoader implements Loader<File,JRReport> {
         //Get file path that needs to be used for identifying extension
         String filePath = loadSource.getAbsolutePath();
         String extension = "";  //string that saves the extension
-        boolean isXml = true ; //boolean value to return
+        boolean isXml = true; //boolean value to return
 
         int i = filePath.lastIndexOf('.');
         if (i > 0) {
             extension = filePath.substring(i);            //adds the file extension to a String
         }
-        if(!extension.equals(FILE_EXTENSION)){  // pot inlocui FILE_EXTENSION direct cu stringul de care am nevoie ".jrxml"
+        if (!extension.equals(FILE_EXTENSION)) {  // pot inlocui FILE_EXTENSION direct cu stringul de care am nevoie ".jrxml"
             isXml = false;
-            System.out.println("File does not have a "+ FILE_EXTENSION +" extension");
+            System.out.println("File does not have a " + FILE_EXTENSION + " extension");
         }
         return isXml;
     }

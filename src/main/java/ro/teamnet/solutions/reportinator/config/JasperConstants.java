@@ -14,7 +14,7 @@ public final class JasperConstants extends ConstantsConfig {
     public static final String JASPER_DATASOURCE_IDENTIFIER_KEY = "ReportinatorDataSource";
     public static final String JASPER_TABLE_IDENTIFIER_KEY = "ReportinatorTable";
     // TODO Create/add landscape and potrait default .JRXML templates
-    public static final String JASPER_DEFAULT_TEMPLATE_RESOURCE_PATH = "reports/template/default_template.jrxml"; // to be modified with explicit Path
+    public static final String JASPER_DEFAULT_TEMPLATE_RESOURCE_PATH = "default_template.jrxml"; // to be modified with explicit Path
     public static final String JASPER_TABLE_DEFAULT_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorDefaultTableStyle";
     public static final String JASPER_TABLE_CONTENT_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorTableContentStyle";
     public static final String JASPER_TABLE_HEADER_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorTableHeaderStyle";

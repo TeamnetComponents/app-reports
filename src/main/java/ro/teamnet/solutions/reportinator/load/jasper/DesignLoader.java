@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Acts as a facade for the Loader implemented classes , it's similar to JrxmlLoader class.
+ * Acts as a facade for the {@link ro.teamnet.solutions.reportinator.load.Loader} implementing classes,
+ * it's similar to {@link net.sf.jasperreports.engine.xml.JRXmlLoader} class. It
  *
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
@@ -16,10 +17,12 @@ import java.io.InputStream;
 public class DesignLoader {
 
     /**
-     * TODO Doc
+     * Loads a {@link java.io.File} into {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * to be further processed by {@link ro.teamnet.solutions.reportinator.bind.Binder}
      *
-     * @param file
-     * @return
+     * @param file A {@code .jrxml} file that contains valid information
+     *             in order to be loaded into a {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * @return a {@link net.sf.jasperreports.engine.design.JasperDesign}
      * @throws LoaderException If loading the template from a {@code File} fails.
      */
     public static JRReport load(File file) throws LoaderException {
@@ -27,10 +30,12 @@ public class DesignLoader {
     }
 
     /**
-     * TODO Doc
+     * Loads a {@link java.io.InputStream} into {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * to be further processed by {@link ro.teamnet.solutions.reportinator.bind.Binder}
      *
-     * @param inputStream
-     * @return
+     * @param inputStream A valid {@link java.io.InputStream} that gives valid information in order to be loaded into a
+     *                    {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * @return a {@link net.sf.jasperreports.engine.design.JasperDesign}
      * @throws LoaderException If loading the template from an {@code InputStream} fails.
      */
     public static JRReport load(InputStream inputStream) throws LoaderException {
@@ -38,10 +43,12 @@ public class DesignLoader {
     }
 
     /**
-     * TODO Doc
+     * Loads a {@link org.springframework.core.io.Resource} into {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * to be further processed by {@link ro.teamnet.solutions.reportinator.bind.Binder}
      *
-     * @param resource
-     * @return
+     * @param resource A valid {@link org.springframework.core.io.Resource} that can give valid information
+     *                 to be loaded into a {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * @return a {@link net.sf.jasperreports.engine.design.JasperDesign}
      * @throws LoaderException If loading the template from a {@code Resource} fails.
      */
     public static JRReport load(Resource resource) throws LoaderException {
