@@ -8,21 +8,22 @@ package ro.teamnet.solutions.reportinator.config;
  */
 public class ConstantsConfig {
 
-    private ConstantsConfig() throws IllegalAccessException {
-        throw new IllegalAccessException("Constants class should not be instantiated.");
-    }
+//    private ConstantsConfig() throws IllegalAccessException {
+//        throw new IllegalAccessException("Constants class should not be instantiated.");
+//    }
 
-    public static final String JASPER_TITLE_IDENTIFIER_KEY = "ReportinatorReportTitle";
+    /**
+     * Maximum allowed table width (in pixels) for an A4 Landscape page format.
+     */
+    public static final Integer TABLE_MAXIMUM_WIDTH_LANDSCAPE = 792;
 
-    public static final String JASPER_SUBTITLE_IDENTIFIER_KEY = "ReportinatorReportTitle";
+    /**
+     * Maximum allowed table width (in pixels) for an A4 Portrait page format.
+     */
+    public static final Integer TABLE_MAXIMUM_WIDTH_PORTRAIT = 545;
 
-    public static final String JASPER_DATASET_IDENTIFIER_KEY = "ReportinatorDataset";
-
-    public static final String JASPER_DATASOURCE_IDENTIFIER_KEY = "ReportinatorDataSource";
-
-    public static final String JASPER_TABLE_IDENTIFIER_KEY = "ReportinatorTable";
-
-    public static final Integer TABLE_MAXIMUM_WIDTH = 700;
-
-    public static final String DEFAULT_RESOURCE_PATH = "resource/template/default_template.jrxml"; // to be modified with explicit Path
+    /**
+     * Standard Table Border width.
+     */
+    public static final Float TABLE_BORDER_WIDTH = 0.7f; //usage for styles
 }

@@ -1,54 +1,67 @@
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
-import ro.teamnet.solutions.reportinator.load.utils.Loader;
-import ro.teamnet.solutions.reportinator.load.utils.LoaderException;
+import ro.teamnet.solutions.reportinator.load.Loader;
+import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * Created by Andrei.Marica on 2/10/2015.
+ * A {@link ro.teamnet.solutions.reportinator.load.Loader} implementation that loads a {@link java.io.File}
+ * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a paramterer for the .load()
+ * method in {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader}.
+ * <p/>
+ * The File sent to this .load() method should have a ".jrxml" extension , our loadSource
+ * passes through a verification of extension using checkIfJrxml() method that ensures our File
+ * it's a jrxml .
  *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/11/2015
  */
 public final class FileLoader implements Loader<File,JRReport> {
 
     private final String FILE_EXTENSION = ".jrxml"; // Se poate scoate nu ? pentru ca verificarea se poate realiza
                                                     // si in respectiva metoda fara sa initializez variabila asta
     /**
-     *Method to load an File in a JRReport using its InputStream
-     * @param loadSource needed to send its InputStream to the InputStreamLoader
-     * @return a JRReport based on the given InputStream
-     * @throws LoaderException if InputStreamLoader doesn't work properly
+     * Method to load an File in a JRReport using its InputStream.
+     *
+     * @param loadSource needed to send its InputStream to the InputStreamLoader.
+     * @return a JRReport based on the given InputStream.
+     * @throws LoaderException if InputStreamLoader doesn't work properly.
      */
     @Override
     public JRReport load(File loadSource) throws LoaderException {
 
-        JRReport jasperDesign = null;
+        JRReport jasperDesign;
 
-        if(checkIfJrxml(loadSource)) {
+        if (checkIfJrxml(loadSource)) {
             try {
 
                 jasperDesign = new InputStreamLoader().load(new FileInputStream(loadSource));
 
             } catch (FileNotFoundException e) {
-                throw new LoaderException("Can't load "+ loadSource.getClass().getCanonicalName()
-                                            ,e);
+                //Re-throw
+                throw new LoaderException("Can't load " + loadSource.getClass().getCanonicalName()
+                        , e);
             }
             return jasperDesign;
+        } else {
+            throw new LoaderException("Could not load Resource");
         }
-        return jasperDesign;
+
 
     }
 
     /**
-     * A method to check if a file is a JRXML , if so the JRXMLLoader can .load it's source
-     * @param loadSource to be verified that has a specific extension
-     * @return returns a true value if our file has ".jrxml" extension
+     * A method to check if a file is a JRXML , if so the JRXMLLoader can .load it's source.
+     *
+     * @param loadSource to be verified that has a specific extension.
+     * @return returns a true value if our file has ".jrxml" extension and false if the file doesn't have the specific extension.
      */
-    public boolean checkIfJrxml(File loadSource){
-
+    public boolean checkIfJrxml(File loadSource) {
+        //Get file path that needs to be used for identifying extension
         String filePath = loadSource.getAbsolutePath();
         String extension = "";  //string that saves the extension
         boolean isXml = true ; //boolean value to return

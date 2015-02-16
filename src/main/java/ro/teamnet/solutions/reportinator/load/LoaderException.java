@@ -1,9 +1,11 @@
-package ro.teamnet.solutions.reportinator.load.utils;
+package ro.teamnet.solutions.reportinator.load;
 
 /**
+ * TODO Doc
+ *
  * Created by Andrei.Marica on 2/10/2015.
  */
-public class LoaderException extends Exception {
+public class LoaderException extends RuntimeException {
 
     public LoaderException() {
     }
