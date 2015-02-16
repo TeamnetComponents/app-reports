@@ -1,6 +1,7 @@
 package ro.teamnet.solutions.reportinator.bind.jasper;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import ro.teamnet.solutions.reportinator.bind.Binder;
@@ -15,7 +16,7 @@ import java.util.Objects;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public class StylesToDesignBinder implements Binder<List<JRStyle>, JasperDesign> {
+public final class StylesDesignBinder implements Binder<List<JRStyle>, JasperDesign> {
 
     /**
      * TODO: DOC
@@ -25,12 +26,12 @@ public class StylesToDesignBinder implements Binder<List<JRStyle>, JasperDesign>
     /**
      * TODO: DOC
      *
-     * @param jasperDesign
+     * @param reportDesign
      */
-    public StylesToDesignBinder(JasperDesign jasperDesign) {
+    public StylesDesignBinder(JRReport reportDesign) {
 
         this.jasperDesign = JasperDesign.class.cast(
-                Objects.requireNonNull(jasperDesign, "Jasper report reference must not be null."));
+                Objects.requireNonNull(reportDesign, "Jasper report reference must not be null."));
     }
 
     /**

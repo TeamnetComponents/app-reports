@@ -49,6 +49,7 @@ public final class FileLoader implements Loader<File, JRReport> {
             }
             return jasperDesign;
         } else {
+            // TODO Change message description to better reflect exception case (i.e. not a valid JRXML file)
             throw new LoaderException("Could not load Resource");
         }
 
