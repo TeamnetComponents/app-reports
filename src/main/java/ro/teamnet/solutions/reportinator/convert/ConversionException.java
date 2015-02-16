@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.convert;
 
 /**
- * An checked exception which denotes that a conversion error occurred.
+ * An unchecked exception which denotes that a conversion error occurred.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/9/2015
