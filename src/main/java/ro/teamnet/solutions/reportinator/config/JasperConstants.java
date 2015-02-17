@@ -28,6 +28,6 @@ public final class JasperConstants extends ConstantsConfig {
     public static final String JASPER_STYLE_FONT_NAME_IDENTIFIER_KEY = "SansSerif";
     public static final String JASPER_PDF_FONT_NAME_IDENTIFIER_KEY = "Helvetica";
     public static final String JASPER_PDF_ENCODING_IDENTIFIER_KEY = "Cp1252";
-    public static final int JASPER_MINIMUM_BAND_DETAIL_HEIGHT = 300;
+    public static final Integer JASPER_MINIMUM_BAND_DETAIL_HEIGHT = 300;
     public static final Integer JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT = 2 * JasperStyles.COLUMN_HEADER_STYLE.getStyle().getFontsize().intValue();
 }

@@ -117,6 +117,8 @@ public enum JasperStyles {
         ColumnContentStyle.setParentStyle(getDefaultStyle());
         ColumnContentStyle.setName(JasperConstants.JASPER_TABLE_CONTENT_STYLE_NAME_IDENTIFIER_KEY);
         ColumnContentStyle.setBold(false);
+        ColumnContentStyle.getLineBox().setLeftPadding(2);
+        ColumnContentStyle.getLineBox().setRightPadding(2);
 
         return ColumnContentStyle;
     }
@@ -171,6 +173,7 @@ public enum JasperStyles {
         lineBox.getBottomPen().setLineColor(Color.BLACK);
         lineBox.getTopPen().setLineWidth(ConstantsConfig.TABLE_BORDER_WIDTH);
         lineBox.getTopPen().setLineColor(Color.BLACK);
+
         return lineBox;
     }
 

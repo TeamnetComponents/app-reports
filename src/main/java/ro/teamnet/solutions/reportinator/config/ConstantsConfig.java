@@ -20,7 +20,7 @@ public class ConstantsConfig {
     /**
      * Maximum allowed table width (in pixels) for an A4 Portrait page format.
      */
-    public static final Integer TABLE_MAXIMUM_WIDTH_PORTRAIT = 545;
+    public static final Integer TABLE_MAXIMUM_WIDTH_PORTRAIT = 555;
 
     /**
      * Standard Table Border width.

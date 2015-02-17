@@ -10,18 +10,19 @@ import java.io.OutputStream;
  * Class that exports a report to the given format
  * Created by Bogdan.Iancu on 13-Feb-15.
  */
-public class ExporterImpl {
+public class ReportExporter {
 
     /**
      * Converts a JasperPrint object to the desired format
-     * @param inputSource the JasperPrint object ta
+     *
+     * @param inputSource  the JasperPrint object ta
      * @param outputSource
-     * @param type desired format
+     * @param type         desired format
      */
-    public void export(JasperPrint inputSource, OutputStream outputSource, ExportType type){
+    public static void export(JasperPrint inputSource, OutputStream outputSource, ExportType type) {
         try {
             type.getExporter().export(inputSource, outputSource);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ExporterException("Exception exporting report", e);
         }
     }

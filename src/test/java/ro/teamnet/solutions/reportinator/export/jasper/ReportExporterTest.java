@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.export.ExportType;
-import ro.teamnet.solutions.reportinator.export.Exporter;
 import ro.teamnet.solutions.reportinator.export.ExporterException;
 import ro.teamnet.solutions.reportinator.load.jasper.DesignLoader;
 
@@ -22,10 +21,9 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class ExporterImplTest {
+public class ReportExporterTest {
 
     private JasperPrint reportPrint;
     private Map<String, Object> reportParameters;
@@ -48,14 +46,14 @@ public class ExporterImplTest {
 
     @Test
     public void testExport() throws Exception {
-        ExporterImpl mockExporter = mock(ExporterImpl.class, CALLS_REAL_METHODS);
-        mockExporter.export(this.reportPrint, out, ExportType.PDF);
+        ReportExporter mockExporter = mock(ReportExporter.class, CALLS_REAL_METHODS);
+        ReportExporter.export(this.reportPrint, out, ExportType.PDF);
         verify(mockExporter, times(1)).export(this.reportPrint, out,ExportType.PDF);
     }
 
     @Test(expected = ExporterException.class)
     public void testShouldPassIfParametersAreNull() throws Exception{
-        new ExporterImpl().export(null, null, null);
+        new ReportExporter().export(null, null, null);
     }
 
 }
