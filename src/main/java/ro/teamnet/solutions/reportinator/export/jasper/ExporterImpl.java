@@ -2,6 +2,7 @@ package ro.teamnet.solutions.reportinator.export.jasper;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import ro.teamnet.solutions.reportinator.export.ExportType;
+import ro.teamnet.solutions.reportinator.export.ExporterException;
 
 import java.io.OutputStream;
 
@@ -18,6 +19,10 @@ public class ExporterImpl {
      * @param type desired format
      */
     public void export(JasperPrint inputSource, OutputStream outputSource, ExportType type){
-        type.getExporter().export(inputSource,outputSource);
+        try {
+            type.getExporter().export(inputSource, outputSource);
+        }catch (Exception e){
+            throw new ExporterException("Exception exporting report", e);
+        }
     }
 }
