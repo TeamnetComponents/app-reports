@@ -10,6 +10,8 @@ import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * //TODO Doc
@@ -17,7 +19,7 @@ import java.awt.*;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/13/2015
  */
-public enum Styles {
+public enum JasperStyles {
 
     /**
      * It's a default style generally inherited by the other styles in order to conserve code
@@ -66,14 +68,6 @@ public enum Styles {
     };
 
     /**
-     * Abstract method that has different implementations for each Style
-     *
-     * @return {@link net.sf.jasperreports.engine.JRStyle}
-     */
-    public abstract JRStyle getStyle();
-
-
-    /**
      * Helper method that reuses the code by using the generated {@link net.sf.jasperreports.engine.JRStyle}
      * as a parent for future {@link net.sf.jasperreports.engine.design.JRDesignStyle} and by that
      * all these lines will be directly implemented in the specific JRDesignStyle
@@ -97,6 +91,7 @@ public enum Styles {
     /**
      * Method that returns a table style , can be further customized here
      * Must be set on a {@link net.sf.jasperreports.components.table.DesignCell}
+     *
      * @return {@link net.sf.jasperreports.engine.design.JRDesignStyle}
      */
     private static JRStyle getTableStyle() {
@@ -110,7 +105,7 @@ public enum Styles {
     /**
      * Method that returns a column content style , can be further customized here
      * This style defines the elements in the main body of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return {@link net.sf.jasperreports.engine.design.JRDesignStyle}
@@ -124,11 +119,10 @@ public enum Styles {
         return ColumnContentStyle;
     }
 
-
     /**
      * Method that returns a column header style , can be further customized here
      * This style defines the elements in the header column of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}
@@ -144,7 +138,7 @@ public enum Styles {
     /**
      * Method that returns a column footer style , can be further customized here
      * This style defines the elements in the  footer column of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}
@@ -157,7 +151,6 @@ public enum Styles {
 
         return columnFooterStyle;
     }
-
 
     /**
      * A helper method that sets the depending {@link net.sf.jasperreports.engine.design.JRDesignStyle} box and
@@ -179,5 +172,24 @@ public enum Styles {
         return lineBox;
     }
 
+    /**
+     * A helper method which returns all the JasperReports report styles defined in this enum, as a {@link java.util.List}
+     *
+     * @return A list containing all contained report styles.
+     */
+    public static List<JRStyle> asList() {
+        List<JRStyle> stylesList = new ArrayList<>();
+        for (JasperStyles enumValue : values()) {
+            stylesList.add(enumValue.getStyle());
+        }
 
+        return stylesList;
+    }
+
+    /**
+     * Abstract method that has different implementations for each Style
+     *
+     * @return {@link net.sf.jasperreports.engine.JRStyle}
+     */
+    public abstract JRStyle getStyle();
 }
