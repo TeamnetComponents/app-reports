@@ -45,13 +45,14 @@ public final class FileLoader implements Loader<File, JRReport> {
             } catch (FileNotFoundException e) {
                 //Re-throw
                 throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport"
-                        , e);
+                        , e.getCause());
             }
             return jasperDesign;
         } else {
 
-            throw new LoaderException("File = null ; File is has not a .jrxml extension ." +
-                    "Could not load given resource of File type into a JRReport");
+            throw new LoaderException("Could not load given resource of File type into a JRReport:" +
+                    " File is either null or has not a .jrxml extension."
+            );
         }
 
 

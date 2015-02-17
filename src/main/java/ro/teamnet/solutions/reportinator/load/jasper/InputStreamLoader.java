@@ -38,10 +38,11 @@ public final class InputStreamLoader implements Loader<InputStream, JRReport> {
             } catch (JRException | IOException e) {
                 //Re-throw
                 throw new LoaderException("Could not load " + loadSource.getClass().getCanonicalName() + " into a JRReport"
-                        , e);
+                        , e.getCause());
             }
         } else {
-            throw new LoaderException("InputStream = null ; Could not load resource of InputStream type to a JRReport");
+            throw new LoaderException(" Could not load resource of InputStream type to a JRReport:" +
+                    " InputStream = null.");
         }
         return jasperDesign;
     }

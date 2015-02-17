@@ -46,11 +46,10 @@ public class ClassPathLoaderTest {
     }
 
 
-    @Test
+    @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithUnreadableClassPath() throws Exception {
         JRReport report = classPathLoader.load(new ClassPathResource(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNull(report);
     }
 
     @Test(expected = LoaderException.class)
@@ -59,16 +58,12 @@ public class ClassPathLoaderTest {
         assertNull(report);
     }
 
-    @Test
+    @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithClassPathResourceNull() throws Exception {
         JRReport report = classPathLoader.load(null);
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNull(report);
+
     }
 
-    @Test
-    public void testShouldCreateDefaultResource() throws Exception {
-        assertNotNull(classPathLoader.createDefaultResource());
-        assertEquals(ClassPathResource.class, classPathLoader.createDefaultResource().getClass());
-    }
+
 }

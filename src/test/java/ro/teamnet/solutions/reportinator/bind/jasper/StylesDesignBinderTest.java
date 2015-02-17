@@ -26,7 +26,7 @@ public class StylesDesignBinderTest {
      */
     private StylesDesignBinder stylesDesignBinder;
     /**
-     * Object needed by the constructor and the report template to be returned after binind the styles to it
+     * Object needed by the constructor and the report template to be returned after binding the styles to it
      */
     private JasperDesign jasperDesign;
 

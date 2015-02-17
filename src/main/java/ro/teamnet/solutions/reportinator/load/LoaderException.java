@@ -1,8 +1,8 @@
 package ro.teamnet.solutions.reportinator.load;
 
 /**
- * TODO Doc
- *
+ * An  exception which denotes that a loading failure has occurred.
+ * <p/>
  * Created by Andrei.Marica on 2/10/2015.
  */
 public class LoaderException extends RuntimeException {

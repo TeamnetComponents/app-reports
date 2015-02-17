@@ -29,7 +29,7 @@ public final class StylesDesignBinder implements Binder<List<JRStyle>, JRReport>
      * Receives a {@link net.sf.jasperreports.engine.JRReport}
      * (usually a {@link net.sf.jasperreports.engine.design.JasperDesign}) to bind JRStyles to it.
      *
-     * @param reportDesign A mutable report design to bind field metadata to.
+     * @param reportDesign A mutable report design to bind JRDesignStyles to.
      */
     public StylesDesignBinder(JRReport reportDesign) {
 
@@ -53,12 +53,13 @@ public final class StylesDesignBinder implements Binder<List<JRStyle>, JRReport>
                 try {
                     this.jasperDesign.addStyle(styleToBind);
                 } catch (JRException e) {
-                    throw new BindingException("The Binder could not bind the given List<JRStyle> to a JasperDesign", e);
+                    throw new BindingException("The Binder could not bind the given List<JRStyle> to a JasperDesign", e.getCause());
                 }
             }
         } else {
-            throw new BindingException("The given List<JRStyles> is empty or null;" +
-                    " The Binder could not bind the given List<JRStyle> to a JasperDesign");
+            throw new BindingException("The Binder could not bind the given List<JRStyle> to a JasperDesign: " +
+                    "The given List<JRStyles> is either empty or null;"
+            );
         }
         return jasperDesign;
     }

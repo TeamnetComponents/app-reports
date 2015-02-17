@@ -1,9 +1,7 @@
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.load.Loader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
@@ -30,30 +28,19 @@ public final class ClassPathLoader implements Loader<Resource, JRReport> {
     @Override
     public JRReport load(final Resource sourceFile) throws LoaderException {
 
-        Resource auxiliarResource = sourceFile;
 
-        if (auxiliarResource == null || !sourceFile.isReadable()) {
-            System.out.println("Source File is not readable or null , it will be set as a default resource"); //checks if the sourceFile is readable (if it can be read by .getInputStream() )
-            auxiliarResource = createDefaultResource();  //if the sourceFile is unreadable , our method sets the resource to a default path
-
+        if (sourceFile == null || !sourceFile.isReadable()) {
+            throw new LoaderException("Could not load given resource of Resource type into a JasperDesign :" +
+                    " Resource is either null or unreadable.");
         }
 
         JRReport jasperDesign;
         try {
-            jasperDesign = new InputStreamLoader().load(auxiliarResource.getInputStream());
+            jasperDesign = new InputStreamLoader().load(sourceFile.getInputStream());
         } catch (IOException e) {
-            throw new LoaderException("Could not load  " + sourceFile.getClass().getCanonicalName() + " to a JRReport", e);
+            throw new LoaderException("Could not load  " + sourceFile.getClass().getCanonicalName() + " to a JRReport.", e.getCause());
         }
         return jasperDesign;
-    }
-
-    /**
-     * Helper method that returns a new Resource , using the DEFAULT_PATH, when the given Resource
-     * is either null or unreadable
-     */
-    public Resource createDefaultResource() {
-        return new ClassPathResource(JasperConstants.JASPER_TEST_TEMPLATE_RESOURCE_PATH);
-
     }
 
 }

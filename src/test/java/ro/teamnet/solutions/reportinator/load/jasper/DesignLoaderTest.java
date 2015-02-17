@@ -63,19 +63,17 @@ public class DesignLoaderTest {
         assertEquals(JasperDesign.class, report.getClass());
     }
 
-    @Test
+    @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithInvalidClassPathAsInput() throws Exception {
         JRReport report = designLoader.load(new ClassPathResource(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNull(report);
     }
 
-    @Test
+    @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithNullClassPathAsInput() throws Exception {
         ClassPathResource classPathResource = null;
         JRReport report = designLoader.load(classPathResource);
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNull(report);
     }
 
 
