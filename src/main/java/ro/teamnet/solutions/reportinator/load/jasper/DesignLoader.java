@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 /**
  * Acts as a facade for the {@link ro.teamnet.solutions.reportinator.load.Loader} implementing classes,
- * it's similar to {@link net.sf.jasperreports.engine.xml.JRXmlLoader} class. It
+ * it's similar to {@link net.sf.jasperreports.engine.xml.JRXmlLoader} class.
  *
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015

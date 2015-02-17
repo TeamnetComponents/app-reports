@@ -20,7 +20,7 @@ import java.io.InputStream;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public class InputStreamLoader implements Loader<InputStream, JRReport> {
+public final class InputStreamLoader implements Loader<InputStream, JRReport> {
     /**
      * A method that loads an InputStream in a JasperDesign using {@link net.sf.jasperreports.engine.xml.JRXmlLoader}.
      *
@@ -32,17 +32,16 @@ public class InputStreamLoader implements Loader<InputStream, JRReport> {
     public JRReport load(InputStream loadSource) throws LoaderException {
 
         JasperDesign jasperDesign;
-        if (loadSource != null) {     // Is this condition enough to pass?
+        if (loadSource != null) {
             try {
                 jasperDesign = JRXmlLoader.load(loadSource.available() != 0 ? loadSource : null);
             } catch (JRException | IOException e) {
                 //Re-throw
-                throw new LoaderException("Can't load " + loadSource.getClass().getCanonicalName()
+                throw new LoaderException("Could not load " + loadSource.getClass().getCanonicalName() + " into a JRReport"
                         , e);
             }
-
         } else {
-            throw new LoaderException("Could not load resource!");
+            throw new LoaderException("InputStream = null ; Could not load resource of InputStream type to a JRReport");
         }
         return jasperDesign;
     }

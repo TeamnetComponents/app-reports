@@ -12,20 +12,30 @@ import java.io.File;
 import static junit.framework.Assert.*;
 
 /**
- * TODO DOC
+ * Contract and minimal tests for the {@link ro.teamnet.solutions.reportinator.load.jasper.FileLoader} class
+ *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/17/2015
  */
 public class FileLoaderTest {
 
 
     /**
-     * TODO DOC
+     * Path to a JRXml file that contains valid data for the Loader
      */
-    private static final String PATH_TO_XML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
-    private static final String PATH_TO_NON_XML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.someExtension";
+    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    /**
+     * Path to a Non-JRXml file that contains invalid data and has improper extension for the Loader
+     */
+    private static final String PATH_TO_NON_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.someExtension";
+    /**
+     * Object to be tested
+     */
     private FileLoader fileLoader;
 
+
     /**
-     * TODO DOC
+     * Creating the object to test
      *
      * @throws Exception
      */
@@ -34,89 +44,48 @@ public class FileLoaderTest {
         fileLoader = new FileLoader();
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test
-    public void testLoadIfFileHasAJrxmlExtension() throws Exception {
-        JRReport report = fileLoader.load(new File(PATH_TO_XML_FILE));
+    public void testShouldLoadIfFileHasAJrxmlExtension() throws Exception {
+        JRReport report = fileLoader.load(new File(PATH_TO_JRXML_FILE));
         assertNotNull(report);
         assertEquals(JasperDesign.class, report.getClass());
 
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testLoadIfFileDoesNotExist() throws Exception {
-        JRReport report = fileLoader.load(new File(PATH_TO_XML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
-
-    }
-
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test(expected = LoaderException.class)
-    public void testLoadIfFileIsEmpty() throws Exception {
+    public void testShouldFailWhenLoadingAFileThatDoesNotExist() throws Exception {
+        JRReport report = fileLoader.load(new File("path_to_non_existent_file"));
+        assertNull(report);
+
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldFailWhenLoadingAFileThatIsEmpty() throws Exception {
         JRReport report = fileLoader.load(new File("G:\\reportinator\\src\\test\\resources\\random_empty_template.jrxml"));
         assertNull(report);
-        //TODO evaluate statement for an empty file
-
-
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test(expected = LoaderException.class)
-    public void testLoadIfFileIsNull() throws Exception {
+    public void testShouldFailWhenLoadingAFileThatIsNull() throws Exception {
         JRReport report = fileLoader.load(null);
         assertNull(report);
-
-
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test(expected = LoaderException.class)
-    public void testLoadIfFileHasNotAJrxmlExtension() throws Exception {
-        JRReport report = fileLoader.load(new File(PATH_TO_NON_XML_FILE));
+    public void testShouldFailWhenLoadingAFileThatHasNotAJrxmlExtension() throws Exception {
+        JRReport report = fileLoader.load(new File(PATH_TO_NON_JRXML_FILE));
         assertNull(report);
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test
-    public void testCheckIfJrxmlWithNonJrxmlFile() throws Exception {
-        String pathToNonJrxmlFile = PATH_TO_NON_XML_FILE;
+    public void testShouldFailWhenCheckingIfJrxmlWithNonJrxmlFile() throws Exception {
+        String pathToNonJrxmlFile = PATH_TO_NON_JRXML_FILE;
         assertEquals(false, fileLoader.checkIfJrxml(new File(pathToNonJrxmlFile)));
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test
-    public void testCheckIfJrxmlWithJrxmlFile() throws Exception {
-        String pathToJrxmlFile = PATH_TO_XML_FILE;
+    public void testShouldPassWhenCheckingIfJrxmlWithJrxmlFile() throws Exception {
+        String pathToJrxmlFile = PATH_TO_JRXML_FILE;
         assertEquals(true, fileLoader.checkIfJrxml(new File(pathToJrxmlFile)));
     }
 }

@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * //TODO Doc
+ * An {@link java.lang.Enum} that holds all the {@link net.sf.jasperreports.engine.JRStyle} needed for the
+ * {@link ro.teamnet.solutions.reportinator.bind.Binder} to bind them to the report template , in our case
+ * a {@link net.sf.jasperreports.engine.design.JasperDesign}
  *
  * @author Andrei.Marica
  * @version 1.0 Date: 2/13/2015
@@ -105,7 +107,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column content style , can be further customized here
      * This style defines the elements in the main body of the generated Table
-     * <p>
+     * <p/>
      * MUST BE SET ON A {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return {@link net.sf.jasperreports.engine.design.JRDesignStyle}
@@ -122,7 +124,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column header style , can be further customized here
      * This style defines the elements in the header column of the generated Table
-     * <p>
+     * <p/>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}
@@ -138,7 +140,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column footer style , can be further customized here
      * This style defines the elements in the  footer column of the generated Table
-     * <p>
+     * <p/>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}

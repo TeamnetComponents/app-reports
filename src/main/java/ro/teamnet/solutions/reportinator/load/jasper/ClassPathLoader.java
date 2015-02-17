@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public class ClassPathLoader implements Loader<Resource, JRReport> {
+public final class ClassPathLoader implements Loader<Resource, JRReport> {
 
     /**
      * Method to load a Resource to a JRReport by sending it's InputStream to InputStreamLoaders load method ;
@@ -33,15 +33,16 @@ public class ClassPathLoader implements Loader<Resource, JRReport> {
         Resource auxiliarResource = sourceFile;
 
         if (auxiliarResource == null || !sourceFile.isReadable()) {
-            System.out.println("Source File is not readable , it will be set as default"); //checks if the sourceFile is readable (if it can be read by .getInputStream() )
-            auxiliarResource = createDefaultResource();   //if the sourceFile is unreadable , our method sets the resource to a default path
+            System.out.println("Source File is not readable or null , it will be set as a default resource"); //checks if the sourceFile is readable (if it can be read by .getInputStream() )
+            auxiliarResource = createDefaultResource();  //if the sourceFile is unreadable , our method sets the resource to a default path
+
         }
 
         JRReport jasperDesign;
         try {
             jasperDesign = new InputStreamLoader().load(auxiliarResource.getInputStream());
         } catch (IOException e) {
-            throw new LoaderException("Can't load " + sourceFile.getClass().getCanonicalName(), e);
+            throw new LoaderException("Could not load  " + sourceFile.getClass().getCanonicalName() + " to a JRReport", e);
         }
         return jasperDesign;
     }
@@ -51,7 +52,7 @@ public class ClassPathLoader implements Loader<Resource, JRReport> {
      * is either null or unreadable
      */
     public Resource createDefaultResource() {
-        return new ClassPathResource(JasperConstants.JASPER_DEFAULT_TEMPLATE_RESOURCE_PATH);
+        return new ClassPathResource(JasperConstants.JASPER_TEST_TEMPLATE_RESOURCE_PATH);
 
     }
 

@@ -1,32 +1,36 @@
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 
+import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Before;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 
-import static org.easymock.EasyMock.*;
+import static junit.framework.Assert.*;
 
 /**
- * TODO DOC
+ * Contract and minimal tests for {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader} class
+ *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/17/2015
  */
 public class InputStreamLoaderTest {
 
     /**
-     * TODO DOC FOR VARIABLES
+     * Path to a JRXml file that contains valid information for the Loader
      */
-    private static final String PATH_TO_XML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    /**
+     * Object to be tested
+     */
     private InputStreamLoader inputStreamLoader;
-    private InputStreamLoader inputStreamLoaderMock;
-    private InputStream is;
 
 
     /**
-     * TODO DOC
+     * Creating the object to test
      *
      * @throws Exception
      */
@@ -35,42 +39,16 @@ public class InputStreamLoaderTest {
         inputStreamLoader = new InputStreamLoader();
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test
-    public void testLoadWithValidInputStream() throws Exception {
-        inputStreamLoaderMock = createMock(InputStreamLoader.class);
-        is = new FileInputStream(PATH_TO_XML_FILE);
-        expect(inputStreamLoaderMock.load(new FileInputStream(PATH_TO_XML_FILE)))
-                .andReturn(anyObject(JasperDesign.class));
-        replay();
-
-        try {
-            inputStreamLoader.load(is);
-        } finally {
-            verify();
-        }
-
+    public void testShouldLoadCorrectlyWithValidInputStream() throws Exception {
+        JRReport report = inputStreamLoader.load(new FileInputStream(PATH_TO_JRXML_FILE));
+        assertNotNull(report);
+        assertEquals(JasperDesign.class, report.getClass());
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test(expected = LoaderException.class)
-    public void testLoadWithNullInputStream() throws Exception {
-        inputStreamLoaderMock = createMock(InputStreamLoader.class);
-        expect(inputStreamLoaderMock.load(null)).andThrow(new LoaderException());
-        replay();
-        try {
-            inputStreamLoader.load(is);
-        } finally {
-            verify();
-        }
-
+    public void testShouldFailWhenLoadingWithNullInputStream() throws Exception {
+        JRReport report = inputStreamLoader.load(null);
+        assertNull(report);
     }
 }

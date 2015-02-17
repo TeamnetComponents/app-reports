@@ -10,18 +10,26 @@ import ro.teamnet.solutions.reportinator.load.LoaderException;
 import static junit.framework.Assert.*;
 
 /**
- * TODO DOC
+ * Contract and minimal tests for {@link ro.teamnet.solutions.reportinator.load.jasper.ClassPathLoader} class
+ *
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/17/2015
  */
 public class ClassPathLoaderTest {
 
     /**
-     * TODO DOC
+     * Path to a JRXml file that contains valid data for the Loader
      */
-    private static final String PATH_TO_XML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
-    private ClassPathLoader classPathLoader;
+    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
 
     /**
-     * TODO DOC
+     * Object to be tested
+     */
+    private ClassPathLoader classPathLoader;
+
+
+    /**
+     * Creating the object to test
      *
      * @throws Exception
      */
@@ -30,26 +38,17 @@ public class ClassPathLoaderTest {
         classPathLoader = new ClassPathLoader();
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
     @Test
-    public void testLoadWithReadableClassPath() throws Exception {
+    public void testShouldLoadGivenSourceWithReadableClassPath() throws Exception {
         JRReport report = classPathLoader.load(new ClassPathResource("Silhouette_Landscape_No_detail_band.jrxml"));
         assertNotNull(report);
         assertEquals(JasperDesign.class, report.getClass());
     }
 
-    /**
-     * TODO DOC
-     *
-     * @throws Exception
-     */
+
     @Test
-    public void testLoadWithUnreadableClassPath() throws Exception {
-        JRReport report = classPathLoader.load(new ClassPathResource(PATH_TO_XML_FILE));
+    public void testShouldLoadDefaultWithUnreadableClassPath() throws Exception {
+        JRReport report = classPathLoader.load(new ClassPathResource(PATH_TO_JRXML_FILE));
         assertNotNull(report);
         assertEquals(JasperDesign.class, report.getClass());
     }
@@ -61,14 +60,14 @@ public class ClassPathLoaderTest {
     }
 
     @Test
-    public void testLoadWithClassPathResourceNull() throws Exception {
+    public void testShouldLoadDefaultWithClassPathResourceNull() throws Exception {
         JRReport report = classPathLoader.load(null);
         assertNotNull(report);
         assertEquals(JasperDesign.class, report.getClass());
     }
 
     @Test
-    public void testCreateDefaultResource() throws Exception {
+    public void testShouldCreateDefaultResource() throws Exception {
         assertNotNull(classPathLoader.createDefaultResource());
         assertEquals(ClassPathResource.class, classPathLoader.createDefaultResource().getClass());
     }

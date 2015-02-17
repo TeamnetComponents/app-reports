@@ -13,8 +13,8 @@ import java.io.FileNotFoundException;
  * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a paramterer for the .load()
  * method in {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader}.
  * <p/>
- * The File sent to this .load() method should have a ".jrxml" extension , our loadSource
- * passes through a verification of extension using checkIfJrxml() method that ensures our File
+ * The File sent to this {@code .load()} method should have a ".jrxml" extension , our loadSource
+ * passes through a verification of extension using {@code checkIfJrxml()} method that ensures our File
  * it's a jrxml .
  *
  * @author Andrei.Marica
@@ -44,13 +44,14 @@ public final class FileLoader implements Loader<File, JRReport> {
 
             } catch (FileNotFoundException e) {
                 //Re-throw
-                throw new LoaderException("Can't load " + loadSource.getClass().getCanonicalName()
+                throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport"
                         , e);
             }
             return jasperDesign;
         } else {
-            // TODO Change message description to better reflect exception case (i.e. not a valid JRXML file)
-            throw new LoaderException("Could not load Resource");
+
+            throw new LoaderException("File = null ; File is has not a .jrxml extension ." +
+                    "Could not load given resource of File type into a JRReport");
         }
 
 

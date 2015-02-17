@@ -11,22 +11,25 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * TODO:DOC
+ * Binds a list of {@link net.sf.jasperreports.engine.design.JRDesignStyle} to a {@link net.sf.jasperreports.engine.JRReport}
+ * which is the default report template. The styles is to be used by setting the styles to the different parts of the report
+ * such as the column content.
  *
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public final class StylesDesignBinder implements Binder<List<JRStyle>, JasperDesign> {
+public final class StylesDesignBinder implements Binder<List<JRStyle>, JRReport> {
 
     /**
-     * TODO: DOC
+     * the report design to bind JRStyles to it
      */
     private final JasperDesign jasperDesign;
 
     /**
-     * TODO: DOC
+     * Receives a {@link net.sf.jasperreports.engine.JRReport}
+     * (usually a {@link net.sf.jasperreports.engine.design.JasperDesign}) to bind JRStyles to it.
      *
-     * @param reportDesign
+     * @param reportDesign A mutable report design to bind field metadata to.
      */
     public StylesDesignBinder(JRReport reportDesign) {
 
@@ -35,25 +38,27 @@ public final class StylesDesignBinder implements Binder<List<JRStyle>, JasperDes
     }
 
     /**
-     * TODO: DOC
+     * Binds a list of {@link net.sf.jasperreports.engine.JRStyle} to the
+     * attached report template
      *
-     * @param item The item to bind.
-     * @return
-     * @throws BindingException
+     * @param item The list of {@link net.sf.jasperreports.engine.JRStyle}
+     * @return the report template , having all the {@link net.sf.jasperreports.engine.JRStyle} given , bound to it
+     * @throws BindingException if the given list is empty
      */
     @Override
-    public JasperDesign bind(List<JRStyle> item) throws BindingException {
+    public JRReport bind(List<JRStyle> item) throws BindingException {
 
-        if (!item.isEmpty()) {
+        if (item != null && !item.isEmpty()) {
             for (JRStyle styleToBind : item) {
                 try {
                     this.jasperDesign.addStyle(styleToBind);
                 } catch (JRException e) {
-                    throw new BindingException("EXCEPTION MESSAGE", e);
+                    throw new BindingException("The Binder could not bind the given List<JRStyle> to a JasperDesign", e);
                 }
             }
         } else {
-            throw new BindingException("EXCEPTION MESSAGE");
+            throw new BindingException("The given List<JRStyles> is empty or null;" +
+                    " The Binder could not bind the given List<JRStyle> to a JasperDesign");
         }
         return jasperDesign;
     }
