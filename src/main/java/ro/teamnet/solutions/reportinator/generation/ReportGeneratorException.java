@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.generation;
 
 /**
- * An exception, denoting report build failures.
+ * An exception, denoting report build failures (usually pertaining to concrete implementations' internal heuristics).
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015

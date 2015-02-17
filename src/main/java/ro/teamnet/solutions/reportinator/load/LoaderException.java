@@ -1,9 +1,11 @@
 package ro.teamnet.solutions.reportinator.load;
 
 /**
- * An  exception which denotes that a loading failure has occurred.
- * <p/>
- * Created by Andrei.Marica on 2/10/2015.
+ * An exception denoting loader failures (usually pertaining to concrete implementations' internal heuristics).
+ *
+ * @author Andrei.Marica
+ * @author Bogdan.Stefan
+ * @version 1.0 Date: 2/10/2015
  */
 public class LoaderException extends RuntimeException {
 

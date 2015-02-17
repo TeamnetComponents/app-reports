@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.config;
 
 /**
- * TODO Doc
+ * A class containing various constants, common to the reporting engine.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015

@@ -1,6 +1,7 @@
 package ro.teamnet.solutions.reportinator.generation.jasper;
 
 import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import ro.teamnet.solutions.reportinator.bind.jasper.FieldMetadataDesignBinder;
 import ro.teamnet.solutions.reportinator.bind.jasper.StylesDesignBinder;
@@ -15,32 +16,40 @@ import ro.teamnet.solutions.reportinator.load.jasper.DesignLoader;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 /**
- * A report generator implementation which deals with Jasper Reports generation.
+ * A report generator implementation which deals with JasperReports filling and print generation.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
  */
 public final class JasperReportGenerator implements ReportGenerator<JasperPrint> {
 
+    /**
+     * The report parameters dictionary.
+     */
     private final Map<String, Object> parameters;
 
+    /**
+     * The compiled template, to be used for filling.
+     */
     private final JRReport report;
 
+    /**
+     * The data source, to be used in the filling process.
+     */
     private final JRDataSource dataSource;
 
     /**
-     * No-arg constructor. Should be private since instances of this type are immutable.
+     * A {@code no-arg} constructor. Should be private since instances of this type are immutable.
      *
      * @see JasperReportGenerator#JasperReportGenerator()
      */
     private JasperReportGenerator() {
-        // TODO Log access to this class
+        // Future Log calls to this method
         throw new IllegalStateException("Illegal reflection attack detected and logged.");
     }
 
@@ -54,6 +63,27 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         this.parameters = reportBuilder.reportParameters;
         this.report = reportBuilder.reportDesign;
         this.dataSource = reportBuilder.reportDataSource;
+    }
+
+    /**
+     * A factory method which accepts a String, as the path to a report template.
+     *
+     * @param absolutePathnameToJasperXml The path to the report template.
+     * @return A builder instance, based on the given template.
+     * @throws ReportGeneratorException If builder construction failed.
+     */
+    public static Builder builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
+        return new Builder(absolutePathnameToJasperXml);
+    }
+
+    /**
+     * A factory method, for a builder, which uses the default report template.
+     *
+     * @return A builder instance, based on the default, built-in, template.
+     * @throws ReportGeneratorException If builder construction failed.
+     */
+    public static Builder builder() throws ReportGeneratorException {
+        return new Builder(null);
     }
 
     /**
@@ -72,13 +102,13 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     /**
      * A builder class for the final (to be exported) report.
      */
-    public static class Builder {
+    protected static final class Builder {
 
         /**
          * Holds a Jasper report's runtime parameters.
          */
         private final Map<String, Object> reportParameters = new HashMap<String, Object>();
-
+        private CyclicBarrier barrier;
         /**
          * An optional design JRXML, loaded when builder is instantiated. Set to a default value.
          */
@@ -93,6 +123,14 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * Holds table metadata (field names and labels).
          */
         private Map<String, String> reportTableAndColumnMetadata;
+
+        {
+            // Initialize some parameter defaults
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_HEADER_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_FOOTER_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_TITLE_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY, "");
+        }
 
         /**
          * A constructor which manages a template from an absolute pathname defined by a String value.
@@ -115,35 +153,27 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * A factory method which accepts a String, as the path to a report template.
-         *
-         * @param absolutePathnameToJasperXml The path to the report template.
-         * @return A builder instance, based on the given template.
-         * @throws ReportGeneratorException If builder construction failed.
-         */
-        public static Builder builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
-            return new Builder(absolutePathnameToJasperXml);
-        }
-
-        /**
-         * A factory method, for a builder
-         *
-         * @return A builder instance, based on the default, built-in, template.
-         * @throws ReportGeneratorException If builder construction failed.
-         */
-        public static Builder builder() throws ReportGeneratorException {
-            return new Builder(null);
-        }
-
-        /**
-         * Establishes the report's data source.
+         * Establishes the report's data source (as a runtime parameter).
          *
          * @param datasource A data source.
          * @return The builder instance, having the data source attached.
          */
         public Builder withDatasource(JRDataSource datasource) {
-            Objects.requireNonNull(datasource, "Data source must not be null.");
-            this.reportDataSource = datasource;
+            this.reportDataSource = Objects.requireNonNull(datasource, "Data source must not be null.");
+            // Attach a parameter for the datasource to the design
+            JRDesignParameter parameter = new JRDesignParameter();
+            parameter.setName(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY);
+            parameter.setValueClass(JRDataSource.class);
+            try {
+                ((JasperDesign) this.reportDesign).addParameter(parameter);
+            } catch (JRException e) {
+                throw new ReportGeneratorException(
+                        MessageFormat.format("Failed to attach datasource as a parameter to the report design. An " +
+                                "exception occurred: \n{0}", e.getMessage()),
+                        e.getCause());
+            }
+            // Add it to runtime parameters dictionary as well
+            this.reportParameters.put(parameter.getName(), this.reportDataSource);
 
             return this;
         }
@@ -155,7 +185,8 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @return The builder instance, having the header text attached.
          */
         public Builder withPageHeader(String headerText) {
-            this.reportParameters.put(JasperConstants.JASPER_PAGE_HEADER_IDENTIFIER_KEY, headerText == null ? "" : headerText);
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_HEADER_IDENTIFIER_KEY,
+                    Objects.requireNonNull(headerText, "Header text must not be null."));
 
             return this;
         }
@@ -167,7 +198,8 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @return The builder instance, having the footer text attached.
          */
         public Builder withPageFooter(String footerText) {
-            this.reportParameters.put(JasperConstants.JASPER_PAGE_FOOTER_IDENTIFIER_KEY, footerText == null ? "" : footerText);
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_FOOTER_IDENTIFIER_KEY,
+                    Objects.requireNonNull(footerText, "Footer text must not be null."));
 
             return this;
         }
@@ -185,7 +217,8 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @return The builder instance, having the title text attached.
          */
         public Builder withTitle(String titleText) {
-            this.reportParameters.put(JasperConstants.JASPER_TITLE_IDENTIFIER_KEY, titleText == null ? "" : titleText);
+            this.reportParameters.put(JasperConstants.JASPER_TITLE_IDENTIFIER_KEY,
+                    Objects.requireNonNull(titleText, "Report title must not be null."));
 
             return this;
         }
@@ -197,16 +230,18 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @return The builder instance, having the subtitle text attached.
          */
         public Builder withSubtitle(String subtitleText) {
-            this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY, subtitleText == null ? "" : subtitleText);
+            this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY,
+                    Objects.requireNonNull(subtitleText, "Report subtitle must not be null."));
 
             return this;
         }
 
         /**
-         * Establishes a dictionary mapping between table runtime rows-to-column metadata, and runtime column labels
+         * Establishes a dictionary mapping at runtime, between a data source's rows metadata to a table's column and
+         * column labels
          * information.
-         * <p>The dictionary {@code keys} represent the field names to be used to extract data from the data source
-         * and they must be the same.</p>
+         * <p>The dictionary {@code keys} represent the field names to be used to extract data from the data source,
+         * thus they must be the same as the data source's fields.</p>
          *
          * @param tableColumnsMetadata A dictionary containing columns metadata and labels.
          * @return The builder instance, with assigned column metadata.
@@ -236,36 +271,78 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * Uses the builder data, to create a report generator.
          *
          * @return A report generator, to return an instance.
-         * @throws ReportGeneratorException If
+         * @throws ReportGeneratorException If anything happens during the build process.
          */
         public JasperReportGenerator build() throws ReportGeneratorException {
             validateBuilder();
+            barrier = new CyclicBarrier(4);
             try {
-                // Bind all required styles to report design
-                this.reportDesign = new StylesDesignBinder(this.reportDesign).bind(JasperStyles.asList());
-                // Bind fields metadata to report design
-                this.reportDesign =
-                        new FieldMetadataDesignBinder(this.reportDesign).bind(this.reportTableAndColumnMetadata.keySet());
-                // Bind table, based on metadata, to report design
-                JRComponentElement tableComponent = new JasperTableComponentCreator(this.reportDesign).create(this.reportTableAndColumnMetadata);
-                this.reportDesign =
-                        new TableDesignBinder(this.reportDesign).bind(tableComponent);
+                new Thread(() -> {
+                    // Bind all required styles to report design
+                    this.reportDesign = new StylesDesignBinder(this.reportDesign).bind(JasperStyles.asList());
+                    try {
+                        barrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format("Could not attach styles to the report. " +
+                                "An exception occurred: {0}", e.getMessage()), e.getCause());
+                    }
+                }).start();
+                new Thread(() -> {
+                    // Bind fields metadata to report design
+                    Collection<String> fieldNames = this.reportTableAndColumnMetadata.keySet();
+                    this.reportDesign =
+                            new FieldMetadataDesignBinder(this.reportDesign).bind(fieldNames);
+                    try {
+                        barrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format("Could not field metadata to the report. " +
+                                "An exception occurred: {0}", e.getMessage()), e.getCause());
+                    }
+                }).start();
+                new Thread(() -> {
+                    // Bind table, based on metadata, to report design
+                    JRComponentElement tableComponent = // Generate the table
+                            new JasperTableComponentCreator(this.reportDesign).create(this.reportTableAndColumnMetadata);
+                    this.reportDesign = // Bind it
+                            new TableDesignBinder(this.reportDesign).bind(tableComponent);
+                    try {
+                        barrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format("Could not bind the table to the report. " +
+                                "An exception occurred: {0}", e.getMessage()), e.getCause());
+                    }
+                }).start();
+                // Wait until all above bindings have been completed
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                throw new ReportGeneratorException(
+                        MessageFormat.format("Building failed. An exception occurred: {0} ", e.getMessage()), e.getCause());
+            }
+
+            try {
                 // Compile report
-                this.reportDesign = JasperCompileManager.compileReport((JasperDesign) this.reportDesign); // TODO Investigate why this is always null?
+                this.reportDesign = JasperCompileManager.compileReport((JasperDesign) this.reportDesign);
             } catch (JRException e) {
-                throw new ReportGeneratorException(MessageFormat.format("Building failed. An exception occurred: {0} ", e.getMessage()), e);
+                throw new ReportGeneratorException(
+                        MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), e.getCause());
             }
 
             return new JasperReportGenerator(this);
         }
 
+        /**
+         * A method to do some sanity checks before attempting start the report building process.
+         */
         private void validateBuilder() {
-            if (this.reportDataSource == null) {
-                throw new ReportGeneratorException("Builder must have a non-null data source.");
+            if (this.reportDesign == null) {
+                throw new ReportGeneratorException("No report design was attached.");
             }
-
+            if (this.reportDataSource == null ||
+                    !this.reportParameters.get(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY).equals(this.reportDataSource)) {
+                throw new ReportGeneratorException("No data source was attached.");
+            }
             if (this.reportTableAndColumnMetadata == null) {
-                throw new ReportGeneratorException("Builder must have non-null fields and column metadata.");
+                throw new ReportGeneratorException("No fields and columns metadata was attached.");
             }
         }
     }

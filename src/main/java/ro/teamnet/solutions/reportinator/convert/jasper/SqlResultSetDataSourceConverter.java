@@ -35,13 +35,13 @@ public final class SqlResultSetDataSourceConverter implements Converter<ResultSe
 
     @Override
     public JRDataSource convert(ResultSet inputSource) {
-        // TODO Implement this
+        // TODO Implement
         return new SqlResultSetJasperAdapter();
     }
 
     @Override
     public Collection<String> getFieldMetadata() {
-        // TODO
+        // TODO Implement
         return null;
     }
 }

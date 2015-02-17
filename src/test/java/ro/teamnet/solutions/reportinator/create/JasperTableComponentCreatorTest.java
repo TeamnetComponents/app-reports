@@ -7,11 +7,10 @@ public class JasperTableComponentCreatorTest {
 
     @Before
     public void setUp() throws Exception {
-
     }
 
     @Test
-    public void testCreate() throws Exception {
+    public void testShouldPassIfAValidTableWasCreated() throws Exception {
         // TODO Test method
     }
 }

@@ -8,12 +8,6 @@ package ro.teamnet.solutions.reportinator.load;
  */
 public interface Loader<WHAT,IN> {
 
-    // TODO Are methods below appropriate interface methods?
-
-//    T load(File templateFile);
-//
-//    T load(URL templateFileUrl);
-
     /**
      * Loads a sourceFile (e.g. <em>Files , InputStream</em>), at logical level, into another item (i.e. <em>a JRReport
      * </em>) using implementation specific internal heuristics.

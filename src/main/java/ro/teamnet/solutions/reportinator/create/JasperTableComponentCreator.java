@@ -7,50 +7,87 @@ import net.sf.jasperreports.components.table.WhenNoDataTypeTableEnum;
 import net.sf.jasperreports.engine.JRComponentElement;
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JRReport;
+import net.sf.jasperreports.engine.JRTextField;
 import net.sf.jasperreports.engine.component.ComponentKey;
-import net.sf.jasperreports.engine.design.JRDesignComponentElement;
-import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JRDesignTextField;
+import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
 import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
+import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * TODO Doc
+ * TODO Doc and extract as an interface?
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
  */
 public final class JasperTableComponentCreator {
 
-    public JasperTableComponentCreator(JRReport reportDesign) {
-        // TODO report design is required to obtain dataset info?? Not really. What could I use here, instead?
-    }
+    private static final JRDesignDatasetRun DATASET_RUN;
 
-    private final JRDesignDatasetRun DATASET_RUN;
-
-    { // Initialization data
-
-        // Build dataset parameter runtime identifier
-        String datasetParameter = "$P{" + JasperConstants.JASPER_DATASET_IDENTIFIER_KEY + '}';
+    static { // Initialization data
         DATASET_RUN = new JRDesignDatasetRun();
+        // Assign a dataset
         DATASET_RUN.setDatasetName(JasperConstants.JASPER_DATASET_IDENTIFIER_KEY);
-        JRExpression expression = new JRDesignExpression(datasetParameter);
-        DATASET_RUN.setDataSourceExpression(expression);
+        // Build datasource parameter runtime identifier
+        String dataSourceAsParameter = "$P{" + JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY + '}';
+        // Attach data source parameter
+        JRExpression dataSourceExpression = new JRDesignExpression(dataSourceAsParameter);
+        DATASET_RUN.setDataSourceExpression(dataSourceExpression);
+
 
         // Ensure everything was setup correctly
         assert DATASET_RUN.getDatasetName().equals(JasperConstants.JASPER_DATASET_IDENTIFIER_KEY) :
                 MessageFormat.format("Discovered dataset name {0} does not match required name {1}.",
                         DATASET_RUN.getDatasetName(),
                         JasperConstants.JASPER_DATASET_IDENTIFIER_KEY);
-        assert DATASET_RUN.getDataSourceExpression().getText().equals(datasetParameter) :
+        assert DATASET_RUN.getDataSourceExpression().getText().equals(dataSourceAsParameter) :
                 MessageFormat.format("Discovered dataset parameter {0} does not match required parameter {1}.",
                         DATASET_RUN.getDataSourceExpression().getText(),
-                        datasetParameter);
+                        dataSourceAsParameter);
+    }
+
+    private final JasperDesign reportDesign;
+
+
+    public JasperTableComponentCreator(JRReport reportDesign) {
+        this.reportDesign = JasperDesign.class.cast(
+                Objects.requireNonNull(reportDesign, "Jasper report reference must not be null."));
+    }
+
+    /**
+     * A helper method which computes the column width, equally divided between the column number and orientation
+     * permitted width.
+     *
+     * @param numberOfColumns The total number of columns, for the table.
+     * @return The width of a column.
+     */
+    private static int calculateColumnWidth(JasperDesign reportDesign, int numberOfColumns) {
+        int calculatedWidth = JasperConstants.TABLE_MAXIMUM_WIDTH_PORTRAIT / numberOfColumns;
+        switch (reportDesign.getOrientationValue()) {
+            case LANDSCAPE:
+                calculatedWidth = JasperConstants.TABLE_MAXIMUM_WIDTH_LANDSCAPE / numberOfColumns;
+                break;
+            default:
+                break;
+        }
+
+        return calculatedWidth;
+    }
+
+    /**
+     * Determines a text field's width, based on the column container, accounting for left and right padding.
+     *
+     * @param element The text field.
+     * @param columnWidth The maximum allowed width.
+     * @return
+     */
+    private static int determineWidth(JRTextField element, int columnWidth) {
+        return columnWidth - element.getStyle().getLineBox().getLeftPadding() - element.getLineBox().getRightPadding();
     }
 
     /**
@@ -64,30 +101,28 @@ public final class JasperTableComponentCreator {
      */
     public JRComponentElement create(final Map<String, String> columnMetadata) {
         final int numberOfColumns = columnMetadata.size();
+        final int columnWidth = calculateColumnWidth(this.reportDesign, numberOfColumns);
         final StandardTable table = new StandardTable();
         table.setWhenNoDataType(WhenNoDataTypeTableEnum.ALL_SECTIONS_NO_DETAIL); // Display only headers & footers
         table.setDatasetRun(DATASET_RUN);
         for (Map.Entry<String, String> columnMetadatum : columnMetadata.entrySet()) {
             StandardColumn column = new StandardColumn();
-            // TODO Width calculation ---.
-//            column.setWidth(???);
+            column.setWidth(columnWidth);
 
+            // TODO Try and refactor this to incorporate DRY ---.
             // Define Column headers
             JRDesignExpression expression = new JRDesignExpression("\"" + columnMetadatum.getValue() + "\"");
             JRDesignTextField dynamicTextField = new JRDesignTextField(); // Future Investigate replacing this using StaticText
             dynamicTextField.setExpression(expression);
             dynamicTextField.setStretchWithOverflow(true);
             dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
-            // TODO Style ---.
-//            dynamicTextField.setStyle(JasperStylesEnum.TABLE_HEADER);
-            // TODO Width calculation ---.
-//            dynamicTextField.setWidth(???);
+            dynamicTextField.setStyle(JasperStyles.COLUMN_HEADER_STYLE.getStyle());
+            int textBoxWidth = determineWidth(dynamicTextField, columnWidth);
+            dynamicTextField.setWidth(textBoxWidth);
             // A holder 'box'
             DesignCell cell = new DesignCell();
-            // TODO Style ---.
-//            cell.setStyle(columnHeaderStyle???);
-            // TODO Height calculation ---.
-//            cell.setHeight(???);
+            cell.setStyle(JasperStyles.TABLE_STYLE.getStyle());
+            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
             cell.addElement(dynamicTextField);
             column.setColumnHeader(cell);
 
@@ -97,15 +132,12 @@ public final class JasperTableComponentCreator {
             dynamicTextField.setExpression(expression);
             dynamicTextField.setStretchWithOverflow(true);
             dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
-            // TODO Style ---.
-//            dynamicTextField.setStyle(normalOrDetailStyle???);
-            // TODO Width calculation ---.
-//            dynamicTextField.setWidth(???);
+            dynamicTextField.setStyle(JasperStyles.COLUMN_CONTENT_STYLE.getStyle());
+            textBoxWidth = determineWidth(dynamicTextField, columnWidth);
+            dynamicTextField.setWidth(textBoxWidth);
             cell = new DesignCell();
-            // TODO Style ---.
-//            cell.setStyle(columnHeaderStyle???);
-            // TODO Height calculation ---. // Do-able by taking Style font-size and doubling it
-//            cell.setHeight(how???);
+            cell.setStyle(JasperStyles.TABLE_STYLE.getStyle());
+            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
             cell.addElement(dynamicTextField);
             column.setDetailCell(cell);
 

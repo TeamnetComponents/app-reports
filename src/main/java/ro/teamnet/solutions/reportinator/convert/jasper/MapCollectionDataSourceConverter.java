@@ -39,7 +39,6 @@ public final class MapCollectionDataSourceConverter implements Converter<List<Ma
 
     /**
      * {@inheritDoc}
-     * TODO Change list<> to collection<>
      */
     @Override
     public JRDataSource convert(List<Map<String, ?>> inputSource) throws ConversionException {
