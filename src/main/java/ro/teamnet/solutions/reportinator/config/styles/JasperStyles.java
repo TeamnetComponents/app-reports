@@ -4,9 +4,8 @@ package ro.teamnet.solutions.reportinator.config.styles;
 import net.sf.jasperreports.engine.JRLineBox;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
-import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
@@ -40,6 +39,15 @@ public enum JasperStyles {
     TABLE_STYLE {
         public JRStyle getStyle() {
             return getTableStyle();
+        }
+    },
+    /**
+     * General TABLE_STYLE to be used by the {@link net.sf.jasperreports.engine.design.JasperDesign}
+     * for the cells , it draws the table using a JRLineBox
+     */
+    HEADER_TABLE_STYLE {
+        public JRStyle getStyle() {
+            return getTableHeaderStyle();
         }
     },
     /**
@@ -103,7 +111,21 @@ public enum JasperStyles {
         JRDesignStyle tableStyle = new JRDesignStyle();
         tableStyle.setName(JasperConstants.JASPER_TABLE_STYLE_NAME_IDENTIFIER_KEY);
         JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox());
+        return tableStyle;
+    }
 
+    /**
+     * Method that returns a {@link net.sf.jasperreports.engine.design.JRDesignStyle} similar to TableStyle
+     * but this one is used by the HeaderColums and has a specific background color for {@link net.sf.jasperreports.components.table.DesignCell}
+     *
+     * @return
+     */
+    private static JRStyle getTableHeaderStyle() {
+        JRDesignStyle tableStyle = new JRDesignStyle();
+        tableStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
+        tableStyle.setBackcolor(new Color(53, 162, 163));
+        tableStyle.setMode(ModeEnum.OPAQUE);
+        JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox());
         return tableStyle;
     }
 
@@ -119,7 +141,6 @@ public enum JasperStyles {
         JRDesignStyle ColumnContentStyle = new JRDesignStyle();
         ColumnContentStyle.setParentStyle(getDefaultStyle());
         ColumnContentStyle.setName(JasperConstants.JASPER_TABLE_CONTENT_STYLE_NAME_IDENTIFIER_KEY);
-        ColumnContentStyle.setBold(false);
         ColumnContentStyle.getLineBox().setLeftPadding(2);
         ColumnContentStyle.getLineBox().setRightPadding(2);
 
@@ -138,7 +159,8 @@ public enum JasperStyles {
         JRDesignStyle columnHeaderStyle = new JRDesignStyle();
         columnHeaderStyle.setParentStyle(getDefaultStyle());
         columnHeaderStyle.setName(JasperConstants.JASPER_TABLE_HEADER_STYLE_NAME_IDENTIFIER_KEY);
-        columnHeaderStyle.setBold(false);
+        columnHeaderStyle.setBold(Boolean.TRUE);
+        columnHeaderStyle.setFontSize(12.0f);
         return columnHeaderStyle;
     }
 

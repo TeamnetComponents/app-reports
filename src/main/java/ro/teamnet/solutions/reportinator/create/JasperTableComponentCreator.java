@@ -108,7 +108,6 @@ public final class JasperTableComponentCreator {
         for (Map.Entry<String, String> columnMetadatum : columnMetadata.entrySet()) {
             StandardColumn column = new StandardColumn();
             column.setWidth(columnWidth);
-
             // TODO Try and refactor this to incorporate DRY ---.
             // Define Column headers
             JRDesignExpression expression = new JRDesignExpression("\"" + columnMetadatum.getValue() + "\"");
@@ -121,7 +120,7 @@ public final class JasperTableComponentCreator {
             dynamicTextField.setWidth(textBoxWidth);
             // A holder 'box'
             DesignCell cell = new DesignCell();
-            cell.setStyle(JasperStyles.TABLE_STYLE.getStyle());
+            cell.setStyle(JasperStyles.HEADER_TABLE_STYLE.getStyle());
             cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
             cell.addElement(dynamicTextField);
             column.setColumnHeader(cell);
