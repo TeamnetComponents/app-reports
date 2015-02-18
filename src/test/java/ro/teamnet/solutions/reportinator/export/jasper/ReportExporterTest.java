@@ -75,7 +75,7 @@ public class ReportExporterTest {
     @After
     public void tearDown() throws Exception {
         out.close();
-        //Files.delete(path);
+        Files.delete(path);
     }
 
     @Test(expected = ExporterException.class)

@@ -44,7 +44,7 @@ public final class TableDesignBinder implements Binder<JRComponentElement, JRRep
         if (tableComponent == null) {
             throw new IllegalArgumentException("The table component must not be null.");
         }
-        if (!tableComponent.getComponentKey().getName().equals("table") && !tableComponent.getComponentKey().getNamespace().equals("jr")) {
+        if (tableComponent.getComponentKey()== null || !tableComponent.getComponentKey().getName().equals("table") && !tableComponent.getComponentKey().getNamespace().equals("jr")) {
             throw new BindingException("The component is not a JasperDesign Table");
         }
 
