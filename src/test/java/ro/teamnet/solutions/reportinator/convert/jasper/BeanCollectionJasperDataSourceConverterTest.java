@@ -4,6 +4,7 @@ import net.sf.jasperreports.engine.JRDataSource;
 import org.junit.Before;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
+import ro.teamnet.solutions.reportinator.utils.Employee;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,76 +58,5 @@ public class BeanCollectionJasperDataSourceConverterTest {
     public void testShouldPassIfBeanCollectionIsEmpty() throws Exception {
         BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(Collections.<String>emptyList());
         assertNull(bcConvertor);
-    }
-
-    private class Employee{
-        private int id;
-        private String firstName;
-        private String lastName;
-        private int salary;
-        private String department;
-
-
-        public Employee() {
-        }
-
-        public Employee(int id, String lastName, String firstName, int salary, String department) {
-            this.id = id;
-            this.lastName = lastName;
-            this.firstName = firstName;
-            this.salary = salary;
-            this.department = department;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public int getSalary() {
-            return salary;
-        }
-
-        public void setSalary(int salary) {
-            this.salary = salary;
-        }
-
-        public String getDepartment() {
-            return department;
-        }
-
-        public void setDepartment(String department) {
-            this.department = department;
-        }
-
-        @Override
-        public String toString() {
-            return "Employee{" +
-                    "id=" + id +
-                    ", firstName='" + firstName + '\'' +
-                    ", lastName='" + lastName + '\'' +
-                    ", salary=" + salary +
-                    ", department='" + department + '\'' +
-                    '}' + "\n";
-        }
     }
 }

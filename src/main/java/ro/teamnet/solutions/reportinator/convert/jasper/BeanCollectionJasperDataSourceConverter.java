@@ -93,20 +93,19 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements Convert
         @Override
         public boolean next() throws JRException {
             boolean retValue = this.rowIterator.hasNext();
-            try {
-                this.currentRow = this.rowIterator.next();
-            } catch (NoSuchElementException e) {
-                // Re-throw
-                throw new JRException("No more elements.", e);
-            }
+            if(retValue)
+                try {
+                    this.currentRow = this.rowIterator.next();
+                } catch (NoSuchElementException e) {
+                    // Re-throw
+                    throw new JRException("No more elements.", e);
+                }
 
             return retValue;
         }
 
         @Override
         public Object getFieldValue(JRField jrField) throws JRException {
-            System.out.println(fieldMetadata);
-            System.out.println(currentRow);
             int index = fieldMetadata.indexOf(Objects.requireNonNull(jrField, "Field must not be null!").getName());
             Object retValue = this.currentRow.get(index);
             if (retValue == null) {

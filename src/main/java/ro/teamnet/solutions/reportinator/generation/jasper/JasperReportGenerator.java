@@ -102,7 +102,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     /**
      * A builder class for the final (to be exported) report.
      */
-    protected static final class Builder {
+    public static final class Builder {
 
         /**
          * Holds a Jasper report's runtime parameters.

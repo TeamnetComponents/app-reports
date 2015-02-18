@@ -5,7 +5,9 @@ import net.sf.jasperreports.engine.JRLineBox;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 
@@ -80,8 +82,9 @@ public enum JasperStyles {
         JRDesignStyle defaultStyle = new JRDesignStyle();
         defaultStyle.setName(JasperConstants.JASPER_TABLE_DEFAULT_STYLE_NAME_IDENTIFIER_KEY);
         defaultStyle.setFontName(JasperConstants.JASPER_STYLE_FONT_NAME_IDENTIFIER_KEY);
-        defaultStyle.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
-        defaultStyle.setVerticalAlignment(VerticalAlignEnum.MIDDLE);
+        defaultStyle.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
+        defaultStyle.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+
         defaultStyle.setPdfFontName(JasperConstants.JASPER_PDF_FONT_NAME_IDENTIFIER_KEY);
         defaultStyle.setPdfEncoding(JasperConstants.JASPER_PDF_ENCODING_IDENTIFIER_KEY);
         defaultStyle.setFontSize(10.0f);

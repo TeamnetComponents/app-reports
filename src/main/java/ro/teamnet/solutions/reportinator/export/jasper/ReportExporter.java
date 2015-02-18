@@ -15,7 +15,7 @@ public class ReportExporter {
     /**
      * Converts a JasperPrint object to the desired format
      *
-     * @param inputSource  the JasperPrint object ta
+     * @param inputSource  the JasperPrint object to be exported
      * @param outputSource
      * @param type         desired format
      */
