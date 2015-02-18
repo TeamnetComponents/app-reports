@@ -12,8 +12,9 @@ public interface ReportGenerator<T> {
      * Generates a report abstraction, specific to the underlying reporting engine (denoted by {@code T}),
      * ready for exporting.
      *
-     * @return
+     * @return A report abstraction of the specified type.
      * @throws ReportGeneratorException If anything happened during report generation.
      */
     T generate() throws ReportGeneratorException;
+
 }

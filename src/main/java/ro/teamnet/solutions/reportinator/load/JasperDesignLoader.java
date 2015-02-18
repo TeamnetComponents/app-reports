@@ -1,8 +1,10 @@
-package ro.teamnet.solutions.reportinator.load.jasper;
+package ro.teamnet.solutions.reportinator.load;
 
 import net.sf.jasperreports.engine.JRReport;
 import org.springframework.core.io.Resource;
-import ro.teamnet.solutions.reportinator.load.LoaderException;
+import ro.teamnet.solutions.reportinator.load.jasper.ClassPathLoader;
+import ro.teamnet.solutions.reportinator.load.jasper.FileLoader;
+import ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader;
 
 import java.io.File;
 import java.io.InputStream;
@@ -14,7 +16,7 @@ import java.io.InputStream;
  * @author Andrei.Marica
  * @version 1.0 Date: 2/11/2015
  */
-public class DesignLoader {
+public class JasperDesignLoader {
 
     /**
      * Loads a {@link java.io.File} into {@link net.sf.jasperreports.engine.design.JasperDesign}

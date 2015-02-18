@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Before;
 import org.junit.Test;
+import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.FileInputStream;
@@ -22,7 +23,7 @@ public class InputStreamLoaderTest {
     /**
      * Path to a JRXml file that contains valid information for the Loader
      */
-    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    private static final String PATH_TO_JRXML_FILE = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
     /**
      * Object to be tested
      */

@@ -1,4 +1,4 @@
-package ro.teamnet.solutions.reportinator.create;
+package ro.teamnet.solutions.reportinator.create.jasper;
 
 import net.sf.jasperreports.components.table.DesignCell;
 import net.sf.jasperreports.components.table.StandardColumn;
@@ -11,21 +11,23 @@ import net.sf.jasperreports.engine.JRTextField;
 import net.sf.jasperreports.engine.component.ComponentKey;
 import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
-import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
+import ro.teamnet.solutions.reportinator.config.Constants;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
+import ro.teamnet.solutions.reportinator.create.ComponentCreator;
 
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * TODO Doc and extract as an interface?
+ * A creator implementation, which creates a table, as a {@link net.sf.jasperreports.engine.JRComponentElement} to be
+ * used in JasperReports template designs.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
  */
-public final class JasperTableComponentCreator {
+public final class TableComponentCreator implements ComponentCreator<JRComponentElement, Map<String, String>> {
 
     private static final JRDesignDatasetRun DATASET_RUN;
 
@@ -54,7 +56,7 @@ public final class JasperTableComponentCreator {
     private final JasperDesign reportDesign;
 
 
-    public JasperTableComponentCreator(JRReport reportDesign) {
+    public TableComponentCreator(JRReport reportDesign) {
         this.reportDesign = JasperDesign.class.cast(
                 Objects.requireNonNull(reportDesign, "Jasper report reference must not be null."));
     }
@@ -80,11 +82,11 @@ public final class JasperTableComponentCreator {
     }
 
     /**
-     * Determines a text field's width, based on the column container, accounting for left and right padding.
+     * Determines a text field's width, based on the surounding column container, accounting for left and right padding.
      *
      * @param element The text field.
-     * @param columnWidth The maximum allowed width.
-     * @return
+     * @param columnWidth The maximum allowed width for the column.
+     * @return The calculated width of the text field.
      */
     private static int determineWidth(JRTextField element, int columnWidth) {
         return columnWidth - element.getStyle().getLineBox().getLeftPadding() - element.getLineBox().getRightPadding();
@@ -99,6 +101,7 @@ public final class JasperTableComponentCreator {
      *                       the labels associated with the columns, to be displayed on the resulting report.
      * @return A dynamically generated table, directly as a {@link JRComponentElement}.
      */
+    @Override
     public JRComponentElement create(final Map<String, String> columnMetadata) {
         final int numberOfColumns = columnMetadata.size();
         final int columnWidth = calculateColumnWidth(this.reportDesign, numberOfColumns);
@@ -155,7 +158,7 @@ public final class JasperTableComponentCreator {
         );
         componentElement.setComponent(table);
         componentElement.setKey(JasperConstants.JASPER_TABLE_IDENTIFIER_KEY);
-        componentElement.setWidth(ConstantsConfig.TABLE_MAXIMUM_WIDTH_LANDSCAPE); // As minimum, in pixels
+        componentElement.setWidth(Constants.TABLE_MAXIMUM_WIDTH_LANDSCAPE); // As minimum, in pixels
         componentElement.setHeight(100); // As minimum, in pixels
 
         return componentElement;

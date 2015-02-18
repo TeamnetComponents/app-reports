@@ -1,4 +1,4 @@
-package ro.teamnet.solutions.reportinator.generation.jasper;
+package ro.teamnet.solutions.reportinator.generation;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
@@ -8,11 +8,9 @@ import ro.teamnet.solutions.reportinator.bind.jasper.StylesDesignBinder;
 import ro.teamnet.solutions.reportinator.bind.jasper.TableDesignBinder;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
-import ro.teamnet.solutions.reportinator.create.JasperTableComponentCreator;
-import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
-import ro.teamnet.solutions.reportinator.generation.ReportGeneratorException;
+import ro.teamnet.solutions.reportinator.create.jasper.TableComponentCreator;
+import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
-import ro.teamnet.solutions.reportinator.load.jasper.DesignLoader;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -77,7 +75,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     }
 
     /**
-     * A factory method, for a builder, which uses the default report template.
+     * A factory method, for a builder, which uses the API's built-in default report template.
      *
      * @return A builder instance, based on the default, built-in, template.
      * @throws ReportGeneratorException If builder construction failed.
@@ -100,7 +98,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     }
 
     /**
-     * A builder class for the final (to be exported) report.
+     * A builder for the final (to be exported) report.
      */
     public static final class Builder {
 
@@ -108,7 +106,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * Holds a Jasper report's runtime parameters.
          */
         private final Map<String, Object> reportParameters = new HashMap<String, Object>();
-        private CyclicBarrier barrier;
+//        private CyclicBarrier barrier;
         /**
          * An optional design JRXML, loaded when builder is instantiated. Set to a default value.
          */
@@ -141,7 +139,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         private Builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
             try {
                 this.reportDesign = JasperDesign.class.cast(
-                        DesignLoader.load(new File(absolutePathnameToJasperXml == null ?
+                        JasperDesignLoader.load(new File(absolutePathnameToJasperXml == null ?
                                 JasperConstants.JASPER_DEFAULT_TEMPLATE_RESOURCE_PATH :
                                 absolutePathnameToJasperXml))
                 );
@@ -275,7 +273,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         public JasperReportGenerator build() throws ReportGeneratorException {
             validateBuilder();
-            barrier = new CyclicBarrier(4);
+            CyclicBarrier barrier = new CyclicBarrier(4);
             try {
                 new Thread(() -> {
                     // Bind all required styles to report design
@@ -302,7 +300,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 new Thread(() -> {
                     // Bind table, based on metadata, to report design
                     JRComponentElement tableComponent = // Generate the table
-                            new JasperTableComponentCreator(this.reportDesign).create(this.reportTableAndColumnMetadata);
+                            new TableComponentCreator(this.reportDesign).create(this.reportTableAndColumnMetadata);
                     this.reportDesign = // Bind it
                             new TableDesignBinder(this.reportDesign).bind(tableComponent);
                     try {
@@ -312,7 +310,8 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                                 "An exception occurred: {0}", e.getMessage()), e.getCause());
                     }
                 }).start();
-                // Wait until all above bindings have been completed
+
+                // This thread must also Wait until all above bindings have been completed
                 barrier.await();
             } catch (InterruptedException | BrokenBarrierException e) {
                 throw new ReportGeneratorException(

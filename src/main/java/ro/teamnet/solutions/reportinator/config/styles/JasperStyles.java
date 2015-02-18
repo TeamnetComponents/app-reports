@@ -7,7 +7,7 @@ import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
-import ro.teamnet.solutions.reportinator.config.ConstantsConfig;
+import ro.teamnet.solutions.reportinator.config.Constants;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 
 import java.awt.*;
@@ -118,14 +118,14 @@ public enum JasperStyles {
      * Method that returns a {@link net.sf.jasperreports.engine.design.JRDesignStyle} similar to TableStyle
      * but this one is used by the HeaderColums and has a specific background color for {@link net.sf.jasperreports.components.table.DesignCell}
      *
-     * @return
+     * @return TODO
      */
     private static JRStyle getTableHeaderStyle() {
         JRDesignStyle tableStyle = new JRDesignStyle();
         tableStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
         tableStyle.setBackcolor(new Color(53, 162, 163));
         tableStyle.setMode(ModeEnum.OPAQUE);
-        JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox());
+        JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox()); // TODO Investigate, lineBox is never used
         return tableStyle;
     }
 
@@ -190,13 +190,13 @@ public enum JasperStyles {
      * @return a customized {@link net.sf.jasperreports.engine.JRLineBox}
      */
     private static JRLineBox setUpLineBox(JRLineBox lineBox) {
-        lineBox.getLeftPen().setLineWidth(ConstantsConfig.TABLE_BORDER_WIDTH);
+        lineBox.getLeftPen().setLineWidth(Constants.TABLE_BORDER_WIDTH);
         lineBox.getLeftPen().setLineColor(Color.BLACK);
-        lineBox.getRightPen().setLineWidth(ConstantsConfig.TABLE_BORDER_WIDTH);
+        lineBox.getRightPen().setLineWidth(Constants.TABLE_BORDER_WIDTH);
         lineBox.getRightPen().setLineColor(Color.BLACK);
-        lineBox.getBottomPen().setLineWidth(ConstantsConfig.TABLE_BORDER_WIDTH);
+        lineBox.getBottomPen().setLineWidth(Constants.TABLE_BORDER_WIDTH);
         lineBox.getBottomPen().setLineColor(Color.BLACK);
-        lineBox.getTopPen().setLineWidth(ConstantsConfig.TABLE_BORDER_WIDTH);
+        lineBox.getTopPen().setLineWidth(Constants.TABLE_BORDER_WIDTH);
         lineBox.getTopPen().setLineColor(Color.BLACK);
 
         return lineBox;

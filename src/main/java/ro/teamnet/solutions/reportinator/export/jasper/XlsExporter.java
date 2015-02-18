@@ -15,7 +15,7 @@ import java.io.OutputStream;
  * Class that exports a report to xls format
  * Created by Bogdan.Iancu on 13-Feb-15.
  */
-public class JasperXlsExporter implements Exporter<JasperPrint> {
+public class XlsExporter implements Exporter<JasperPrint> {
 
     @Override
     public void export(JasperPrint inputSource, OutputStream outputSource){

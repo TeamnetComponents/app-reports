@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Before;
 import org.junit.Test;
+import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class FileLoaderTest {
     /**
      * Path to a JRXml file that contains valid data for the Loader
      */
-    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    private static final String PATH_TO_JRXML_FILE = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
     /**
      * Path to a Non-JRXml file that contains invalid data and has improper extension for the Loader
      */
@@ -61,7 +62,7 @@ public class FileLoaderTest {
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingAFileThatIsEmpty() throws Exception {
-        JRReport report = fileLoader.load(new File("G:\\reportinator\\src\\test\\resources\\random_empty_template.jrxml"));
+        JRReport report = fileLoader.load(new File("G:\\reportinator\\src\\test\\resources\\jasper_invalid_empty_template.jrxml"));
         assertNull(report);
     }
 

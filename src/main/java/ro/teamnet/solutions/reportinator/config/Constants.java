@@ -6,9 +6,9 @@ package ro.teamnet.solutions.reportinator.config;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
  */
-public class ConstantsConfig {
+public class Constants {
 
-//    private ConstantsConfig() throws IllegalAccessException {
+//    private Constants() throws IllegalAccessException {
 //        throw new IllegalAccessException("Constants class should not be instantiated.");
 //    }
 

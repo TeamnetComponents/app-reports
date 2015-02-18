@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import static junit.framework.Assert.*;
@@ -20,7 +21,7 @@ public class ClassPathLoaderTest {
     /**
      * Path to a JRXml file that contains valid data for the Loader
      */
-    private static final String PATH_TO_JRXML_FILE = "G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.jrxml";
+    private static final String PATH_TO_JRXML_FILE = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
 
     /**
      * Object to be tested
@@ -40,7 +41,7 @@ public class ClassPathLoaderTest {
 
     @Test
     public void testShouldLoadGivenSourceWithReadableClassPath() throws Exception {
-        JRReport report = classPathLoader.load(new ClassPathResource("Silhouette_Landscape_No_detail_band.jrxml"));
+        JRReport report = classPathLoader.load(new ClassPathResource("jasper_test_blank_portrait_template.jrxml"));
         assertNotNull(report);
         assertEquals(JasperDesign.class, report.getClass());
     }
@@ -54,7 +55,7 @@ public class ClassPathLoaderTest {
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingClassPathResourceAsEmptyInputStream() throws Exception {
-        JRReport report = classPathLoader.load(new ClassPathResource("random_empty_template.jrxml"));
+        JRReport report = classPathLoader.load(new ClassPathResource("jasper_invalid_empty_template.jrxml"));
         assertNull(report);
     }
 

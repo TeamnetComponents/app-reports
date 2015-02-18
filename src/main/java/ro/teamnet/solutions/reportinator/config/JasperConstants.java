@@ -8,7 +8,7 @@ import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/11/2015
  */
-public final class JasperConstants extends ConstantsConfig {
+public final class JasperConstants extends Constants {
 
     public static final String JASPER_PAGE_HEADER_IDENTIFIER_KEY = "ReportinatorReportHeader";
     public static final String JASPER_PAGE_FOOTER_IDENTIFIER_KEY = "ReportinatorReportFooter";

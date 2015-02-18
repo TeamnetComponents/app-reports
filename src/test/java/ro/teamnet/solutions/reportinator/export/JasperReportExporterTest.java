@@ -1,20 +1,18 @@
-package ro.teamnet.solutions.reportinator.export.jasper;
+package ro.teamnet.solutions.reportinator.export;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.design.JasperDesign;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ro.teamnet.solutions.reportinator.config.JasperConstants;
+import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.convert.jasper.BeanCollectionJasperDataSourceConverter;
-import ro.teamnet.solutions.reportinator.export.ExportType;
-import ro.teamnet.solutions.reportinator.export.ExporterException;
+import ro.teamnet.solutions.reportinator.export.jasper.type.ExportType;
+import ro.teamnet.solutions.reportinator.generation.JasperReportGenerator;
 import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
-import ro.teamnet.solutions.reportinator.generation.jasper.JasperReportGenerator;
-import ro.teamnet.solutions.reportinator.load.jasper.DesignLoader;
+import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 import ro.teamnet.solutions.reportinator.utils.Employee;
 
 import java.io.File;
@@ -25,13 +23,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
-public class ReportExporterTest {
+public class JasperReportExporterTest {
 
-    private static final String JRXML_PATH = JasperConstants.JASPER_TEST_TEMPLATE_RESOURCE_PATH;
+    private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
     private JasperPrint reportPrint;
     private Map<String, Object> reportParameters;
     private OutputStream out;
@@ -42,14 +38,11 @@ public class ReportExporterTest {
     private Path path;
 
 
-
-
-
     @Before
     public void setUp() throws Exception {
         reportParameters = new HashMap();
-        this.reportPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport((JasperDesign) DesignLoader.load(new File(JasperConstants.JASPER_TEST_TEMPLATE_RESOURCE_PATH))), reportParameters);
-        out = new FileOutputStream( "test.pdf");
+        this.reportPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport((JasperDesign) JasperDesignLoader.load(new File(JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH))), reportParameters);
+
 
         employees = new ArrayList<>();
         employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii"));
@@ -68,23 +61,26 @@ public class ReportExporterTest {
 
         dataSource = new BeanCollectionJasperDataSourceConverter<Employee>(fields.keySet()).convert(employees);
         parameters = new HashMap<>();
-        parameters.put("REPORT_TITLE","Employees");
-        path = Paths.get(".\\test.pdf");
+        parameters.put("REPORT_TITLE", "Employees");
+
     }
 
-    @After
-    public void tearDown() throws Exception {
-        out.close();
-        Files.delete(path);
+
+    @Test(expected = ExporterException.class)
+    public void testUsingPrintForExportShouldPassIfParametersAreNull() throws Exception {
+        JasperPrint print = null;
+        JasperReportExporter.export(print, null, null);
     }
 
     @Test(expected = ExporterException.class)
-    public void testShouldPassIfParametersAreNull() throws Exception{
-        ReportExporter.export(null, null, null);
+    public void testUsingGeneratorForExportShouldPassIfParametersAreNull() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator = null;
+        JasperReportExporter.export(reportGenerator, null, null); // Ignore warning 'is always null'
     }
 
     @Test
     public void testShouldExportAFile() throws Exception {
+        out = new FileOutputStream("testReportExporter.pdf");
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder(JRXML_PATH)
                         .withDatasource(this.dataSource)
@@ -92,8 +88,11 @@ public class ReportExporterTest {
                         .withParameters(parameters)
                         .build();
         JasperPrint print = reportGenerator.generate();
-        ReportExporter.export(print, out, ExportType.PDF);
+        JasperReportExporter.export(print, out, ExportType.PDF);
+        path = Paths.get(".\\testReportExporter.pdf");
         assertTrue(Files.exists(path));
+        out.close();
+        Files.delete(path);
     }
 
 

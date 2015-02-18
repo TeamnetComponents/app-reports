@@ -44,8 +44,8 @@ public final class FileLoader implements Loader<File, JRReport> {
 
             } catch (FileNotFoundException e) {
                 //Re-throw
-                throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport"
-                        , e.getCause());
+                throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport",
+                        e.getCause());
             }
             return jasperDesign;
         } else {

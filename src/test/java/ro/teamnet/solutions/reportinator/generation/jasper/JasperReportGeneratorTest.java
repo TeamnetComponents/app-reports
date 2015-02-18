@@ -4,12 +4,11 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.junit.Before;
 import org.junit.Test;
-import ro.teamnet.solutions.reportinator.config.JasperConstants;
+import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.convert.jasper.MapCollectionDataSourceConverter;
+import ro.teamnet.solutions.reportinator.generation.JasperReportGenerator;
 import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,49 +16,16 @@ import static org.junit.Assert.assertNotNull;
 
 public class JasperReportGeneratorTest {
 
-    private static final String JRXML_PATH = JasperConstants.JASPER_TEST_TEMPLATE_RESOURCE_PATH;
-    private final static List<String> COLUMNS_META = new LinkedList<String>();
-    private final static List<Map<String, ?>> ROWS = new LinkedList<Map<String, ?>>();
-    private final static Map<String, String> FIELDS_COLUMNS_METADATA = new LinkedHashMap<>();
+    private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
+    private final static List<String> COLUMNS_METADATA = JasperConstantsTest.COLUMNS_METADATA;
+    private final static List<Map<String, ?>> ROWS_MAP_COLLECTION = JasperConstantsTest.ROWS_MAP_COLLECTION;
+    private final static Map<String, String> FIELDS_COLUMNS_METADATA = JasperConstantsTest.FIELDS_COLUMNS_METADATA;
     private static JRDataSource DATA_SOURCE;
 
     @Before
     public void setUp() throws Exception {
-        // Prepare map collection
-        // Generate some row data
-        Map<String, String> row;
-        for (int i = 0; i < 39; i++) {
-            row = new LinkedHashMap<String, String>();
-            row.put("Col01", Integer.toString(i));
-            if (i % 2 == 0) {
-                row.put("Col02", "The quick and sneaky brown fox jumped over the lazy dog.");
-                row.put("Col05", "The quick and sneaky brown fox jumped over the lazy dog.");
-                row.put("Col03", "The quick and sneaky brown fox jumped over the lazy dog.");
-                row.put("Col04", "The quick and sneaky brown fox jumped over the lazy dog.");
-                row.put("Col06", "The quick and sneaky brown fox jumped over the lazy dog.");
-                row.put("Col07", "The quick and sneaky brown fox jumped over the lazy dog.");
-            } else {
-                row.put("Col02", "The dog slept.");
-                row.put("Col05", "The dog slept.");
-                row.put("Col03", "The dog slept.");
-                row.put("Col04", "The dog slept.");
-                row.put("Col06", "The dog slept.");
-                row.put("Col07", "The dog slept.");
-            }
-            ROWS.add(row);
-        }
 
-        // Grab column metadata from an entry
-        COLUMNS_META.addAll(ROWS.get(0).keySet());
-
-        // Establish labels
-        int i = 0;
-        for (String fieldName : COLUMNS_META) {
-            i++;
-            FIELDS_COLUMNS_METADATA.put(fieldName, "Column label " + i);
-        }
-
-        DATA_SOURCE = new MapCollectionDataSourceConverter(COLUMNS_META).convert(ROWS);
+        DATA_SOURCE = new MapCollectionDataSourceConverter(COLUMNS_METADATA).convert(ROWS_MAP_COLLECTION);
     }
 
     @Test
