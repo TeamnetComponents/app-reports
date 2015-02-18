@@ -140,7 +140,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             try {
                 this.reportDesign = JasperDesign.class.cast(
                         JasperDesignLoader.load(new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JASPER_DEFAULT_TEMPLATE_RESOURCE_PATH :
+                                JasperConstants.JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH :
                                 absolutePathnameToJasperXml))
                 );
             } catch (LoaderException e) {
