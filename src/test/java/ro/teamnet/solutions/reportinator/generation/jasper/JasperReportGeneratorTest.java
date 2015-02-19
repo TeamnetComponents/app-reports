@@ -38,4 +38,6 @@ public class JasperReportGeneratorTest {
         JasperPrint print = reportGenerator.generate();
         assertNotNull("Generated print object was null.", print);
     }
+
+    // TODO Error and other tests
 }

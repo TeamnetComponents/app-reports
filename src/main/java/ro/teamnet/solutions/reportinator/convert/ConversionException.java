@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.convert;
 
 /**
- * An exception denoting conversion failures (usually pertaining to concrete implementations' internal heuristics).
+ * An unchecked exception denoting conversion failures (usually pertaining to concrete implementations' internal heuristics).
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/9/2015

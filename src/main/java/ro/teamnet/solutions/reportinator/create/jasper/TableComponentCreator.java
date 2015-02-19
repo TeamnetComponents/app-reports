@@ -15,6 +15,7 @@ import ro.teamnet.solutions.reportinator.config.Constants;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 import ro.teamnet.solutions.reportinator.create.ComponentCreator;
+import ro.teamnet.solutions.reportinator.create.CreationException;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -84,7 +85,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
     /**
      * Determines a text field's width, based on the surounding column container, accounting for left and right padding.
      *
-     * @param element The text field.
+     * @param element     The text field.
      * @param columnWidth The maximum allowed width for the column.
      * @return The calculated width of the text field.
      */
@@ -103,6 +104,9 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
      */
     @Override
     public JRComponentElement create(final Map<String, String> columnMetadata) {
+        if (columnMetadata == null) {
+            throw new CreationException("Column metadata must not be null.");
+        }
         final int numberOfColumns = columnMetadata.size();
         final int columnWidth = calculateColumnWidth(this.reportDesign, numberOfColumns);
         final StandardTable table = new StandardTable();
@@ -114,7 +118,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
             // TODO Try and refactor this to incorporate DRY ---.
             // Define Column headers
             JRDesignExpression expression = new JRDesignExpression("\"" + columnMetadatum.getValue() + "\"");
-            JRDesignTextField dynamicTextField = new JRDesignTextField(); // Future Investigate replacing this using StaticText
+            JRDesignTextField dynamicTextField = new JRDesignTextField(); // FUTURE Investigate replacing this with StaticText fields
             dynamicTextField.setExpression(expression);
             dynamicTextField.setStretchWithOverflow(true);
             dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
@@ -148,9 +152,14 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
         }
 
         // Everything went okay?
-        assert table.getColumns().size() == columnMetadata.entrySet().size() :
-                MessageFormat.format("Generated table columns number {0} does not match given dictionary " +
-                        "columns number {1}.", table.getColumns().size(), columnMetadata.entrySet().size());
+//        assert table.getColumns().size() == columnMetadata.entrySet().size() :
+//                MessageFormat.format("Generated table columns number {0} does not match given dictionary " +
+//                        "columns number {1}.", table.getColumns().size(), columnMetadata.entrySet().size());
+
+        if (table.getColumns().size() != columnMetadata.entrySet().size()) {
+            throw new CreationException(MessageFormat.format("Generated table columns number {0} does not match given dictionary " +
+                    "columns number {1}.", table.getColumns().size(), columnMetadata.entrySet().size()));
+        }
 
         JRDesignComponentElement componentElement = new JRDesignComponentElement();
         componentElement.setComponentKey( // Sets type of runtime XML DOM component

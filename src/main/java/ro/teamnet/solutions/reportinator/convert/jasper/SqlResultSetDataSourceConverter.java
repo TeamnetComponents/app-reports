@@ -17,10 +17,22 @@ import java.util.Collection;
  */
 public final class SqlResultSetDataSourceConverter implements Converter<ResultSet, JRDataSource> {
 
+    @Override
+    public JRDataSource convert(ResultSet inputSource) {
+        // TODO Implement
+        return null;
+    }
+
+    @Override
+    public Collection<String> getFieldMetadata() {
+        // TODO Implement
+        return null;
+    }
+
     /**
      * A helper class which adapts a {@link java.sql.ResultSet} to a {@link net.sf.jasperreports.engine.JRDataSource}.
      */
-    private static final class SqlResultSetJasperAdapter implements JRDataSource {
+    private static final class DataSourceAdapter implements JRDataSource {
 
         @Override
         public boolean next() throws JRException {
@@ -31,17 +43,5 @@ public final class SqlResultSetDataSourceConverter implements Converter<ResultSe
         public Object getFieldValue(JRField jrField) throws JRException {
             return null;
         }
-    }
-
-    @Override
-    public JRDataSource convert(ResultSet inputSource) {
-        // TODO Implement
-        return new SqlResultSetJasperAdapter();
-    }
-
-    @Override
-    public Collection<String> getFieldMetadata() {
-        // TODO Implement
-        return null;
     }
 }

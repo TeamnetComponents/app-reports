@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.bind;
 
 /**
- * An exception denoting binding failures (usually pertaining to concrete implementations' internal heuristics).
+ * An unchecked exception denoting binding failures (usually pertaining to concrete implementations' internal heuristics).
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015

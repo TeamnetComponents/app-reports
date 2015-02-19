@@ -42,12 +42,13 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     private final JRDataSource dataSource;
 
     /**
-     * A {@code no-arg} constructor. Should be private since instances of this type are immutable.
+     * A {@code no-arg} constructor. Should be private since instances of this type are immutable. An instance of this
+     * type can be obtained instead using the built-in builder.
      *
-     * @see JasperReportGenerator#JasperReportGenerator()
+     * @see JasperReportGenerator#JasperReportGenerator(ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder)
      */
     private JasperReportGenerator() {
-        // Future Log calls to this method
+        // FUTURE Log calls to this method
         throw new IllegalStateException("Illegal reflection attack detected and logged.");
     }
 

@@ -22,14 +22,14 @@ import java.util.*;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class MapCollectionDataSourceConverter implements Converter<List<Map<String, ?>>, JRDataSource> {
+public final class MapCollectionDataSourceConverter implements Converter<Collection<Map<String, ?>>, JRDataSource> {
 
     private final Collection<String> fieldMetadata;
-    private List<Map<String, ?>> rowsCollection;
+    private Collection<Map<String, ?>> rowsCollection;
 
     /**
      * Instantiates and assigns required field metadata to a converter. This is then matched with
-     * {@link #convert(java.util.List)}'s contained metadata.
+     * {@link #convert(java.util.Collection)}'s contained metadata.
      *
      * @param fieldMetadata A collection representing the required metadata.
      */
@@ -41,8 +41,8 @@ public final class MapCollectionDataSourceConverter implements Converter<List<Ma
      * {@inheritDoc}
      */
     @Override
-    public JRDataSource convert(List<Map<String, ?>> inputSource) throws ConversionException {
-        this.rowsCollection = Collections.unmodifiableList(
+    public JRDataSource convert(Collection<Map<String, ?>> inputSource) throws ConversionException {
+        this.rowsCollection = Collections.unmodifiableCollection(
                 Objects.requireNonNull(inputSource, "Input source collection must not be null!")
         );
         // Empty collection of items?
@@ -53,14 +53,18 @@ public final class MapCollectionDataSourceConverter implements Converter<List<Ma
             );
         }
         // Collection lacking required metadata?
-        if (!this.rowsCollection.get(0).keySet().containsAll(this.fieldMetadata)) {
-            throw new ConversionException(
-                    MessageFormat.format("Input source metadata {0} does not contain all converter required " +
-                            "metadata {1}!", inputSource.size(), this.fieldMetadata)
-            );
+        for (Map<String, ?> row : this.rowsCollection) {
+            if (!row.keySet().containsAll(this.fieldMetadata)) {
+                throw new ConversionException(
+                        MessageFormat.format("Input source metadata {0} does not contain all converter required " +
+                                "metadata {1}!", inputSource.size(), this.fieldMetadata)
+                );
+            } else {
+                break;
+            }
         }
 
-//        return new JasperDataSourceAdapter();
+//        return new DataSourceAdapter();
 
         // Use built-in Jasper adapter
         return new JRMapCollectionDataSource(this.rowsCollection);
@@ -75,17 +79,18 @@ public final class MapCollectionDataSourceConverter implements Converter<List<Ma
     }
 
     /**
-     * A custom internal adapter for a {@link net.sf.jasperreports.engine.JRDataSource}.
-     * <p>Not used anymore, because a native implementation is preferred.</p>
+     * A custom adapter for a {@link net.sf.jasperreports.engine.JRDataSource}, which uses the map collection as
+     * the ADT backing.
      * @see net.sf.jasperreports.engine.data.JRMapCollectionDataSource
+     * @deprecated Not used anymore, because a Jasper specific implementation is preferred.
      */
     @Deprecated
-    private class JasperDataSourceAdapter implements JRDataSource {
+    private final class DataSourceAdapter implements JRDataSource {
 
         private final Iterator<Map<String, ?>> rowIterator;
         private Map<String, ?> currentRow;
 
-        public JasperDataSourceAdapter() {
+        public DataSourceAdapter() {
             this.rowIterator = MapCollectionDataSourceConverter.this.rowsCollection.iterator();
 
         }
