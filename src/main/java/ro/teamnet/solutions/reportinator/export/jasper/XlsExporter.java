@@ -13,7 +13,8 @@ import java.io.OutputStream;
 
 /**
  * Class that exports a report to xls format
- * Created by Bogdan.Iancu on 13-Feb-15.
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 20-Feb-15
  */
 public class XlsExporter implements Exporter<JasperPrint> {
 

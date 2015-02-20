@@ -45,12 +45,12 @@ public class JasperReportExporterTest {
 
 
         employees = new ArrayList<>();
-        employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii"));
-        employees.add(new Employee(2, "Cristi", "Dumitru", 1000, "Solutii"));
-        employees.add(new Employee(3, "Oana", "Popescu", 1000, "Solutii"));
-        employees.add(new Employee(4, "Alex", "Cojocaru", 1000, "Solutii"));
-        employees.add(new Employee(5, "Mihaela", "Scripcaru", 1000, "Solutii"));
-        employees.add(new Employee(6, "Sad", "Panda", 1000000, "Boss"));
+        employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii", "home" , "developer", 8, 0 ));
+        employees.add(new Employee(2, "Cristi", "Dumitru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(3, "Oana", "Popescu", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(4, "Alex", "Cojocaru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(5, "Mihaela", "Scripcaru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(6, "Sad", "Panda", 1000000, "Management", "mansion" , "BOSS", 1, 100));
 
         fields = new LinkedHashMap<>();
         fields.put("id", "Id");
@@ -58,6 +58,10 @@ public class JasperReportExporterTest {
         fields.put("lastName", "Nume");
         fields.put("department", "Departament");
         fields.put("salary", "Salariu");
+        //fields.put("address", "Adresa");
+        //fields.put("position", "Functie");
+        //fields.put("hoursPerDay", "Ore pe zi");
+        //fields.put("yearsOfExperience", "Ani de experienta");
 
         dataSource = new BeanCollectionJasperDataSourceConverter<Employee>(fields.keySet()).convert(employees);
         parameters = new HashMap<>();
@@ -81,10 +85,11 @@ public class JasperReportExporterTest {
     @Test
     public void testShouldExportAFile() throws Exception {
         out = new FileOutputStream("testReportExporter.pdf");
+        //TODO Atentie!!! TableColumnsMetadata trebuie sa fie inainte de DataSource
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder(JRXML_PATH)
-                        .withDatasource(this.dataSource)
                         .withTableColumnsMetadata(fields)
+                        .withDatasource(this.dataSource)
                         .withParameters(parameters)
                         .build();
         JasperPrint print = reportGenerator.generate();
@@ -92,7 +97,7 @@ public class JasperReportExporterTest {
         path = Paths.get(".\\testReportExporter.pdf");
         assertTrue(Files.exists(path));
         out.close();
-        Files.delete(path);
+        //Files.delete(path);
     }
 
 

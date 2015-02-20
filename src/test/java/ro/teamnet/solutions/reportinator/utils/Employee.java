@@ -9,6 +9,10 @@ public class Employee{
     private String lastName;
     private int salary;
     private String department;
+    private String address;
+    private String position;
+    private int hoursPerDay;
+    private int yearsOfExperience;
 
 
     public Employee() {
@@ -20,6 +24,18 @@ public class Employee{
         this.firstName = firstName;
         this.salary = salary;
         this.department = department;
+    }
+
+    public Employee(int id, String firstName, String lastName, int salary, String department, String address, String position, int hoursPerDay, int yearsOfExperience) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.department = department;
+        this.address = address;
+        this.position = position;
+        this.hoursPerDay = hoursPerDay;
+        this.yearsOfExperience = yearsOfExperience;
     }
 
     public int getId() {
@@ -60,6 +76,38 @@ public class Employee{
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public int getHoursPerDay() {
+        return hoursPerDay;
+    }
+
+    public void setHoursPerDay(int hoursPerDay) {
+        this.hoursPerDay = hoursPerDay;
+    }
+
+    public int getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+
+    public void setYearsOfExperience(int yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
     }
 
     @Override

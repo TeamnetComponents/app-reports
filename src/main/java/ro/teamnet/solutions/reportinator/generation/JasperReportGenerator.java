@@ -141,7 +141,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             try {
                 this.reportDesign = JasperDesign.class.cast(
                         JasperDesignLoader.load(new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH :
+                                JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
                                 absolutePathnameToJasperXml))
                 );
             } catch (LoaderException e) {
@@ -247,6 +247,17 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
             this.reportTableAndColumnMetadata = Collections.unmodifiableMap(tableColumnsMetadata);
+
+            //TODO check this
+//            if(tableColumnsMetadata.keySet().size() >= 8 )
+//            {
+//
+//                this.reportDesign = JasperDesign.class.cast(
+//                        JasperDesignLoader.load(new File(JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
+//
+//
+//            }
+
 
             return this;
         }

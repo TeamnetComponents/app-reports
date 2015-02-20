@@ -9,10 +9,12 @@ import java.io.OutputStream;
 /**
  * TODO Improve documentation consistency and general/exception messages improvements
  * Class that exports a report to the given format
- * Created by Bogdan.Iancu on 13-Feb-15.
- *
  * @author Bogdan.Stefan
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 20-Feb-15
  */
+
+
 public class JasperReportExporter {
 
     /**

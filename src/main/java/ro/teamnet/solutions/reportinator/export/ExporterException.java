@@ -1,9 +1,9 @@
 package ro.teamnet.solutions.reportinator.export;
 
 /**
- * TODO Update documentation for specific conventions
  * An unchecked exception which denotes that an error occurred while exporting the report
- * Created by Bogdan.Iancu on 13-Feb-15.
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 20-Feb-15
  */
 public class ExporterException extends RuntimeException {
     public ExporterException(String message) {
