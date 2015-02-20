@@ -1,7 +1,7 @@
 package ro.teamnet.solutions.reportinator.convert.jasper;
 
 import net.sf.jasperreports.engine.JRDataSource;
-import ro.teamnet.solutions.reportinator.convert.Converter;
+import ro.teamnet.solutions.reportinator.convert.DataSourceConverter;
 
 import java.sql.Connection;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class SqlQueryDataSourceConverter implements Converter<String, JRDataSource> {
+public final class SqlQueryDataSourceConverter implements DataSourceConverter<String, JRDataSource> {
 
     private Connection connection;
 

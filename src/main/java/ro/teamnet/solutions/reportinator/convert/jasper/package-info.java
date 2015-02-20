@@ -1,5 +1,5 @@
 /**
- * Converter classes related to <em>JasperReports</em>.
+ * DataSourceConverter classes related to <em>JasperReports</em>.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015

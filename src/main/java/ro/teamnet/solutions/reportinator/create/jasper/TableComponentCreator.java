@@ -4,10 +4,7 @@ import net.sf.jasperreports.components.table.DesignCell;
 import net.sf.jasperreports.components.table.StandardColumn;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.components.table.WhenNoDataTypeTableEnum;
-import net.sf.jasperreports.engine.JRComponentElement;
-import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.JRReport;
-import net.sf.jasperreports.engine.JRTextField;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.component.ComponentKey;
 import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
@@ -105,7 +102,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
     @Override
     public JRComponentElement create(final Map<String, String> columnMetadata) {
         if (columnMetadata == null) {
-            throw new CreationException("Column metadata must not be null.");
+            throw new IllegalArgumentException("Column metadata must not be null.");
         }
         final int numberOfColumns = columnMetadata.size();
         final int columnWidth = calculateColumnWidth(this.reportDesign, numberOfColumns);
@@ -115,46 +112,29 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
         for (Map.Entry<String, String> columnMetadatum : columnMetadata.entrySet()) {
             StandardColumn column = new StandardColumn();
             column.setWidth(columnWidth);
-            // TODO Try and refactor this to incorporate DRY ---.
             // Define Column headers
-            JRDesignExpression expression = new JRDesignExpression("\"" + columnMetadatum.getValue() + "\"");
-            JRDesignTextField dynamicTextField = new JRDesignTextField(); // FUTURE Investigate replacing this with StaticText fields
-            dynamicTextField.setExpression(expression);
-            dynamicTextField.setStretchWithOverflow(true);
-            dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
-            dynamicTextField.setStyle(JasperStyles.COLUMN_HEADER_STYLE.getStyle());
-            int textBoxWidth = determineWidth(dynamicTextField, columnWidth);
-            dynamicTextField.setWidth(textBoxWidth);
-            // A holder 'box'
             DesignCell cell = new DesignCell();
             cell.setStyle(JasperStyles.HEADER_TABLE_STYLE.getStyle());
             cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
-            cell.addElement(dynamicTextField);
+            // Attach runtime text holder
+            String columnLabelExpression = "\"" + columnMetadatum.getValue() + "\"";
+            cell.addElement(
+                    generateHolderTextBox(columnLabelExpression, JasperStyles.COLUMN_HEADER_STYLE.getStyle(), columnWidth));
             column.setColumnHeader(cell);
 
             // Define Detail cells
-            expression = new JRDesignExpression("$F{" + columnMetadatum.getKey() + '}');
-            dynamicTextField = new JRDesignTextField();
-            dynamicTextField.setExpression(expression);
-            dynamicTextField.setStretchWithOverflow(true);
-            dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
-            dynamicTextField.setStyle(JasperStyles.COLUMN_CONTENT_STYLE.getStyle());
-            textBoxWidth = determineWidth(dynamicTextField, columnWidth);
-            dynamicTextField.setWidth(textBoxWidth);
             cell = new DesignCell();
             cell.setStyle(JasperStyles.TABLE_STYLE.getStyle());
             cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
-            cell.addElement(dynamicTextField);
+            // Attach runtime text holder
+            String columnContentExpression = "$F{" + columnMetadatum.getKey() + '}';
+            cell.addElement(
+                    generateHolderTextBox(columnContentExpression, JasperStyles.COLUMN_CONTENT_STYLE.getStyle(), columnWidth));
             column.setDetailCell(cell);
 
             // Add our freshly generated column to the table
             table.addColumn(column);
         }
-
-        // Everything went okay?
-//        assert table.getColumns().size() == columnMetadata.entrySet().size() :
-//                MessageFormat.format("Generated table columns number {0} does not match given dictionary " +
-//                        "columns number {1}.", table.getColumns().size(), columnMetadata.entrySet().size());
 
         if (table.getColumns().size() != columnMetadata.entrySet().size()) {
             throw new CreationException(MessageFormat.format("Generated table columns number {0} does not match given dictionary " +
@@ -163,13 +143,36 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
 
         JRDesignComponentElement componentElement = new JRDesignComponentElement();
         componentElement.setComponentKey( // Sets type of runtime XML DOM component
-                new ComponentKey("http://jasperreports.sourceforge.net/jasperreports/components", "jr", "table")
-        );
+                new ComponentKey("http://jasperreports.sourceforge.net/jasperreports/components", "jr", "table"));
         componentElement.setComponent(table);
         componentElement.setKey(JasperConstants.JASPER_TABLE_IDENTIFIER_KEY);
         componentElement.setWidth(Constants.TABLE_MAXIMUM_WIDTH_LANDSCAPE); // As minimum, in pixels
         componentElement.setHeight(100); // As minimum, in pixels
 
         return componentElement;
+    }
+
+    /**
+     * A helper method which creates a {@link net.sf.jasperreports.engine.design.JRDesignTextField} as a holder box for
+     * the column content, using the given constraints. An expression is required to fill it with explicit content, during
+     * the <em>filling process</em>. This holder box must also obey a maximum permitted {@code width}, given its
+     * {@code style} (and left/right padding).
+     *
+     * @param columnExpressionText An JasperReports expression, to be used during report filling for data binding.
+     * @param columnStyle A JasperReports style to be applied to the column element, during generation.
+     * @param maximumPermittedWidth The maximum permitted width, to fit the holder box in.
+     * @return A holder box, with the given <em>constraints</em>.
+     */
+    private static JRDesignTextField generateHolderTextBox(String columnExpressionText, JRStyle columnStyle, int maximumPermittedWidth) {
+        JRDesignExpression expression = new JRDesignExpression(columnExpressionText);
+        JRDesignTextField dynamicTextField = new JRDesignTextField(); // FUTURE Investigate replacing this with StaticText fields (for column labels)
+        dynamicTextField.setExpression(expression);
+        dynamicTextField.setStretchWithOverflow(true);
+        dynamicTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
+        dynamicTextField.setStyle(columnStyle);
+        int determinedWidth = determineWidth(dynamicTextField, maximumPermittedWidth);
+        dynamicTextField.setWidth(determinedWidth);
+
+        return dynamicTextField;
     }
 }

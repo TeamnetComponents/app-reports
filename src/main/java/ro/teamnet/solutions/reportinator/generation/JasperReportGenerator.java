@@ -203,7 +203,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             return this;
         }
 
-        // TODO Attach encoding to a style
+        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
 //        public Builder withEncoding(String encoding) {
 //
 //            return this;

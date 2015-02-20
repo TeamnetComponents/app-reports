@@ -3,19 +3,19 @@ package ro.teamnet.solutions.reportinator.convert;
 import java.util.Collection;
 
 /**
- * An interface to be implemented by wrapper classes which translate from an {@code IN}put format, to a custom
- * {@code OUT}put format.
+ * An interface to be implemented by wrapper classes which translate from an {@code IN}put format (representing any data
+ * source), to a custom {@code OUT}put format, to be used as an internal report engine data source.
  * <p>This usually follows the principles of an <em>adapter design pattern</em> combined with enforced
  * compile-time consistency checking through <em>generics</em>.
  * </p>
  * <p>
- * Note: Type parameters are used to enforce type checking at compile type.
+ * <strong>Note</strong>: Type parameters are used to enforce type checking at compile type.
  * </p>
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public interface Converter<IN, OUT> {
+public interface DataSourceConverter<IN, OUT> {
 
     /**
      * Converts (or adapts) an <em>input source of data</em> (established through the {@code IN} type parameter) to a

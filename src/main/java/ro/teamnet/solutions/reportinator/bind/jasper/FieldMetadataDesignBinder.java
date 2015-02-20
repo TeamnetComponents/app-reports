@@ -95,7 +95,7 @@ public final class FieldMetadataDesignBinder implements Binder<Collection<String
      * @return A band to be used as a "No Data" replacement band, for a design.
      */
 //    private static JRBand noData() {
-//        // TODO Configure a proper "No data band"
+//        // FUTURE Configure a proper "No data band" (see init() method)
 //        JRDesignBand noDataBand = new JRDesignBand();
 //        JRStaticText staticText;
 //

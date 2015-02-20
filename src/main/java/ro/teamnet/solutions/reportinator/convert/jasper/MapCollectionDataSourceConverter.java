@@ -5,13 +5,13 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
-import ro.teamnet.solutions.reportinator.convert.Converter;
+import ro.teamnet.solutions.reportinator.convert.DataSourceConverter;
 
 import java.text.MessageFormat;
 import java.util.*;
 
 /**
- * A {@link ro.teamnet.solutions.reportinator.convert.Converter} implementation which converts a {@link java.util.Map}
+ * A {@link ro.teamnet.solutions.reportinator.convert.DataSourceConverter} implementation which converts a {@link java.util.Map}
  * {@link java.util.Collection} into a {@link net.sf.jasperreports.engine.JRDataSource} (specific to JasperReports)
  * through some internal heuristics.
  * <p>
@@ -22,7 +22,7 @@ import java.util.*;
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
  */
-public final class MapCollectionDataSourceConverter implements Converter<Collection<Map<String, ?>>, JRDataSource> {
+public final class MapCollectionDataSourceConverter implements DataSourceConverter<Collection<Map<String, ?>>, JRDataSource> {
 
     private final Collection<String> fieldMetadata;
     private Collection<Map<String, ?>> rowsCollection;
