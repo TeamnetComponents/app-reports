@@ -14,19 +14,21 @@ import java.util.Collection;
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
+ * @deprecated <strong>NOT IMPLEMENTED YET.</strong>
  */
+@Deprecated
 public final class SqlResultSetDataSourceConverter implements DataSourceConverter<ResultSet, JRDataSource> {
 
     @Override
     public JRDataSource convert(ResultSet inputSource) {
-        // TODO Implement
-        return null;
+        // FUTURE Implement this
+        throw new IllegalStateException("Not implemented yet.");
     }
 
     @Override
     public Collection<String> getFieldMetadata() {
-        // TODO Implement
-        return null;
+        // FUTURE Implement this
+        throw new IllegalStateException("Not implemented yet.");
     }
 
     /**
@@ -36,12 +38,14 @@ public final class SqlResultSetDataSourceConverter implements DataSourceConverte
 
         @Override
         public boolean next() throws JRException {
-            return false;
+            // FUTURE Implement this
+            throw new IllegalStateException("Not implemented yet.");
         }
 
         @Override
         public Object getFieldValue(JRField jrField) throws JRException {
-            return null;
+            // FUTURE Implement this
+            throw new IllegalStateException("Not implemented yet.");
         }
     }
 }

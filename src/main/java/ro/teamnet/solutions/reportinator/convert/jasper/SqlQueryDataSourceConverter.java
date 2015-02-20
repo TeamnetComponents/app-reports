@@ -12,7 +12,9 @@ import java.util.Collection;
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/6/2015
+ * @deprecated <strong>NOT IMPLEMENTED YET.</strong>
  */
+@Deprecated
 public final class SqlQueryDataSourceConverter implements DataSourceConverter<String, JRDataSource> {
 
     private Connection connection;
@@ -23,14 +25,14 @@ public final class SqlQueryDataSourceConverter implements DataSourceConverter<St
 
     @Override
     public JRDataSource convert(String sqlString) {
-        // TODO Implement
-        return null;
+        // FUTURE Implement this
+        throw new IllegalStateException("Not implemented yet.");
     }
 
     @Override
     public Collection<String> getFieldMetadata() {
-        /// TODO Implement
-        return null;
+        // FUTURE Implement this
+        throw new IllegalStateException("Not implemented yet.");
     }
 
 }
