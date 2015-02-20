@@ -58,10 +58,10 @@ public class JasperReportExporterTest {
         fields.put("lastName", "Nume");
         fields.put("department", "Departament");
         fields.put("salary", "Salariu");
-        //fields.put("address", "Adresa");
-        //fields.put("position", "Functie");
-        //fields.put("hoursPerDay", "Ore pe zi");
-        //fields.put("yearsOfExperience", "Ani de experienta");
+        fields.put("address", "Adresa");
+        fields.put("position", "Functie");
+        fields.put("hoursPerDay", "Ore pe zi");
+        fields.put("yearsOfExperience", "Ani de experienta");
 
         dataSource = new BeanCollectionJasperDataSourceConverter<Employee>(fields.keySet()).convert(employees);
         parameters = new HashMap<>();
@@ -85,12 +85,11 @@ public class JasperReportExporterTest {
     @Test
     public void testShouldExportAFile() throws Exception {
         out = new FileOutputStream("testReportExporter.pdf");
-        //TODO Atentie!!! TableColumnsMetadata trebuie sa fie inainte de DataSource
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder(JRXML_PATH)
-                        .withTableColumnsMetadata(fields)
                         .withDatasource(this.dataSource)
                         .withParameters(parameters)
+                        .withTableColumnsMetadata(fields)
                         .build();
         JasperPrint print = reportGenerator.generate();
         JasperReportExporter.export(print, out, ExportType.PDF);

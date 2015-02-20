@@ -247,19 +247,14 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
             this.reportTableAndColumnMetadata = Collections.unmodifiableMap(tableColumnsMetadata);
-
-            //TODO check this
-//            if(tableColumnsMetadata.keySet().size() >= 8 )
-//            {
-//
-//                this.reportDesign = JasperDesign.class.cast(
-//                        JasperDesignLoader.load(new File(JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
-//
-//
-//            }
-
-
+            if(tableColumnsMetadata.keySet().size() >= JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT){
+                this.reportDesign = JasperDesign.class.cast(
+                        JasperDesignLoader.load(new File(JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
+                if(this.reportDataSource != null)
+                    return withDatasource(this.reportDataSource);
+            }
             return this;
+
         }
 
         /**

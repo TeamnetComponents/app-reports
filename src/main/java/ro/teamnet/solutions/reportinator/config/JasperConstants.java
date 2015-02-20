@@ -31,4 +31,5 @@ public final class JasperConstants extends Constants {
     public static final String JASPER_PDF_ENCODING_IDENTIFIER_KEY = "Cp1252";
     public static final Integer JASPER_MINIMUM_BAND_DETAIL_HEIGHT = 300;
     public static final Integer JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT = 2 * JasperStyles.COLUMN_HEADER_STYLE.getStyle().getFontsize().intValue();
+    public static final Integer JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = 8;
 }
