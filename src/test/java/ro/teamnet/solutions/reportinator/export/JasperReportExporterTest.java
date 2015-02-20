@@ -96,7 +96,7 @@ public class JasperReportExporterTest {
         path = Paths.get(".\\testReportExporter.pdf");
         assertTrue(Files.exists(path));
         out.close();
-        //Files.delete(path);
+        Files.delete(path);
     }
 
 
