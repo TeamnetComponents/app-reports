@@ -13,7 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+/**
+ * @author Bogdan.Stefan
+ */
 public class JasperReportGeneratorTest {
 
     private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
@@ -28,12 +32,47 @@ public class JasperReportGeneratorTest {
         DATA_SOURCE = new MapCollectionDataSourceConverter(COLUMNS_METADATA).convert(ROWS_MAP_COLLECTION);
     }
 
-    @Test
-    public void testReportGeneratorShouldGenerateAValidPrint() throws Exception {
+    @Test(expected = IllegalStateException.class)
+    public void testShouldPassIfExceptionWhenUsingCustomJrxmlAndDataSource() throws Exception {
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder(JRXML_PATH)
                         .withDatasource(DATA_SOURCE)
                         .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
+                        .build();
+        assertNull("Generator should have been null.", reportGenerator);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testShouldPassIfExceptionWhenUsingCustomJrxmlAnTableMetadata() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder(JRXML_PATH)
+                        .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
+                        .build();
+        assertNull("Generator should have been null.", reportGenerator);
+    }
+
+    @Test
+    public void testShouldGenerateAValidReportPrint() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder()
+                        .withDatasource(DATA_SOURCE)
+                        .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
+                        .build();
+        JasperPrint print = reportGenerator.generate();
+        assertNotNull("Generated print object was null.", print);
+    }
+
+    /**
+     * A regression test, for a previously discovered bug.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testReportGeneratorShouldGenerateAValidPrintWhenTableColumnMetadataBeforeDataSource() {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder() // Table metadata is given before data source
+                        .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
+                        .withDatasource(DATA_SOURCE)
                         .build();
         JasperPrint print = reportGenerator.generate();
         assertNotNull("Generated print object was null.", print);

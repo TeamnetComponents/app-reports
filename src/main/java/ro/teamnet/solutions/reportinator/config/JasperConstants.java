@@ -3,7 +3,7 @@ package ro.teamnet.solutions.reportinator.config;
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 
 /**
- * TODO Doc
+ * A class containing various constants related to JasperReports API configuration, to be used internally.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/11/2015
@@ -17,7 +17,8 @@ public final class JasperConstants extends Constants {
     public static final String JASPER_DATASET_IDENTIFIER_KEY = "ReportinatorDataset";
     public static final String JASPER_DATASOURCE_IDENTIFIER_KEY = "ReportinatorDataSource";
     public static final String JASPER_TABLE_IDENTIFIER_KEY = "ReportinatorTable";
-    // TODO Create/add landscape and potrait default .JRXML templates
+    public static final String JASPER_REPORT_DESIGN_NAME_KEY = "ReportinatorLoadedDesign";
+    // TODO Create/add landscape and potrait default .JRXML templates below
     public static final String JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
     public static final String JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
     public static final String JASPER_TABLE_DEFAULT_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorDefaultTableStyle";

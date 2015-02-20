@@ -36,7 +36,7 @@ public class HtmlExporterTest {
 
     @Before
     public void setUp() throws Exception {
-        reportParameters = new HashMap();
+        reportParameters = new HashMap<String, Object>();
         this.reportPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport((JasperDesign) JasperDesignLoader.load(new File(JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH))), reportParameters);
         out = new FileOutputStream( "test.html");
     }

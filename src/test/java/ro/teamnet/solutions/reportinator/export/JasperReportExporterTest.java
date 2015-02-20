@@ -23,8 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.junit.Assert.assertTrue;
-
 public class JasperReportExporterTest {
 
     private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
@@ -45,12 +43,12 @@ public class JasperReportExporterTest {
 
 
         employees = new ArrayList<>();
-        employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii", "home" , "developer", 8, 0 ));
-        employees.add(new Employee(2, "Cristi", "Dumitru", 1000, "Solutii", "home" , "developer", 8, 0));
-        employees.add(new Employee(3, "Oana", "Popescu", 1000, "Solutii", "home" , "developer", 8, 0));
-        employees.add(new Employee(4, "Alex", "Cojocaru", 1000, "Solutii", "home" , "developer", 8, 0));
-        employees.add(new Employee(5, "Mihaela", "Scripcaru", 1000, "Solutii", "home" , "developer", 8, 0));
-        employees.add(new Employee(6, "Sad", "Panda", 1000000, "Management", "mansion" , "BOSS", 1, 100));
+        employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii", "home", "developer", 8, 0));
+        employees.add(new Employee(2, "Cristi", "Dumitru", 1000, "Solutii", "home", "developer", 8, 0));
+        employees.add(new Employee(3, "Oana", "Popescu", 1000, "Solutii", "home", "developer", 8, 0));
+        employees.add(new Employee(4, "Alex", "Cojocaru", 1000, "Solutii", "home", "developer", 8, 0));
+        employees.add(new Employee(5, "Mihaela", "Scripcaru", 1000, "Solutii", "home", "developer", 8, 0));
+        employees.add(new Employee(6, "Sad", "Panda", 1000000, "Management", "mansion", "BOSS", 1, 100));
 
         fields = new LinkedHashMap<>();
         fields.put("id", "Id");
@@ -69,7 +67,6 @@ public class JasperReportExporterTest {
 
     }
 
-
     @Test(expected = ExporterException.class)
     public void testUsingPrintForExportShouldPassIfParametersAreNull() throws Exception {
         JasperPrint print = null;
@@ -86,17 +83,21 @@ public class JasperReportExporterTest {
     public void testShouldExportAFile() throws Exception {
         out = new FileOutputStream("testReportExporter.pdf");
         ReportGenerator<JasperPrint> reportGenerator =
-                JasperReportGenerator.builder(JRXML_PATH)
+                JasperReportGenerator.builder()
                         .withDatasource(this.dataSource)
                         .withParameters(parameters)
                         .withTableColumnsMetadata(fields)
                         .build();
         JasperPrint print = reportGenerator.generate();
         JasperReportExporter.export(print, out, ExportType.PDF);
-        path = Paths.get(".\\testReportExporter.pdf");
-        assertTrue(Files.exists(path));
         out.close();
-        Files.delete(path);
+        // Clean-up generated files
+        path = Paths.get("testReportExporter.pdf");
+        if (Files.exists(path) && Files.isWritable(path)) {
+            File f = path.toFile();
+            f.setWritable(true);
+            f.delete();
+        }
     }
 
 

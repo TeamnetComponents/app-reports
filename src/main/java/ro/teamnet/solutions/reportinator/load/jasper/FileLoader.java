@@ -34,14 +34,10 @@ public final class FileLoader implements Loader<File, JRReport> {
      */
     @Override
     public JRReport load(File loadSource) throws LoaderException {
-
         JRReport jasperDesign;
-
         if (loadSource != null && checkIfJrxml(loadSource)) {
             try {
-
                 jasperDesign = new InputStreamLoader().load(new FileInputStream(loadSource));
-
             } catch (FileNotFoundException e) {
                 //Re-throw
                 throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport",
@@ -49,13 +45,10 @@ public final class FileLoader implements Loader<File, JRReport> {
             }
             return jasperDesign;
         } else {
-
             throw new LoaderException("Could not load given resource of File type into a JRReport:" +
                     " File is either null or has not a .jrxml extension."
             );
         }
-
-
     }
 
     /**

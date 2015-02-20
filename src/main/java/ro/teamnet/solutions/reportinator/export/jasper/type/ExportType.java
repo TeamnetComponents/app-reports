@@ -7,9 +7,10 @@ import ro.teamnet.solutions.reportinator.export.jasper.PdfExporter;
 import ro.teamnet.solutions.reportinator.export.jasper.XlsExporter;
 
 /**
- * Enum that returns an instance of the exporter class of the desired type
+ * Enum that returns an instance of the exporter class of the desired type.
+ *
  * @author Bogdan.Iancu
- * @version 1.0 Date: 20-Feb-15
+ * @version 1.0 Date: 2/20/2015
  */
 public enum ExportType {
     PDF{

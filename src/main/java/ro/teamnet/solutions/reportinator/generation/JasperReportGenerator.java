@@ -13,6 +13,8 @@ import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
+import java.io.InputStream;
+import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
@@ -40,6 +42,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
      * The data source, to be used in the filling process.
      */
     private final JRDataSource dataSource;
+    private final Connection connection;
 
     /**
      * A {@code no-arg} constructor. Should be private since instances of this type are immutable. An instance of this
@@ -62,10 +65,12 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         this.parameters = reportBuilder.reportParameters;
         this.report = reportBuilder.reportDesign;
         this.dataSource = reportBuilder.reportDataSource;
+        this.connection = reportBuilder.fillConnection;
     }
 
     /**
-     * A factory method which accepts a String, as the path to a report template.
+     * A factory method which accepts a String, as the absolute or relative path to a report template. This string will
+     * be converted to a {@link java.io.File} and then loaded.
      *
      * @param absolutePathnameToJasperXml The path to the report template.
      * @return A builder instance, based on the given template.
@@ -76,13 +81,25 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     }
 
     /**
+     * A factory method which accepts an {@link java.io.InputStream} to load report template from.
+     *
+     * @param jrxmlAsStream The path to the report template.
+     * @return A builder instance, based on the given template.
+     * @throws ReportGeneratorException If builder construction failed.
+     */
+    public static Builder builder(InputStream jrxmlAsStream) throws ReportGeneratorException {
+        return new Builder(jrxmlAsStream);
+    }
+
+    /**
      * A factory method, for a builder, which uses the API's built-in default report template.
      *
      * @return A builder instance, based on the default, built-in, template.
      * @throws ReportGeneratorException If builder construction failed.
      */
     public static Builder builder() throws ReportGeneratorException {
-        return new Builder(null);
+        String reportPath = null; // Specially set, to distinguish between constructors signatures
+        return new Builder(reportPath);
     }
 
     /**
@@ -91,7 +108,11 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
     @Override
     public JasperPrint generate() throws ReportGeneratorException {
         try {
-            return JasperFillManager.fillReport((JasperReport) this.report, this.parameters, this.dataSource);
+            if (this.connection == null) {
+                return JasperFillManager.fillReport((JasperReport) this.report, this.parameters, this.dataSource);
+            } else {
+                return JasperFillManager.fillReport((JasperReport) this.report, this.parameters, this.connection);
+            }
         } catch (JRException e) {
             throw new ReportGeneratorException(
                     MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), e);
@@ -131,6 +152,8 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY, "");
         }
 
+        private Connection fillConnection;
+
         /**
          * A constructor which manages a template from an absolute pathname defined by a String value.
          *
@@ -139,25 +162,52 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
             try {
-                this.reportDesign = JasperDesign.class.cast(
-                        JasperDesignLoader.load(new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
-                                absolutePathnameToJasperXml))
+                JasperDesign design = JasperDesign.class.cast(
+                        JasperDesignLoader.load(
+                                new File(absolutePathnameToJasperXml == null ?
+                                        JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
+                                        absolutePathnameToJasperXml))
                 );
-            } catch (LoaderException e) {
+                if (design != null && absolutePathnameToJasperXml == null) {
+                    // Set the name, because a built-in template was loaded
+                    design.setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
+                }
+                this.reportDesign = design;
+
+            } catch (LoaderException | NullPointerException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file found for given path: {0}", absolutePathnameToJasperXml), e);
+                        MessageFormat.format("No template file found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
             }
         }
 
         /**
-         * Establishes the report's data source (as a runtime parameter).
+         * A constructor which manages a template from an absolute pathname defined by a String value.
+         *
+         * @param jrxmlReportTemplate The {@code InputStream} of the .JRXML file.
+         * @throws ro.teamnet.solutions.reportinator.generation.ReportGeneratorException If anything happens during template loading.
+         */
+        private Builder(InputStream jrxmlReportTemplate) throws ReportGeneratorException {
+            try {
+                this.reportDesign = JasperDesign.class.cast(
+                        JasperDesignLoader.load(jrxmlReportTemplate));
+            } catch (LoaderException e) {
+                // Re-throw
+                throw new ReportGeneratorException(
+                        MessageFormat.format("No template file found for given path: {0}", jrxmlReportTemplate), e.getCause());
+            }
+        }
+
+        /**
+         * Establishes the report's data source (as a runtime parameter), to be used by built-in templates..
          *
          * @param datasource A data source.
          * @return The builder instance, having the data source attached.
          */
         public Builder withDatasource(JRDataSource datasource) {
+            if (!this.usingBuiltInTemplates()) {
+                throw new IllegalStateException("No data source is required when using a custom JRXML template.");
+            }
             this.reportDataSource = Objects.requireNonNull(datasource, "Data source must not be null.");
             // Attach a parameter for the datasource to the design
             JRDesignParameter parameter = new JRDesignParameter();
@@ -237,8 +287,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
 
         /**
          * Establishes a dictionary mapping at runtime, between a data source's rows metadata to a table's column and
-         * column labels
-         * information.
+         * column labels information.
          * <p>The dictionary {@code keys} represent the field names to be used to extract data from the data source,
          * thus they must be the same as the data source's fields.</p>
          *
@@ -246,13 +295,25 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @return The builder instance, with assigned column metadata.
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
+            if (!this.usingBuiltInTemplates()) {
+                throw new IllegalStateException("Table metadata is required when using a custom JRXML template.");
+            }
             this.reportTableAndColumnMetadata = Collections.unmodifiableMap(tableColumnsMetadata);
-            if(tableColumnsMetadata.keySet().size() >= JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT){
+            // Columns cannot fit into portrait?
+            if (tableColumnsMetadata.keySet().size() >= JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
+                // Load the landscape oriented template
                 this.reportDesign = JasperDesign.class.cast(
                         JasperDesignLoader.load(new File(JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
-                if(this.reportDataSource != null)
+                if (this.reportDesign != null) {
+                    // Re-set the name, because a new built-in design was loaded
+                    ((JasperDesign) this.reportDesign).setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
+                }
+                if (this.reportDataSource != null) {
+                    // Re-inject data source fields into the design
                     return withDatasource(this.reportDataSource);
+                }
             }
+
             return this;
 
         }
@@ -268,6 +329,24 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         public Builder withParameters(Map<String, Object> parameters) {
             // Add everything to our parameter dictionary
             this.reportParameters.putAll(parameters);
+
+            return this;
+        }
+
+        /**
+         * Attaches a connection object to be used by custom report templates, during the data filling process. Before
+         * assigning a connection, you must load the custom template into the builder.
+         *
+         * @param connection The connection instance to use.
+         * @return The current instance, with added connection.
+         * @see #builder(java.io.InputStream)
+         */
+        public Builder withConnection(Connection connection) {
+            if (this.usingBuiltInTemplates()) {
+                throw new IllegalStateException("No connection is required, when using the built-in templates. " +
+                        "Try using the another builder method.");
+            }
+            this.fillConnection = Objects.requireNonNull(connection, "Connection must not be null.");
 
             return this;
         }
@@ -337,7 +416,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * A method to do some sanity checks before attempting start the report building process.
+         * A validation method to do some sanity checks before attempting start the report building process.
          */
         private void validateBuilder() {
             if (this.reportDesign == null) {
@@ -345,11 +424,25 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             }
             if (this.reportDataSource == null ||
                     !this.reportParameters.get(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY).equals(this.reportDataSource)) {
-                throw new ReportGeneratorException("No data source was attached.");
+                if (usingBuiltInTemplates()) {
+                    throw new ReportGeneratorException("No data source was attached.");
+                }
             }
             if (this.reportTableAndColumnMetadata == null) {
-                throw new ReportGeneratorException("No fields and columns metadata was attached.");
+                // Throw an exception only if we are using the default templates
+                if (usingBuiltInTemplates()) {
+                    throw new ReportGeneratorException("No fields and columns metadata was attached.");
+                }
             }
+        }
+
+        /**
+         * A validation method which tests if the builder is using default the built-in templates.
+         *
+         * @return {@code True} if it is, {@code False} otherwise.
+         */
+        private boolean usingBuiltInTemplates() {
+            return this.reportDesign.getName().equals(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
         }
     }
 }

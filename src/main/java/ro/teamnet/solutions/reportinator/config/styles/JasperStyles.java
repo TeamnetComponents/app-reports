@@ -92,12 +92,12 @@ public enum JasperStyles {
         defaultStyle.setFontName(JasperConstants.JASPER_STYLE_FONT_NAME_IDENTIFIER_KEY);
         defaultStyle.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
         defaultStyle.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
-
         defaultStyle.setPdfFontName(JasperConstants.JASPER_PDF_FONT_NAME_IDENTIFIER_KEY);
         defaultStyle.setPdfEncoding(JasperConstants.JASPER_PDF_ENCODING_IDENTIFIER_KEY);
         defaultStyle.setFontSize(10.0f);
         defaultStyle.setPdfEmbedded(false);
         defaultStyle.setBlankWhenNull(true);
+
         return defaultStyle;
     }
 
@@ -105,12 +105,13 @@ public enum JasperStyles {
      * Method that returns a table style , can be further customized here
      * Must be set on a {@link net.sf.jasperreports.components.table.DesignCell}
      *
-     * @return {@link net.sf.jasperreports.engine.design.JRDesignStyle}
+     * @return A style for tables.
      */
     private static JRStyle getTableStyle() {
         JRDesignStyle tableStyle = new JRDesignStyle();
         tableStyle.setName(JasperConstants.JASPER_TABLE_STYLE_NAME_IDENTIFIER_KEY);
         JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox());
+
         return tableStyle;
     }
 
@@ -118,15 +119,34 @@ public enum JasperStyles {
      * Method that returns a {@link net.sf.jasperreports.engine.design.JRDesignStyle} similar to TableStyle
      * but this one is used by the HeaderColums and has a specific background color for {@link net.sf.jasperreports.components.table.DesignCell}
      *
-     * @return TODO
+     * @return A style for table headers.
      */
     private static JRStyle getTableHeaderStyle() {
         JRDesignStyle tableStyle = new JRDesignStyle();
         tableStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
-        tableStyle.setBackcolor(new Color(53, 162, 163));
+        tableStyle.setBackcolor(new Color(153, 155, 152));
         tableStyle.setMode(ModeEnum.OPAQUE);
         JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox()); // TODO Investigate, lineBox is never used
+
         return tableStyle;
+    }
+
+    /**
+     * Method that returns a column header style , can be further customized here
+     * This style defines the elements in the header column of the generated Table
+     * <p/>
+     * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
+     *
+     * @return A style for column headers.
+     */
+    private static JRStyle getColumnHeaderStyle() {
+        JRDesignStyle columnHeaderStyle = new JRDesignStyle();
+        columnHeaderStyle.setParentStyle(getDefaultStyle());
+        columnHeaderStyle.setName(JasperConstants.JASPER_TABLE_HEADER_STYLE_NAME_IDENTIFIER_KEY);
+        columnHeaderStyle.setBold(Boolean.TRUE);
+        columnHeaderStyle.setFontSize(12.0f);
+
+        return columnHeaderStyle;
     }
 
     /**
@@ -135,7 +155,7 @@ public enum JasperStyles {
      * <p/>
      * MUST BE SET ON A {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
-     * @return {@link net.sf.jasperreports.engine.design.JRDesignStyle}
+     * @return A style for column content.
      */
     private static JRStyle getColumnContentStyle() {
         JRDesignStyle ColumnContentStyle = new JRDesignStyle();
@@ -148,29 +168,12 @@ public enum JasperStyles {
     }
 
     /**
-     * Method that returns a column header style , can be further customized here
-     * This style defines the elements in the header column of the generated Table
-     * <p/>
-     * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
-     *
-     * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}
-     */
-    private static JRStyle getColumnHeaderStyle() {
-        JRDesignStyle columnHeaderStyle = new JRDesignStyle();
-        columnHeaderStyle.setParentStyle(getDefaultStyle());
-        columnHeaderStyle.setName(JasperConstants.JASPER_TABLE_HEADER_STYLE_NAME_IDENTIFIER_KEY);
-        columnHeaderStyle.setBold(Boolean.TRUE);
-        columnHeaderStyle.setFontSize(12.0f);
-        return columnHeaderStyle;
-    }
-
-    /**
      * Method that returns a column footer style , can be further customized here
      * This style defines the elements in the  footer column of the generated Table
      * <p/>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
-     * @return a {@link net.sf.jasperreports.engine.design.JRDesignStyle}
+     * @return A style for column footers.
      */
     private static JRStyle getColumnFooterStyle() {
         JRDesignStyle columnFooterStyle = new JRDesignStyle();
