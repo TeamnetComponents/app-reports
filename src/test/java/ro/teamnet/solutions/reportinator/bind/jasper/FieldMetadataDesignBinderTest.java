@@ -1,10 +1,12 @@
 package ro.teamnet.solutions.reportinator.bind.jasper;
 
+import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRReport;
 import org.junit.Before;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.bind.Binder;
+import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 
@@ -31,8 +33,14 @@ public class FieldMetadataDesignBinderTest {
     public void testShouldPassIfFieldMetadataIsSuccessfullyBoundToDesign() throws Exception {
         JRReport fieldAttachedReport = new FieldMetadataDesignBinder(this.reportDesign).bind(COLUMNS_METADATA);
         // Retrieve all fields (including extra ones)
+        JRDataset dataset = null;
+        for (JRDataset jrDataset : fieldAttachedReport.getDatasets()) {
+            if (jrDataset.getName().equals(JasperConstants.JASPER_DATASET_IDENTIFIER_KEY)) {
+                dataset = jrDataset;
+            }
+        }
         Collection<String> attachedFieldsNames = new ArrayList<String>();
-        for (JRField field : fieldAttachedReport.getFields()) {
+        for (JRField field : dataset.getFields()) {
             attachedFieldsNames.add(field.getName());
         }
         // Test that all fields have been attached
