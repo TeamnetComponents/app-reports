@@ -2,9 +2,9 @@ package ro.teamnet.solutions.reportinator.load;
 
 import net.sf.jasperreports.engine.JRReport;
 import org.springframework.core.io.Resource;
-import ro.teamnet.solutions.reportinator.load.jasper.ClassPathLoader;
 import ro.teamnet.solutions.reportinator.load.jasper.FileLoader;
 import ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader;
+import ro.teamnet.solutions.reportinator.load.jasper.SpringClassPathResourceLoader;
 
 import java.io.File;
 import java.io.InputStream;
@@ -54,6 +54,6 @@ public class JasperDesignLoader {
      * @throws LoaderException If loading the template from a {@code Resource} fails.
      */
     public static JRReport load(Resource resource) throws LoaderException {
-        return new ClassPathLoader().load(resource);
+        return new SpringClassPathResourceLoader().load(resource);
     }
 }

@@ -43,13 +43,13 @@ public class InputStreamLoaderTest {
     @Test
     public void testShouldLoadCorrectlyWithValidInputStream() throws Exception {
         JRReport report = inputStreamLoader.load(new FileInputStream(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The loaded report should be a JasperDesign", JasperDesign.class, report.getClass());
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingWithNullInputStream() throws Exception {
         JRReport report = inputStreamLoader.load(null);
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 }

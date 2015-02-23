@@ -48,45 +48,45 @@ public class FileLoaderTest {
     @Test
     public void testShouldLoadIfFileHasAJrxmlExtension() throws Exception {
         JRReport report = fileLoader.load(new File(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The loaded report should be a JasperDesign", JasperDesign.class, report.getClass());
 
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingAFileThatDoesNotExist() throws Exception {
         JRReport report = fileLoader.load(new File("path_to_non_existent_file"));
-        assertNull(report);
+        assertNull("Report should be null", report);
 
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingAFileThatIsEmpty() throws Exception {
         JRReport report = fileLoader.load(new File("G:\\reportinator\\src\\test\\resources\\jasper_invalid_empty_template.jrxml"));
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingAFileThatIsNull() throws Exception {
         JRReport report = fileLoader.load(null);
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingAFileThatHasNotAJrxmlExtension() throws Exception {
         JRReport report = fileLoader.load(new File(PATH_TO_NON_JRXML_FILE));
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test
     public void testShouldFailWhenCheckingIfJrxmlWithNonJrxmlFile() throws Exception {
         String pathToNonJrxmlFile = PATH_TO_NON_JRXML_FILE;
-        assertEquals(false, fileLoader.checkIfJrxml(new File(pathToNonJrxmlFile)));
+        assertEquals("File extension should differ from .jrxml", false, fileLoader.checkIfJrxml(new File(pathToNonJrxmlFile)));
     }
 
     @Test
     public void testShouldPassWhenCheckingIfJrxmlWithJrxmlFile() throws Exception {
         String pathToJrxmlFile = PATH_TO_JRXML_FILE;
-        assertEquals(true, fileLoader.checkIfJrxml(new File(pathToJrxmlFile)));
+        assertEquals("File extension should be .jrxml", true, fileLoader.checkIfJrxml(new File(pathToJrxmlFile)));
     }
 }

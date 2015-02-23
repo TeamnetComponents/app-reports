@@ -45,26 +45,27 @@ public class StylesDesignBinderTest {
     @Test(expected = NullPointerException.class)
     public void testShouldThrowExceptionWhenUsingConstructorWithNullJasperDesign() throws Exception {
         stylesDesignBinder = new StylesDesignBinder(null);
-        assertNull(stylesDesignBinder);
+        assertNull("Returned JasperDesignBinder must be null", stylesDesignBinder);
     }
 
     @Test(expected = BindingException.class)
     public void testShouldThrowExceptionWhenBindingWithNullList() throws Exception {
         List<JRStyle> styles = null;
-        stylesDesignBinder.bind(styles);
+        assertNull("Returned JasperDesign must be null", stylesDesignBinder.bind(styles));
 
     }
 
     @Test(expected = BindingException.class)
     public void testShouldThrowExceptionWhenBindingWithAnEmptyList() throws Exception {
         List<JRStyle> styleList = new ArrayList<>();
-        stylesDesignBinder.bind(styleList);
+        assertNull("Returned JasperDesign must be null", stylesDesignBinder.bind(styleList));
     }
 
     @Test
     public void testShouldPassWhenBindingWithValidSJRStylesList() throws Exception {
         List<JRStyle> styleList = JasperStyles.asList();
         stylesDesignBinder.bind(styleList);
-        assertEquals(JasperStyles.asList().getClass(), jasperDesign.getStylesList().getClass());
+        assertEquals("Returned JasperDesign must contain the bound Styles" +
+                "", JasperStyles.asList().getClass(), jasperDesign.getStylesList().getClass());
     }
 }

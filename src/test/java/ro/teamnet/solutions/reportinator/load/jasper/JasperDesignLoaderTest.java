@@ -2,7 +2,6 @@ package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
@@ -28,77 +27,60 @@ public class JasperDesignLoaderTest {
      */
     private static final String PATH_TO_JRXML_FILE = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
 
-    /**
-     * Object to be tested
-     */
-    private JasperDesignLoader jasperDesignLoader;
-
-
-    /**
-     * Creating the object to be tested
-     *
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        jasperDesignLoader = new JasperDesignLoader();
-    }
-
-    // TODO Update this test to use class FQN reference instead of instance (methods are public)
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingWihNullFile() throws Exception {
         File file = null;
         JRReport report = JasperDesignLoader.load(file);
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingWihNullInputStream() throws Exception {
         InputStream inputStream = null;
         JRReport report = JasperDesignLoader.load(inputStream);
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test
     public void testShouldPassWhenLoadingWihValidClassPath() throws Exception {
         JRReport report = JasperDesignLoader.load(new ClassPathResource("jasper_test_blank_portrait_template.jrxml"));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithInvalidClassPathAsInput() throws Exception {
         JRReport report = JasperDesignLoader.load(new ClassPathResource(PATH_TO_JRXML_FILE));
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldLoadDefaultWithNullClassPathAsInput() throws Exception {
         ClassPathResource classPathResource = null;
         JRReport report = JasperDesignLoader.load(classPathResource);
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
 
     @Test
     public void testShouldPassWhenLoadingWithAValidFile() throws Exception {
         JRReport report = JasperDesignLoader.load(new File(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, JasperDesignLoader.load(new File(PATH_TO_JRXML_FILE)).getClass());
+        assertNotNull("Report should not be null", report);
+        assertEquals("the loaded report should be a JasperDesign", JasperDesign.class, JasperDesignLoader.load(new File(PATH_TO_JRXML_FILE)).getClass());
     }
 
     @Test(expected = LoaderException.class)
     public void testShouldFailWhenLoadingWithAInvalidFile() throws Exception {
         JRReport report = JasperDesignLoader.load(new File("G:\\reportinator\\src\\test\\resources\\Silhouette_Landscape_No_detail_band.someExtension"));
-        assertNull(report);
+        assertNull("Report should be null", report);
     }
 
     @Test
     public void testShouldPassWhenLoadingWithAValidInputStream() throws Exception {
         JRReport report = JasperDesignLoader.load(new FileInputStream(PATH_TO_JRXML_FILE));
-        assertNotNull(report);
-        assertEquals(JasperDesign.class, report.getClass());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
     }
 
 }

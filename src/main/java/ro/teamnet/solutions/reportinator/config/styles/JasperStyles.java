@@ -110,25 +110,25 @@ public enum JasperStyles {
     private static JRStyle getTableStyle() {
         JRDesignStyle tableStyle = new JRDesignStyle();
         tableStyle.setName(JasperConstants.JASPER_TABLE_STYLE_NAME_IDENTIFIER_KEY);
-        JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox());
+        setUpLineBox(tableStyle.getLineBox());
 
         return tableStyle;
     }
 
     /**
      * Method that returns a {@link net.sf.jasperreports.engine.design.JRDesignStyle} similar to TableStyle
-     * but this one is used by the HeaderColums and has a specific background color for {@link net.sf.jasperreports.components.table.DesignCell}
+     * but this one is used by the HeaderColumns and has a specific background color for {@link net.sf.jasperreports.components.table.DesignCell}
      *
      * @return A style for table headers.
      */
     private static JRStyle getTableHeaderStyle() {
-        JRDesignStyle tableStyle = new JRDesignStyle();
-        tableStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
-        tableStyle.setBackcolor(new Color(153, 155, 152));
-        tableStyle.setMode(ModeEnum.OPAQUE);
-        JRLineBox lineBox = setUpLineBox(tableStyle.getLineBox()); // TODO Investigate, lineBox is never used
+        JRDesignStyle tableHeaderStyle = new JRDesignStyle();
+        tableHeaderStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
+        tableHeaderStyle.setBackcolor(new Color(153, 155, 152));
+        tableHeaderStyle.setMode(ModeEnum.OPAQUE);
+        setUpLineBox(tableHeaderStyle.getLineBox());
 
-        return tableStyle;
+        return tableHeaderStyle;
     }
 
     /**
