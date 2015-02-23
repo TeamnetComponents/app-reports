@@ -10,6 +10,8 @@ import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
  */
 public final class JasperConstants extends Constants {
 
+    // TODO Documentation for all below
+
     public static final String JASPER_PAGE_HEADER_IDENTIFIER_KEY = "ReportinatorReportHeader";
     public static final String JASPER_PAGE_FOOTER_IDENTIFIER_KEY = "ReportinatorReportFooter";
     public static final String JASPER_TITLE_IDENTIFIER_KEY = "ReportinatorReportTitle";
@@ -18,9 +20,9 @@ public final class JasperConstants extends Constants {
     public static final String JASPER_DATASOURCE_IDENTIFIER_KEY = "ReportinatorDataSource";
     public static final String JASPER_TABLE_IDENTIFIER_KEY = "ReportinatorTable";
     public static final String JASPER_REPORT_DESIGN_NAME_KEY = "ReportinatorLoadedDesign";
-    // TODO Create/add landscape and potrait default .JRXML templates below
-    public static final String JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
-    public static final String JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
+    // TODO Physically create/add landscape and potrait default .JRXML templates below
+    public static final String JASPER_JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
+    public static final String JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
     public static final String JASPER_TABLE_DEFAULT_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorDefaultTableStyle";
     public static final String JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorHeaderTableBoxStyle";
     public static final String JASPER_TABLE_CONTENT_STYLE_NAME_IDENTIFIER_KEY = "ReportinatorTableContentStyle";
@@ -32,4 +34,15 @@ public final class JasperConstants extends Constants {
     public static final String JASPER_PDF_ENCODING_IDENTIFIER_KEY = "Cp1252";
     public static final Integer JASPER_MINIMUM_BAND_DETAIL_HEIGHT = 300;
     public static final Integer JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT = 2 * JasperStyles.COLUMN_HEADER_STYLE.getStyle().getFontsize().intValue();
+    public static final Integer JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT;
+
+    // Defaults (for above) JasperReports properties
+    public static final String DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = "8";
+
+    static {
+        String property;
+        property = CONFIGURATION_PROPERTIES.getProperty("JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT", DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT);
+        JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(property);
+    }
+
 }

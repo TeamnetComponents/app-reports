@@ -165,7 +165,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 JasperDesign design = JasperDesign.class.cast(
                         JasperDesignLoader.load(
                                 new File(absolutePathnameToJasperXml == null ?
-                                        JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
+                                        JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
                                         absolutePathnameToJasperXml))
                 );
                 if (design != null && absolutePathnameToJasperXml == null) {
@@ -303,7 +303,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             if (tableColumnsMetadata.keySet().size() >= JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
                 // Load the landscape oriented template
                 this.reportDesign = JasperDesign.class.cast(
-                        JasperDesignLoader.load(new File(JasperConstants.JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
+                        JasperDesignLoader.load(new File(JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
                 if (this.reportDesign != null) {
                     // Re-set the name, because a new built-in design was loaded
                     ((JasperDesign) this.reportDesign).setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);

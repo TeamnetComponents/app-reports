@@ -1,10 +1,12 @@
 package ro.teamnet.solutions.reportinator.config;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * A class containing various constants, common to the reporting engine.
+ * A class containing various constants, all common to the reporting engines.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/10/2015
@@ -15,7 +17,6 @@ public class Constants {
 //        throw new IllegalAccessException("Constants class should not be instantiated.");
 //    }
 
-    private static final String PROPERTIES_FILE_PATH = "src/test/resources/config.properties";
     /**
      * Maximum allowed table width (in pixels) for an A4 Landscape page format.
      */
@@ -29,43 +30,44 @@ public class Constants {
     /**
      * Standard Table Border width.
      */
-    public static final Float TABLE_BORDER_WIDTH; //usage for styles
+    public static final Float TABLE_BORDER_WIDTH; // Usage for styles
 
+    // Defaults (for above) general properties
+    public static final String DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE = "792";
+    public static final String DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT = "555";
+    public static final String DEFAULT_TABLE_BORDER_WIDTH = "0.7f";
 
-    public static final Integer JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT;
-
+    // Initialize some properties from disk configuration file
+    private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/test/resources/reportinator-config.properties";
+    protected static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
     static {
-        Properties properties = new Properties();
-        try {
-            InputStream input = new FileInputStream(PROPERTIES_FILE_PATH);
-            properties.load(input);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        // A holder reference
         String property;
-
-        property = properties.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", "792");
+        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
         TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(property);
-
-
-        property = properties.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", "555");
+        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
         TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(property);
-
-
-        property = properties.getProperty("TABLE_BORDER_WIDTH", "0.7f");
+        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_BORDER_WIDTH", DEFAULT_TABLE_BORDER_WIDTH);
         TABLE_BORDER_WIDTH = Float.valueOf(property);
-
-
-        property = properties.getProperty("JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT", "8");
-        JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(property);
-
-
-
     }
 
+    /**
+     * A helper method which uses a {@link java.io.FileInputStream} to load settings from a properties configuration
+     * file, given a path to it.
+     *
+     * @param pathToPropertiesFile The path to the disk configuration properties file.
+     * @return A dictionary containing information about different settings.
+     */
+    protected static Properties loadProperties(String pathToPropertiesFile) {
+        Properties properties = new Properties();
+        try (InputStream fileInputStream = new FileInputStream(pathToPropertiesFile)) {
+            properties.load(fileInputStream);
+        } catch (IOException e) {
+            // Re-throw
+            throw new RuntimeException(e.getMessage(), e.getCause());
+        }
 
+        return properties;
+    }
 
 }

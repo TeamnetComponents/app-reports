@@ -46,11 +46,11 @@ public class JasperConstantsTest {
     public static final String JRXML_FAKE_TEMPLATE_PATH = RESOURCES_ROOT.concat("jasper_invalid_empty_template.jrxml");
 
     // Initialization data
-    static {  // --- DO NOT CHANGE WHAT IS BELOW UNLESS YOU KNOW WHAT YOU ARE DOING !!!
+    static {  // --- DO NOT CHANGE WHAT'S BELOW UNLESS YOU KNOW WHAT YOU ARE DOING !!!
+        // Holders for various common test things
         COLUMNS_METADATA = new LinkedList<String>();
         FIELDS_COLUMNS_METADATA = new LinkedHashMap<String, String>();
         ROWS_MAP_COLLECTION = new LinkedList<Map<String, ?>>();
-
         // Generate some row data
         Map<String, String> row;
         for (int i = 0; i < 39; i++) {

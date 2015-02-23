@@ -13,18 +13,18 @@ import ro.teamnet.solutions.reportinator.export.jasper.XlsExporter;
  * @version 1.0 Date: 2/20/2015
  */
 public enum ExportType {
-    PDF{
-        public Exporter<JasperPrint> getExporter(){
+    PDF {
+        public Exporter<JasperPrint> getExporter() {
             return new PdfExporter();
         }
     },
-    XLS{
-        public Exporter<JasperPrint> getExporter(){
+    XLS {
+        public Exporter<JasperPrint> getExporter() {
             return new XlsExporter();
         }
     },
-    HTML{
-        public Exporter<JasperPrint> getExporter(){
+    HTML {
+        public Exporter<JasperPrint> getExporter() {
             return new HtmlExporter();
         }
     };
