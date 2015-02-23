@@ -50,9 +50,9 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
      *
      * @see JasperReportGenerator#JasperReportGenerator(ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder)
      */
-    private JasperReportGenerator() {
+    private JasperReportGenerator() throws IllegalAccessException {
         // FUTURE Log calls to this method
-        throw new IllegalStateException("Illegal reflection attack detected and logged.");
+        throw new IllegalAccessException("Illegal reflection attack detected and logged.");
     }
 
     /**
@@ -128,7 +128,14 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * Holds a Jasper report's runtime parameters.
          */
         private final Map<String, Object> reportParameters = new HashMap<String, Object>();
-//        private CyclicBarrier barrier;
+
+        { // Initialize some runtime parameter defaults
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_HEADER_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_PAGE_FOOTER_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_TITLE_IDENTIFIER_KEY, "");
+            this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY, "");
+        }
+
         /**
          * An optional design JRXML, loaded when builder is instantiated. Set to a default value.
          */
@@ -144,14 +151,9 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Map<String, String> reportTableAndColumnMetadata;
 
-        {
-            // Initialize some parameter defaults
-            this.reportParameters.put(JasperConstants.JASPER_PAGE_HEADER_IDENTIFIER_KEY, "");
-            this.reportParameters.put(JasperConstants.JASPER_PAGE_FOOTER_IDENTIFIER_KEY, "");
-            this.reportParameters.put(JasperConstants.JASPER_TITLE_IDENTIFIER_KEY, "");
-            this.reportParameters.put(JasperConstants.JASPER_SUBTITLE_IDENTIFIER_KEY, "");
-        }
-
+        /**
+         * A connection instance, to be used with custom report templates.
+         */
         private Connection fillConnection;
 
         /**
@@ -162,22 +164,21 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
             try {
-                JasperDesign design = JasperDesign.class.cast(
-                        JasperDesignLoader.load(
-                                new File(absolutePathnameToJasperXml == null ?
-                                        JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
-                                        absolutePathnameToJasperXml))
-                );
-                if (design != null && absolutePathnameToJasperXml == null) {
-                    // Set the name, because a built-in template was loaded
-                    design.setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
+                JRReport loadedDesign = JasperDesignLoader.load(
+                        new File(absolutePathnameToJasperXml == null ?
+                                JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
+                                absolutePathnameToJasperXml));
+                //
+                if (absolutePathnameToJasperXml == null) {
+                    // Set an accessible name because a built-in template was loaded
+                    ((JasperDesign) loadedDesign).setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
                 }
-                this.reportDesign = design;
-
+                // Assign loaded design to builder
+                this.reportDesign = loadedDesign;
             } catch (LoaderException | NullPointerException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
+                        MessageFormat.format("No template file could be found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
             }
         }
 
@@ -189,14 +190,15 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Builder(InputStream jrxmlReportTemplate) throws ReportGeneratorException {
             try {
-                this.reportDesign = JasperDesign.class.cast(
-                        JasperDesignLoader.load(jrxmlReportTemplate));
+                this.reportDesign = JasperDesignLoader.load(jrxmlReportTemplate);
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file found for given path: {0}", jrxmlReportTemplate), e.getCause());
+                        MessageFormat.format("No template file could be found in given stream: {0}", jrxmlReportTemplate), e.getCause());
             }
         }
+
+
 
         /**
          * Establishes the report's data source (as a runtime parameter), to be used by built-in templates..
@@ -209,7 +211,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 throw new IllegalStateException("No data source is required when using a custom JRXML template.");
             }
             this.reportDataSource = Objects.requireNonNull(datasource, "Data source must not be null.");
-            // Attach a parameter for the datasource to the design
+            // Attach a parameter for the data source to the design
             JRDesignParameter parameter = new JRDesignParameter();
             parameter.setName(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY);
             parameter.setValueClass(JRDataSource.class);
@@ -217,11 +219,11 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 ((JasperDesign) this.reportDesign).addParameter(parameter);
             } catch (JRException e) {
                 throw new ReportGeneratorException(
-                        MessageFormat.format("Failed to attach datasource as a parameter to the report design. An " +
+                        MessageFormat.format("Failed to attach given data source as a parameter to the report design. An " +
                                 "exception occurred: \n{0}", e.getMessage()),
                         e.getCause());
             }
-            // Add it to runtime parameters dictionary as well
+            // Add data source to runtime parameters dictionary, as well
             this.reportParameters.put(parameter.getName(), this.reportDataSource);
 
             return this;
@@ -240,6 +242,12 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             return this;
         }
 
+        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
+//        public Builder withEncoding(String encoding) {
+//
+//            return this;
+//        }
+
         /**
          * Establishes the report's runtime page footer text.
          *
@@ -252,12 +260,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
 
             return this;
         }
-
-        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
-//        public Builder withEncoding(String encoding) {
-//
-//            return this;
-//        }
 
         /**
          * Establishes the report's runtime title text, as a parameter.
@@ -296,26 +298,25 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
             if (!this.usingBuiltInTemplates()) {
-                throw new IllegalStateException("Table metadata is required when using a custom JRXML template.");
+                throw new IllegalStateException("Table metadata is not required when using a custom JRXML template.");
             }
             this.reportTableAndColumnMetadata = Collections.unmodifiableMap(tableColumnsMetadata);
-            // Columns cannot fit into portrait?
-            if (tableColumnsMetadata.keySet().size() >= JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
+            // Columns cannot fit into portrait format?
+            if (tableColumnsMetadata.keySet().size() > JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
                 // Load the landscape oriented template
-                this.reportDesign = JasperDesign.class.cast(
-                        JasperDesignLoader.load(new File(JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH)));
-                if (this.reportDesign != null) {
-                    // Re-set the name, because a new built-in design was loaded
-                    ((JasperDesign) this.reportDesign).setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
-                }
+                JasperDesign reloadedDesign = (JasperDesign)
+                        JasperDesignLoader.load(new File(JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH));
+                // Re-set the report design name, because a new design was loaded
+                reloadedDesign.setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
+                this.reportDesign = reloadedDesign;
+                // Do we already have a data source set?
                 if (this.reportDataSource != null) {
-                    // Re-inject data source fields into the design
+                    // Re-inject data source fields into the reloaded design
                     return withDatasource(this.reportDataSource);
                 }
             }
 
             return this;
-
         }
 
         /**
@@ -343,12 +344,49 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         public Builder withConnection(Connection connection) {
             if (this.usingBuiltInTemplates()) {
-                throw new IllegalStateException("No connection is required, when using the built-in templates. " +
-                        "Try using the another builder method.");
+                throw new IllegalStateException("No connection is required when using built-in templates. " +
+                        "Try using the another builder factory method.");
             }
             this.fillConnection = Objects.requireNonNull(connection, "Connection must not be null.");
 
             return this;
+        }
+
+        /**
+         * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
+         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.Worker}
+         * implementation is used to define the algorithm to be ran, as the phase delimitation.
+         *
+         * @param syncBarrier         A barrier to synchronize to.
+         * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
+         * @param worker              A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
+         * @return An anonymous instance of a {@code Runnable}, representing a build phase.
+         */
+        private static Runnable createSynchronizedWorkPhase(CyclicBarrier syncBarrier, String phaseFailureMessage, Worker worker) {
+            return new Runnable() {
+                @Override
+                public void run() {
+                    worker.doWork();
+                    try {
+                        syncBarrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
+                                " An exception occurred: {0}", e.getMessage()), e.getCause());
+                    }
+                }
+            };
+        }
+
+        /**
+         * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
+         * a build phase (that must be ran as a separate thread).
+         */
+        private interface Worker {
+
+            /**
+             * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
+             */
+            void doWork();
         }
 
         /**
@@ -358,56 +396,49 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @throws ReportGeneratorException If anything happens during the build process.
          */
         public JasperReportGenerator build() throws ReportGeneratorException {
-            validateBuilder();
-            CyclicBarrier barrier = new CyclicBarrier(4);
+            // Validate builder
+            checkBuildConsistency();
             try {
-                new Thread(() -> {
+                // Are we using a built-in template?
+                if (this.usingBuiltInTemplates()) {
+                    // A synchronization barrier in order to synchronize build phases
+                    CyclicBarrier barrier = new CyclicBarrier(4);
+                    // We split the build process in 3 parallel phases - each one is contained and explained below
                     // Bind all required styles to report design
-                    this.reportDesign = new StylesDesignBinder(this.reportDesign).bind(JasperStyles.asList());
-                    try {
-                        barrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        throw new ReportGeneratorException(MessageFormat.format("Could not attach styles to the report. " +
-                                "An exception occurred: {0}", e.getMessage()), e.getCause());
-                    }
-                }).start();
-                new Thread(() -> {
+                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't attach styles to report design.", new Worker() {
+                        @Override
+                        public synchronized void doWork() {
+                            reportDesign = new StylesDesignBinder(reportDesign).bind(JasperStyles.asList());
+                        }
+                    })).start();
+
                     // Bind fields metadata to report design
-                    Collection<String> fieldNames = this.reportTableAndColumnMetadata.keySet();
-                    this.reportDesign =
-                            new FieldMetadataDesignBinder(this.reportDesign).bind(fieldNames);
-                    try {
-                        barrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        throw new ReportGeneratorException(MessageFormat.format("Could not field metadata to the report. " +
-                                "An exception occurred: {0}", e.getMessage()), e.getCause());
-                    }
-                }).start();
-                new Thread(() -> {
+                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't bind field metadata to report design.", new Worker() {
+                        @Override
+                        public synchronized void doWork() {
+                            Collection<String> fieldNames = reportTableAndColumnMetadata.keySet();
+                            reportDesign =
+                                    new FieldMetadataDesignBinder(reportDesign).bind(fieldNames);
+                        }
+                    })).start();
+
                     // Bind table, based on metadata, to report design
-                    JRComponentElement tableComponent = // Generate the table
-                            new TableComponentCreator(this.reportDesign).create(this.reportTableAndColumnMetadata);
-                    this.reportDesign = // Bind it
-                            new TableDesignBinder(this.reportDesign).bind(tableComponent);
-                    try {
-                        barrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        throw new ReportGeneratorException(MessageFormat.format("Could not bind the table to the report. " +
-                                "An exception occurred: {0}", e.getMessage()), e.getCause());
-                    }
-                }).start();
+                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't bind table to report design.", new Worker() {
+                        @Override
+                        public synchronized void doWork() {
+                            JRComponentElement tableComponent = // Generate the table
+                                    new TableComponentCreator(reportDesign).create(reportTableAndColumnMetadata);
+                            reportDesign = // Bind it
+                                    new TableDesignBinder(reportDesign).bind(tableComponent);
+                        }
+                    })).start();
 
-                // This thread must also Wait until all above bindings have been completed
-                barrier.await();
-            } catch (InterruptedException | BrokenBarrierException e) {
-                throw new ReportGeneratorException(
-                        MessageFormat.format("Building failed. An exception occurred: {0} ", e.getMessage()), e.getCause());
-            }
-
-            try {
+                    // This main thread must also Wait until all above phases have been completed
+                    barrier.await();
+                }
                 // Compile report
                 this.reportDesign = JasperCompileManager.compileReport((JasperDesign) this.reportDesign);
-            } catch (JRException e) {
+            } catch (InterruptedException | BrokenBarrierException | JRException e) {
                 throw new ReportGeneratorException(
                         MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), e.getCause());
             }
@@ -418,31 +449,36 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         /**
          * A validation method to do some sanity checks before attempting start the report building process.
          */
-        private void validateBuilder() {
+        private void checkBuildConsistency() {
             if (this.reportDesign == null) {
-                throw new ReportGeneratorException("No report design was attached.");
+                throw new IllegalStateException("No report design was attached to the builder - neither a custom nor built-in one was loaded.");
             }
-            if (this.reportDataSource == null ||
-                    !this.reportParameters.get(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY).equals(this.reportDataSource)) {
-                if (usingBuiltInTemplates()) {
-                    throw new ReportGeneratorException("No data source was attached.");
+            // Using a "built-in template" strategy?
+            if (this.usingBuiltInTemplates()) {
+                // Validate data source
+                if (this.reportDataSource == null || !this.reportParameters.get(JasperConstants.JASPER_DATASOURCE_IDENTIFIER_KEY).equals(this.reportDataSource)) {
+                    throw new IllegalStateException("No report data source was attached.");
                 }
-            }
-            if (this.reportTableAndColumnMetadata == null) {
-                // Throw an exception only if we are using the default templates
-                if (usingBuiltInTemplates()) {
-                    throw new ReportGeneratorException("No fields and columns metadata was attached.");
+                // Validate field and column metadata
+                if (this.reportTableAndColumnMetadata == null) {
+                    throw new IllegalStateException("No fields and columns metadata was attached.");
+                }
+            } else { // Default build strategy
+                if (this.fillConnection == null) {
+                    throw new IllegalStateException("No connection was attached.");
                 }
             }
         }
 
         /**
-         * A validation method which tests if the builder is using default the built-in templates.
+         * A validation method which tests if the builder is using default built-in templates or a custom one.
          *
          * @return {@code True} if it is, {@code False} otherwise.
          */
         private boolean usingBuiltInTemplates() {
             return this.reportDesign.getName().equals(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
         }
+
+
     }
 }
