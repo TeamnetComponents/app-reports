@@ -5,15 +5,13 @@ import net.sf.jasperreports.engine.JRComponentElement;
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.component.ComponentKey;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
-import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.Bean;
 import ro.teamnet.solutions.reportinator.bind.BindingException;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class TableDesignBinderTest {
 
