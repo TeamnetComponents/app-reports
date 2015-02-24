@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static org.junit.Assert.assertTrue;
+
 public class JasperReportExporterTest {
 
     private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
@@ -69,7 +71,7 @@ public class JasperReportExporterTest {
 
     @Test(expected = ExporterException.class)
     public void testUsingPrintForExportShouldPassIfParametersAreNull() throws Exception {
-        JasperPrint print = null;
+        JasperPrint print = null; // Specially crafted, to distinguish between exporter types
         JasperReportExporter.export(print, null, null);
     }
 
@@ -80,7 +82,7 @@ public class JasperReportExporterTest {
     }
 
     @Test
-    public void testShouldExportAFile() throws Exception {
+    public void testShouldExportReportAsAPDFFile() throws Exception {
         out = new FileOutputStream("testReportExporter.pdf");
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder()
@@ -91,14 +93,15 @@ public class JasperReportExporterTest {
         JasperPrint print = reportGenerator.generate();
         JasperReportExporter.export(print, out, ExportType.PDF);
         out.close();
-        // Clean-up generated files
         path = Paths.get("testReportExporter.pdf");
+        assertTrue("PDF file was not created by the exporter.", Files.exists(path));
+
+        // Clean-up generated files
         if (Files.exists(path) && Files.isWritable(path)) {
             File f = path.toFile();
             f.setWritable(true);
             f.delete();
         }
     }
-
 
 }

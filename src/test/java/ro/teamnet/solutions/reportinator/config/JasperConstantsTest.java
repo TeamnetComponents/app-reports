@@ -1,5 +1,8 @@
 package ro.teamnet.solutions.reportinator.config;
 
+import net.sf.jasperreports.engine.JRDataSource;
+import ro.teamnet.solutions.reportinator.convert.jasper.MapCollectionDataSourceConverter;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,5 +88,8 @@ public class JasperConstantsTest {
         }
     }
 
-
+    /**
+     * An eager generated data source, to be used in tests.
+     */
+    public static final JRDataSource JASPER_DATA_SOURCE_FROM_MAP_COLLECTION = new MapCollectionDataSourceConverter(COLUMNS_METADATA).convert(ROWS_MAP_COLLECTION);
 }

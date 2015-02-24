@@ -172,16 +172,16 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             try {
                 JRReport loadedDesign = JasperDesignLoader.load(
                         new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH :
+                                JasperConstants.JASPER_JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH :
                                 absolutePathnameToJasperXml));
-                //
+                // No path to a design was given; using built-in one
                 if (absolutePathnameToJasperXml == null) {
                     // Set an accessible name because a built-in template was loaded
                     ((JasperDesign) loadedDesign).setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
                 }
                 // Assign loaded design to builder
                 this.reportDesign = loadedDesign;
-            } catch (LoaderException | NullPointerException e) {
+            } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
                         MessageFormat.format("No template file could be found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
@@ -360,19 +360,19 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
 
         /**
          * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
-         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.Worker}
+         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.BuildPhase}
          * implementation is used to define the algorithm to be ran, as the phase delimitation.
          *
          * @param syncBarrier         A barrier to synchronize to.
          * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
-         * @param worker              A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
+         * @param buildPhase              A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
          * @return An anonymous instance of a {@code Runnable}, representing a build phase.
          */
-        private static Runnable createSynchronizedWorkPhase(CyclicBarrier syncBarrier, String phaseFailureMessage, Worker worker) {
+        private static Runnable createSynchronizedBuildPhase(CyclicBarrier syncBarrier, String phaseFailureMessage, BuildPhase buildPhase) {
             return new Runnable() {
                 @Override
                 public void run() {
-                    worker.doWork();
+                    buildPhase.startPhase();
                     try {
                         syncBarrier.await();
                     } catch (InterruptedException | BrokenBarrierException e) {
@@ -387,12 +387,12 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
          * a build phase (that must be ran as a separate thread).
          */
-        private interface Worker {
+        private interface BuildPhase {
 
             /**
              * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
              */
-            void doWork();
+            void startPhase();
         }
 
         /**
@@ -411,17 +411,17 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                     CyclicBarrier barrier = new CyclicBarrier(4);
                     // We split the build process in 3 parallel phases - each one is contained and explained below
                     // Bind all required styles to report design
-                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't attach styles to report design.", new Worker() {
+                    new Thread(createSynchronizedBuildPhase(barrier, "Couldn't attach styles to report design.", new BuildPhase() {
                         @Override
-                        public synchronized void doWork() {
+                        public synchronized void startPhase() {
                             reportDesign = new StylesDesignBinder(reportDesign).bind(JasperStyles.asList());
                         }
                     })).start();
 
                     // Bind fields metadata to report design
-                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't bind field metadata to report design.", new Worker() {
+                    new Thread(createSynchronizedBuildPhase(barrier, "Couldn't bind field metadata to report design.", new BuildPhase() {
                         @Override
-                        public synchronized void doWork() {
+                        public synchronized void startPhase() {
                             Collection<String> fieldNames = reportTableAndColumnMetadata.keySet();
                             reportDesign =
                                     new FieldMetadataDesignBinder(reportDesign).bind(fieldNames);
@@ -429,9 +429,9 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                     })).start();
 
                     // Bind table, based on metadata, to report design
-                    new Thread(createSynchronizedWorkPhase(barrier, "Couldn't bind table to report design.", new Worker() {
+                    new Thread(createSynchronizedBuildPhase(barrier, "Couldn't bind table to report design.", new BuildPhase() {
                         @Override
-                        public synchronized void doWork() {
+                        public synchronized void startPhase() {
                             JRComponentElement tableComponent = // Generate the table
                                     new TableComponentCreator(reportDesign).create(reportTableAndColumnMetadata);
                             reportDesign = // Bind it
@@ -453,7 +453,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * A validation method to do some sanity checks before attempting start the report building process.
+         * A validation method to do some sanity checks before attempting startPhase the report building process.
          */
         private void checkBuildConsistency() {
             if (this.reportDesign == null) {

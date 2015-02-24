@@ -4,16 +4,19 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.junit.Before;
 import org.junit.Test;
+import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 import ro.teamnet.solutions.reportinator.convert.jasper.MapCollectionDataSourceConverter;
 import ro.teamnet.solutions.reportinator.generation.JasperReportGenerator;
 import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
+import ro.teamnet.solutions.reportinator.generation.ReportGeneratorException;
 
+import java.io.InputStream;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * @author Bogdan.Stefan
@@ -35,24 +38,24 @@ public class JasperReportGeneratorTest {
     @Test(expected = IllegalStateException.class)
     public void testShouldPassIfExceptionWhenUsingCustomJrxmlAndDataSource() throws Exception {
         ReportGenerator<JasperPrint> reportGenerator =
-                JasperReportGenerator.builder(JRXML_PATH)
+                JasperReportGenerator.builder(JRXML_PATH)   // Load a custom JXRML
                         .withDatasource(DATA_SOURCE)
                         .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
                         .build();
-        assertNull("Generator should have been null.", reportGenerator);
+        assertNull("Generator reference should have been null.", reportGenerator);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testShouldPassIfExceptionWhenUsingCustomJrxmlAnTableMetadata() throws Exception {
+    public void testShouldPassIfExceptionWhenUsingCustomJrxmlAndTableMetadataInsteadOfConnection() throws Exception {
         ReportGenerator<JasperPrint> reportGenerator =
-                JasperReportGenerator.builder(JRXML_PATH)
+                JasperReportGenerator.builder(JRXML_PATH)   // Load a custom JXRML
                         .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
                         .build();
-        assertNull("Generator should have been null.", reportGenerator);
+        assertNull("Generator reference should have been null.", reportGenerator);
     }
 
     @Test
-    public void testShouldGenerateAValidReportPrint() throws Exception {
+    public void testShouldGenerateValidReportPrint() throws Exception {
         ReportGenerator<JasperPrint> reportGenerator =
                 JasperReportGenerator.builder()
                         .withDatasource(DATA_SOURCE)
@@ -60,12 +63,12 @@ public class JasperReportGeneratorTest {
                         .build();
         JasperPrint print = reportGenerator.generate();
         assertNotNull("Generated print object was null.", print);
+        assertEquals("Generated print report name does not match built-in name.", JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY, print.getName());
     }
 
     /**
-     * A regression test, for a previously discovered bug.
-     *
-     * @throws Exception
+     * A regression test, for a previously discovered bug in which when setting the builder's column metadata before
+     * the data source threw an exception.
      */
     @Test
     public void testReportGeneratorShouldGenerateAValidPrintWhenTableColumnMetadataBeforeDataSource() {
@@ -74,9 +77,74 @@ public class JasperReportGeneratorTest {
                         .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA)
                         .withDatasource(DATA_SOURCE)
                         .build();
+        assertNotNull("Generator reference should not have been null.", reportGenerator);
         JasperPrint print = reportGenerator.generate();
-        assertNotNull("Generated print object was null.", print);
+        assertEquals("Generated print report name does not match built-in name.", JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY, print.getName());
     }
 
-    // TODO Error and other tests
+    @Test(expected = ReportGeneratorException.class)
+    public void testReportGeneratorBuilderMethodShouldThrowExceptionIfTemplateArgumentIsNull() throws Exception {
+        InputStream fakeTemplateStream = null; // Specially crafted, to distinguish between builder methods
+        JasperReportGenerator.Builder reportGeneratorBuilder =
+                JasperReportGenerator.builder(fakeTemplateStream);
+        assertNull("Builder reference should have been null.", reportGeneratorBuilder);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testReportGeneratorBuilderBuildMethodShouldThrowExceptionIfCustomJrxmlBuilderHasNoBuildInformation() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder(JRXML_PATH) // No build information defined; builder is inconsistent
+                        .build();
+        assertNull("Generator reference should have been null.", reportGenerator);
+    }
+
+
+    @Test(expected = IllegalStateException.class)
+    public void testReportGeneratorBuilderBuildMethodShouldThrowExceptionIfBuilderHasNoBuildInformation() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder() // No build information defined; builder is inconsistent
+                        .build();
+        assertNull("Generator reference should have been null.", reportGenerator);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testReportGeneratorBuilderBuildMethodShouldThrowExceptionIfBuilderHasPartialBuildInformation() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder() // Builder uses built-in template, no field metadata
+                        .withDatasource(DATA_SOURCE) // and only a data source
+                        .build();
+        assertNull("Generator reference should have been null.", reportGenerator);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testReportGeneratorBuilderBuildMethodShouldThrowExceptionIfBuilderHasPartialBuildInformation2() throws Exception {
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder() // Builder uses built-in template, no data source
+                        .withTableColumnsMetadata(FIELDS_COLUMNS_METADATA) // and only field metadata
+                        .build();
+        assertNull("Generator reference should have been null.", reportGenerator);
+    }
+
+    /**
+     * TODO Test that this actually works; it should fail since no valid connection information.
+     */
+    @Test
+    public void testShouldPassWhenUsingValidCustomJrxmlAndConnection() {
+        Connection connection = null; // FUTURE Test that this actually works;
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder(JRXML_PATH)   // Load a custom JXRML
+                        .withConnection(connection)
+                        .build();
+        assertNull("Generator reference should not have been null.", reportGenerator); // Revert this
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testShouldPassIfExceptionWhenUsingCustomJrxmlAndNullConnection() {
+        Connection connection = null; // Specially set to 'null'
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder(JRXML_PATH)   // Load a custom JXRML
+                        .withConnection(connection)
+                        .build();
+        assertNull("Generator reference should have been null.", reportGenerator);
+    }
 }
