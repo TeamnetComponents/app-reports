@@ -9,6 +9,7 @@ import java.util.Properties;
  * A class containing various constants, all common to the reporting engines.
  *
  * @author Bogdan.Stefan
+ * @author Bogdan.Iancu
  * @version 1.0 Date: 2/10/2015
  */
 public class Constants {
