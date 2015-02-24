@@ -3,6 +3,8 @@ package ro.teamnet.solutions.reportinator.convert.jasper;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
 import ro.teamnet.solutions.reportinator.convert.DataSourceConverter;
 
@@ -41,12 +43,67 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
     public JRDataSource convert(Collection<B> inputSource) {
 
         List<List<String>> rows = new ArrayList<>();
+        List<Field> fields = null;
 
-        for(Object o : inputSource){
-            List<String> row = parseRow(o);
+        Iterator<B> iterator = inputSource.iterator();
+
+        Object o1 = iterator.next();
+        fields = getSelectedFields(o1.getClass());
+        List<String> row = parseRow(o1, fields);
+
+        //We need to add an empty row because jasper reports jumps over the first row
+        //FUTURE remove this (in case of jasper bug fix)
+        rows.add(new ArrayList<>());
+
+        rows.add(row);
+
+        while (iterator.hasNext()){
+            row = parseRow(iterator.next(),fields);
             rows.add(row);
         }
+
         return new DataSourceAdapter(rows);
+    }
+
+    /**
+     * Method that gets all the desired fields of the class including inherited fields
+     * @param c
+     * @return
+     */
+    private List<Field> getSelectedFields(Class c) {
+        List<Field> fields = new ArrayList<>();
+
+        for (String fieldName : fieldMetadata) {
+            try {
+                Field field = getSelectedField(null, fieldName, c);
+                fields.add(field);
+            } catch (Exception e) {
+                throw new ConversionException("Exception getting field named " + fieldName, e.getCause());
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * Method that travels recursively on the superclasses of a class to get a desired field
+     * @param field the value of the desired field used for recursivity , MUST be null when first calling the method
+     * @param fieldName the name of the desired field
+     * @param c
+     * @return
+     * @throws NoSuchFieldException if no such field is found
+     */
+    private Field getSelectedField(Field field, String fieldName, Class c) throws NoSuchFieldException {
+
+        if(c.equals(Object.class))
+            throw new NoSuchFieldException();
+
+        try {
+            field = c.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            field = getSelectedField(field, fieldName, c.getSuperclass());
+        }
+
+        return field;
     }
 
     /**
@@ -54,17 +111,16 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
      * @param o
      * @return
      */
-    private List<String> parseRow(Object o){
+    private List<String> parseRow(Object o, List<Field> fields){
         List<String> args = new ArrayList<>();
-        for (String fieldName : fieldMetadata) {
+        for (Field field : fields) {
             String arg = null;
             try {
-                Field field = o.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
                 arg = field.get(o).toString();
                 args.add(arg);
             } catch (Exception e) {
-                throw new ConversionException("Exception parsing : " + o + " object", e);
+                throw new ConversionException("Exception parsing : " + o + " object", e.getCause());
             }
         }
         return args;
@@ -98,7 +154,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
                     this.currentRow = this.rowIterator.next();
                 } catch (NoSuchElementException e) {
                     // Re-throw
-                    throw new JRException("No more elements.", e);
+                    throw new JRException("No more elements.", e.getCause());
                 }
 
             return retValue;

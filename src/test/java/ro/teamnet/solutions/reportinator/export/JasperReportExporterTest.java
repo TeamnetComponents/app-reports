@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 
 public class JasperReportExporterTest {
 
-    private static final String JRXML_PATH = JasperConstantsTest.JRXML_BLANK_PORTRAIT_TEMPLATE_PATH;
     private JasperPrint reportPrint;
     private Map<String, Object> reportParameters;
     private OutputStream out;
@@ -45,14 +44,18 @@ public class JasperReportExporterTest {
 
 
         employees = new ArrayList<>();
-        employees.add(new Employee(1, "Bogdan", "Iancu", 1000, "Solutii", "home", "developer", 8, 0));
-        employees.add(new Employee(2, "Cristi", "Dumitru", 1000, "Solutii", "home", "developer", 8, 0));
-        employees.add(new Employee(3, "Oana", "Popescu", 1000, "Solutii", "home", "developer", 8, 0));
-        employees.add(new Employee(4, "Alex", "Cojocaru", 1000, "Solutii", "home", "developer", 8, 0));
-        employees.add(new Employee(5, "Mihaela", "Scripcaru", 1000, "Solutii", "home", "developer", 8, 0));
-        employees.add(new Employee(6, "Sad", "Panda", 1000000, "Management", "mansion", "BOSS", 1, 100));
+        employees.add(new Employee(23, "romanian", 1, "Bogdan", "Iancu", 1000, "Solutii", "home" , "developer", 8, 0 ));
+        employees.add(new Employee(23, "romanian", 2, "Cristi", "Dumitru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(23, "romanian", 3, "Oana", "Popescu", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(23, "romanian", 4, "Alex", "Cojocaru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(23, "romanian", 5, "Mihaela", "Scripcaru", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(23, "romanian", 6, "Andrei", "Marica", 1000, "Solutii", "home" , "developer", 8, 0));
+        employees.add(new Employee(100, "romanian", 7, "Sad", "Panda", 1000000, "Management", "mansion" , "BOSS", 1, 100));
 
         fields = new LinkedHashMap<>();
+//        fields.put("ceva","aiurea");
+        fields.put("age", "Varsta");
+        fields.put("nationality","Nationalitate");
         fields.put("id", "Id");
         fields.put("firstName", "Prenume");
         fields.put("lastName", "Nume");
@@ -100,7 +103,7 @@ public class JasperReportExporterTest {
         if (Files.exists(path) && Files.isWritable(path)) {
             File f = path.toFile();
             f.setWritable(true);
-            f.delete();
+            //f.delete();
         }
     }
 

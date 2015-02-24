@@ -3,7 +3,7 @@ package ro.teamnet.solutions.reportinator.utils;
 /**
  * Created by Bogdan.Iancu on 17-Feb-15.
  */
-public class Employee{
+public class Employee extends Person{
     private int id;
     private String firstName;
     private String lastName;
@@ -26,7 +26,19 @@ public class Employee{
         this.department = department;
     }
 
-    public Employee(int id, String firstName, String lastName, int salary, String department, String address, String position, int hoursPerDay, int yearsOfExperience) {
+    public Employee(int age, String nationality, int id, String lastName, String firstName, int salary, String department) {
+        super(age,nationality);
+        this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.salary = salary;
+        this.department = department;
+    }
+
+
+
+    public Employee(int age, String nationality, int id, String firstName, String lastName, int salary, String department, String address, String position, int hoursPerDay, int yearsOfExperience) {
+        super(age,nationality);
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
