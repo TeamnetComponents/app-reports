@@ -11,6 +11,7 @@ package ro.teamnet.solutions.reportinator.generation.jasper;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.config.JasperConstants;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
@@ -137,6 +138,7 @@ public class JasperReportGeneratorTest {
      * TODO Test that this actually works; for now it should fail since no valid connection information.
      */
     @Test
+    @Ignore
     public void testShouldPassWhenUsingValidCustomJrxmlAndConnection() {
         Connection connection = null; // FUTURE Test that this actually works
         ReportGenerator<JasperPrint> reportGenerator =
