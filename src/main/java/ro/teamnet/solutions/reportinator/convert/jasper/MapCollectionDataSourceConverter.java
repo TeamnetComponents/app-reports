@@ -15,8 +15,8 @@ import java.util.*;
  * {@link java.util.Collection} into a {@link net.sf.jasperreports.engine.JRDataSource} (specific to JasperReports)
  * through some internal heuristics.
  * <p>
- *     The dictionary binds its {@code keys} to specific {@code parameters, variables or fields}, to be filled with
- *     their respective values at run-time.
+ * The dictionary binds its {@code keys} to specific {@code parameters, variables or fields}, to be filled with
+ * their respective values at run-time.
  * </p>
  *
  * @author Bogdan.Stefan
@@ -49,11 +49,10 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
         if (this.rowsCollection.size() == 0) {
             throw new ConversionException(
                     MessageFormat.format("Input source was empty (size = {0}). Cannot convert to a valid " +
-                            "Jasper data source!", inputSource.size())
-            );
+                            "Jasper data source!", inputSource.size()));
         }
         // Collection lacking required metadata?
-        for (Map<String, ?> row : this.rowsCollection) {
+        for (Map<String, ?> row : this.rowsCollection) { // Loops just once (on purpose)
             if (!row.keySet().containsAll(this.fieldMetadata)) {
                 throw new ConversionException(
                         MessageFormat.format("Input source metadata {0} does not contain all converter required " +
@@ -81,6 +80,7 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
     /**
      * A custom adapter for a {@link net.sf.jasperreports.engine.JRDataSource}, which uses the map collection as
      * the ADT backing.
+     *
      * @see net.sf.jasperreports.engine.data.JRMapCollectionDataSource
      * @deprecated Not used anymore, because a Jasper specific implementation is preferred.
      */
@@ -117,8 +117,7 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
         @Override
         public Object getFieldValue(JRField field) throws JRException {
             Object retValue = this.currentRow.get(
-                    Objects.requireNonNull(field, "Field must not be null!").getName()
-            );
+                    Objects.requireNonNull(field, "Field must not be null!").getName());
             if (retValue == null) {
                 throw new JRException(
                         MessageFormat.format("Given field {0} cannot be matched to a " +
@@ -128,8 +127,8 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
             if (!retValue.getClass().equals(field.getValueClass())) {
                 throw new JRException(
                         MessageFormat.format("Retrieved value type {0} does not match required return type {1}.",
-                        retValue.getClass().getName(),
-                        field.getValueClassName())
+                                retValue.getClass().getName(),
+                                field.getValueClassName())
                 );
             }
             return retValue;

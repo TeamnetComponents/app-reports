@@ -1,5 +1,5 @@
 /**
- * Contains default configuration for various parameters, for the reporting engine.
+ * Contains default configuration for various parameters, regarding Reportinator's reporting engine.
  *
  * @author Bogdan.Stefan
  * @version 1.0 Date: 2/9/2015

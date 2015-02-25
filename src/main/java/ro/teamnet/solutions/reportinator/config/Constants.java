@@ -14,22 +14,24 @@ import java.util.Properties;
  */
 public class Constants {
 
-//    private Constants() throws IllegalAccessException {
-//        throw new IllegalAccessException("Constants class should not be instantiated.");
-//    }
-
     /**
-     * Maximum allowed table width (in pixels) for an A4 Landscape page format.
+     * Maximum allowed table width (in pixels) for an A4, Landscape, page format.
+     *
+     * @see #DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE
      */
     public static final Integer TABLE_MAXIMUM_WIDTH_LANDSCAPE;
 
     /**
      * Maximum allowed table width (in pixels) for an A4 Portrait page format.
+     *
+     * @see #DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT
      */
     public static final Integer TABLE_MAXIMUM_WIDTH_PORTRAIT;
 
     /**
-     * Standard Table Border width.
+     * Standard table border width.
+     *
+     * @see #DEFAULT_TABLE_BORDER_WIDTH
      */
     public static final Float TABLE_BORDER_WIDTH; // Usage for styles
 
@@ -39,7 +41,16 @@ public class Constants {
     public static final String DEFAULT_TABLE_BORDER_WIDTH = "0.7f";
 
     // Initialize some properties from disk configuration file
+    /**
+     * Path to a disk file where configuration properties can be loaded from.
+     */
     private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/test/resources/reportinator-config.properties";
+
+    /**
+     * A dictionary containing configuration properties loaded from a disk {@code .properties} file.
+     *
+     * @see ro.teamnet.solutions.reportinator.config.Constants#CONFIGURATION_PROPERTIES_FILE_PATH
+     */
     protected static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
     static {
         // A holder reference

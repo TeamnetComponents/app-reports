@@ -126,7 +126,7 @@ public class JasperReportGeneratorTest {
     }
 
     /**
-     * TODO Test that this actually works; it should fail since no valid connection information.
+     * TODO Test that this actually works; for now it should fail since no valid connection information.
      */
     @Test
     public void testShouldPassWhenUsingValidCustomJrxmlAndConnection() {

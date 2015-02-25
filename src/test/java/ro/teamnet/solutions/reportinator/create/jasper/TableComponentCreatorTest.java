@@ -8,8 +8,7 @@ import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 
 import java.io.File;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TableComponentCreatorTest {
 
@@ -33,10 +32,14 @@ public class TableComponentCreatorTest {
     @Test
     public void testShouldPassIfAValidTableComponentWasCreated() throws Exception {
         JRComponentElement componentElement = this.componentCreator.create(JasperConstantsTest.FIELDS_COLUMNS_METADATA);
-        assertTrue("Generated component element is not a JasperReports table component.",
+        assertTrue("Generated component element is not a JasperReports Table component.",
                 componentElement.getComponentKey().getNamespacePrefix().equals("jr") &&
                 componentElement.getComponentKey().getName().equals("table"));
     }
 
-    // TODO Error checking tests for this component
+    @Test(expected = IllegalArgumentException.class)
+    public void testShouldPassIfNoComponentWasCreatedWhenNullParameters() throws Exception {
+        JRComponentElement componentElement = this.componentCreator.create(null);
+        assertNull("Component element should have not been created", componentElement);
+    }
 }

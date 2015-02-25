@@ -115,7 +115,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
             // Define Column headers
             DesignCell cell = new DesignCell();
             cell.setStyle(JasperStyles.HEADER_TABLE_STYLE.getStyle());
-            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
+            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM_HEADER_CELL_HEIGHT);
             // Attach runtime text holder
             String columnLabelExpression = "\"" + columnMetadatum.getValue() + "\"";
             cell.addElement(
@@ -125,7 +125,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
             // Define Detail cells
             cell = new DesignCell();
             cell.setStyle(JasperStyles.TABLE_STYLE.getStyle());
-            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM__HEADER_CELL_HEIGHT);
+            cell.setHeight(JasperConstants.JASPER_TABLE_MINIMUM_HEADER_CELL_HEIGHT);
             // Attach runtime text holder
             String columnContentExpression = "$F{" + columnMetadatum.getKey() + '}';
             cell.addElement(
@@ -147,7 +147,7 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
         componentElement.setComponent(table);
         componentElement.setKey(JasperConstants.JASPER_TABLE_IDENTIFIER_KEY);
         componentElement.setWidth(Constants.TABLE_MAXIMUM_WIDTH_LANDSCAPE); // As minimum, in pixels
-        componentElement.setHeight(100); // As minimum, in pixels
+        componentElement.setHeight(100); // As a minimum, in pixels
 
         return componentElement;
     }
