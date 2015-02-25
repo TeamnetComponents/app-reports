@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.bind.jasper;
 
 import net.sf.jasperreports.engine.JRComponentElement;
@@ -44,7 +52,7 @@ public final class TableDesignBinder implements Binder<JRComponentElement, JRRep
         if (tableComponent == null) {
             throw new IllegalArgumentException("The table component must not be null.");
         }
-        if (tableComponent.getComponentKey()== null || !tableComponent.getComponentKey().getName().equals("table") && !tableComponent.getComponentKey().getNamespace().equals("jr")) {
+        if (tableComponent.getComponentKey() == null || !tableComponent.getComponentKey().getName().equals("table") && !tableComponent.getComponentKey().getNamespace().equals("jr")) {
             throw new BindingException("The component is not a JasperDesign Table");
         }
 

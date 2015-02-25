@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.config.styles;
 
 
@@ -134,7 +142,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column header style , can be further customized here
      * This style defines the elements in the header column of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return A style for column headers.
@@ -152,7 +160,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column content style , can be further customized here
      * This style defines the elements in the main body of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return A style for column content.
@@ -170,7 +178,7 @@ public enum JasperStyles {
     /**
      * Method that returns a column footer style , can be further customized here
      * This style defines the elements in the  footer column of the generated Table
-     * <p/>
+     * <p>
      * MUST BE SET ON A  {@link net.sf.jasperreports.engine.design.JRDesignTextField}
      *
      * @return A style for column footers.

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.config;
 
 import java.io.FileInputStream;
@@ -52,6 +60,7 @@ public class Constants {
      * @see ro.teamnet.solutions.reportinator.config.Constants#CONFIGURATION_PROPERTIES_FILE_PATH
      */
     protected static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
+
     static {
         // A holder reference
         String property;

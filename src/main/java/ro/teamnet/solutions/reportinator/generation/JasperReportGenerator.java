@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.generation;
 
 import net.sf.jasperreports.engine.*;
@@ -205,7 +213,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
 
-
         /**
          * Establishes the report's data source (as a runtime parameter), to be used by built-in templates..
          *
@@ -365,7 +372,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          *
          * @param syncBarrier         A barrier to synchronize to.
          * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
-         * @param buildPhase              A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
+         * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
          * @return An anonymous instance of a {@code Runnable}, representing a build phase.
          */
         private static Runnable createSynchronizedBuildPhase(CyclicBarrier syncBarrier, String phaseFailureMessage, BuildPhase buildPhase) {

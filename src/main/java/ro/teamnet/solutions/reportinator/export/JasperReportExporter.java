@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.export;
 
 import net.sf.jasperreports.engine.JasperPrint;
@@ -8,6 +16,7 @@ import java.io.OutputStream;
 
 /**
  * Class that exports a report to the given format
+ *
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
  * @version 1.0 Date: 20-Feb-15
@@ -24,7 +33,7 @@ public class JasperReportExporter {
      * @param type         desired format
      */
     public static void export(JasperPrint inputSource, OutputStream outputSource, ExportType type) throws ExporterException {
-        if(type == null){
+        if (type == null) {
             throw new ExporterException("Export type must not be null");
         }
         try {

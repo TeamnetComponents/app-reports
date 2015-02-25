@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.bind.jasper;
 
 import net.sf.jasperreports.engine.JRException;
@@ -44,7 +52,7 @@ public final class FieldMetadataDesignBinder implements Binder<Collection<String
     /**
      * Binds a collection of fields metadata to the attached report template, by creating Jasper
      * {@link net.sf.jasperreports.engine.JRField}s. The collection must contain at least a field.
-     *
+     * <p>
      * <p>Note: The value of the fields in the collection, must match the names of the report's data source.</p>
      *
      * @param fieldNames A collection of fields metadata.

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.convert.jasper;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -23,10 +31,11 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Constructor for class
+     *
      * @param fieldMetadata collection which specifies what fields of the bean will be added to the data source
      */
     public BeanCollectionJasperDataSourceConverter(Collection<String> fieldMetadata) {
-        if(fieldMetadata == null || fieldMetadata.size()==0 ){
+        if (fieldMetadata == null || fieldMetadata.size() == 0) {
             throw new ConversionException("Field Metadata should not be null");
         }
         this.fieldMetadata = new ArrayList<>(fieldMetadata);
@@ -34,6 +43,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that converts a collection of beans to a JRDataSource
+     *
      * @param inputSource The collection of beans to be converted
      * @return A JRDataSource consisting of the selected fields in the bean collection
      */
@@ -55,8 +65,8 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
         rows.add(row);
 
-        while (iterator.hasNext()){
-            row = parseRow(iterator.next(),fields);
+        while (iterator.hasNext()) {
+            row = parseRow(iterator.next(), fields);
             rows.add(row);
         }
 
@@ -65,6 +75,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that gets all the desired fields of the class including inherited fields
+     *
      * @param c The class that will be scanned for fields
      * @return a list of the selected fields
      * @throws ro.teamnet.solutions.reportinator.convert.ConversionException if the field isn't found in the class or any of it's superclasses
@@ -85,15 +96,16 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that travels recursively on the superclasses of a class to get a desired field
-     * @param field the value of the desired field used for recursivity , MUST be null when first calling the method
+     *
+     * @param field     the value of the desired field used for recursivity , MUST be null when first calling the method
      * @param fieldName the name of the desired field
-     * @param c The class that will be scanned for the field
+     * @param c         The class that will be scanned for the field
      * @return the field with the given fieldName if it is found
      * @throws NoSuchFieldException if no such field is found in the class or any of it's superclasses
      */
     private Field getSelectedField(Field field, String fieldName, Class c) throws NoSuchFieldException {
 
-        if(c.equals(Object.class))
+        if (c.equals(Object.class))
             throw new NoSuchFieldException();
 
         try {
@@ -107,10 +119,11 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that gets the value of each selected field of a bean(Object)
+     *
      * @param o The object(bean) on which the selected fields will be accessed and their values added to the list
      * @return A List of the object's selected fields values
      */
-    private List<String> parseRow(Object o, List<Field> fields){
+    private List<String> parseRow(Object o, List<Field> fields) {
         List<String> args = new ArrayList<>();
         for (Field field : fields) {
             String fieldValue = null;
@@ -136,7 +149,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
     /**
      * Inner class that takes a collection of Strings and converts it to a JRDataSource
      */
-    private class DataSourceAdapter implements JRDataSource{
+    private class DataSourceAdapter implements JRDataSource {
 
         private final Iterator<List<String>> rowIterator;
         private List<String> currentRow;
@@ -148,7 +161,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
         @Override
         public boolean next() throws JRException {
             boolean retValue = this.rowIterator.hasNext();
-            if(retValue)
+            if (retValue)
                 try {
                     this.currentRow = this.rowIterator.next();
                 } catch (NoSuchElementException e) {

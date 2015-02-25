@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 import net.sf.jasperreports.engine.JRReport;
@@ -12,7 +20,7 @@ import java.io.FileNotFoundException;
  * A {@link ro.teamnet.solutions.reportinator.load.Loader} implementation that loads a {@link java.io.File}
  * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a paramterer for the .load()
  * method in {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader}.
- * <p/>
+ * <p>
  * The File sent to this {@code .load()} method should have a ".jrxml" extension , our loadSource
  * passes through a verification of extension using {@code checkIfJrxml()} method that ensures our File
  * it's a jrxml .

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.create.jasper;
 
 import net.sf.jasperreports.components.table.DesignCell;
@@ -158,8 +166,8 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
      * the <em>filling process</em>. This holder box must also obey a maximum permitted {@code width}, given its
      * {@code style} (and left/right padding).
      *
-     * @param columnExpressionText An JasperReports expression, to be used during report filling for data binding.
-     * @param columnStyle A JasperReports style to be applied to the column element, during generation.
+     * @param columnExpressionText  An JasperReports expression, to be used during report filling for data binding.
+     * @param columnStyle           A JasperReports style to be applied to the column element, during generation.
      * @param maximumPermittedWidth The maximum permitted width, to fit the holder box in.
      * @return A holder box, with the given <em>constraints</em>.
      */
