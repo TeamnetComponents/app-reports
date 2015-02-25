@@ -23,6 +23,11 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 2/6/2015
+ */
+
 public class PdfExporterTest {
 
     private JasperPrint reportPrint;

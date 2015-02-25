@@ -3,8 +3,6 @@ package ro.teamnet.solutions.reportinator.convert.jasper;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import ro.teamnet.solutions.reportinator.convert.ConversionException;
 import ro.teamnet.solutions.reportinator.convert.DataSourceConverter;
 
@@ -37,7 +35,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
     /**
      * Method that converts a collection of beans to a JRDataSource
      * @param inputSource The collection of beans to be converted
-     * @return
+     * @return A JRDataSource consisting of the selected fields in the bean collection
      */
     @Override
     public JRDataSource convert(Collection<B> inputSource) {
@@ -67,8 +65,9 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that gets all the desired fields of the class including inherited fields
-     * @param c
-     * @return
+     * @param c The class that will be scanned for fields
+     * @return a list of the selected fields
+     * @throws ro.teamnet.solutions.reportinator.convert.ConversionException if the field isn't found in the class or any of it's superclasses
      */
     private List<Field> getSelectedFields(Class c) {
         List<Field> fields = new ArrayList<>();
@@ -77,7 +76,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
             try {
                 Field field = getSelectedField(null, fieldName, c);
                 fields.add(field);
-            } catch (Exception e) {
+            } catch (NoSuchFieldException e) {
                 throw new ConversionException("Exception getting field named " + fieldName, e.getCause());
             }
         }
@@ -88,9 +87,9 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
      * Method that travels recursively on the superclasses of a class to get a desired field
      * @param field the value of the desired field used for recursivity , MUST be null when first calling the method
      * @param fieldName the name of the desired field
-     * @param c
-     * @return
-     * @throws NoSuchFieldException if no such field is found
+     * @param c The class that will be scanned for the field
+     * @return the field with the given fieldName if it is found
+     * @throws NoSuchFieldException if no such field is found in the class or any of it's superclasses
      */
     private Field getSelectedField(Field field, String fieldName, Class c) throws NoSuchFieldException {
 
@@ -108,18 +107,18 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
     /**
      * Method that gets the value of each selected field of a bean(Object)
-     * @param o
-     * @return
+     * @param o The object(bean) on which the selected fields will be accessed and their values added to the list
+     * @return A List of the object's selected fields values
      */
     private List<String> parseRow(Object o, List<Field> fields){
         List<String> args = new ArrayList<>();
         for (Field field : fields) {
-            String arg = null;
+            String fieldValue = null;
             try {
                 field.setAccessible(true);
-                arg = field.get(o).toString();
-                args.add(arg);
-            } catch (Exception e) {
+                fieldValue = field.get(o).toString();
+                args.add(fieldValue);
+            } catch (IllegalAccessException e) {
                 throw new ConversionException("Exception parsing : " + o + " object", e.getCause());
             }
         }

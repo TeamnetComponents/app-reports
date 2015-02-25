@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
@@ -24,6 +25,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static org.junit.Assert.assertTrue;
+
+/**
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 2/6/2015
+ */
 
 public class JasperReportExporterTest {
 
@@ -53,7 +59,6 @@ public class JasperReportExporterTest {
         employees.add(new Employee(100, "romanian", 7, "Sad", "Panda", 1000000, "Management", "mansion" , "BOSS", 1, 100));
 
         fields = new LinkedHashMap<>();
-//        fields.put("ceva","aiurea");
         fields.put("age", "Varsta");
         fields.put("nationality","Nationalitate");
         fields.put("id", "Id");
@@ -72,11 +77,38 @@ public class JasperReportExporterTest {
 
     }
 
-    @Test(expected = ExporterException.class)
-    public void testUsingPrintForExportShouldPassIfParametersAreNull() throws Exception {
-        JasperPrint print = null; // Specially crafted, to distinguish between exporter types
-        JasperReportExporter.export(print, null, null);
+    @After
+    public void cleanUp() throws Exception{
+        if(out != null)
+            out.close();
+        path = Paths.get("testReportExporter.pdf");
+
+        if (Files.exists(path) && Files.isWritable(path)) {
+            File f = path.toFile();
+            f.setWritable(true);
+            f.delete();
+        }
     }
+
+    @Test(expected = ExporterException.class)
+    public void testUsingPrintForExportShouldPassIfPrintOrOutputAreNull() throws Exception {
+        JasperPrint print = null; // Specially crafted, to distinguish between exporter types
+        JasperReportExporter.export(print, null, ExportType.PDF);
+    }
+
+    @Test(expected = ExporterException.class)
+    public void testShouldPassIfExportTypeIsNull() throws Exception{
+        out = new FileOutputStream("testReportExporter.pdf");
+        ReportGenerator<JasperPrint> reportGenerator =
+                JasperReportGenerator.builder()
+                        .withDatasource(this.dataSource)
+                        .withParameters(parameters)
+                        .withTableColumnsMetadata(fields)
+                        .build();
+        JasperPrint print = reportGenerator.generate();
+        JasperReportExporter.export(print, out, null);
+    }
+
 
     @Test(expected = ExporterException.class)
     public void testUsingGeneratorForExportShouldPassIfParametersAreNull() throws Exception {
@@ -95,16 +127,8 @@ public class JasperReportExporterTest {
                         .build();
         JasperPrint print = reportGenerator.generate();
         JasperReportExporter.export(print, out, ExportType.PDF);
-        out.close();
         path = Paths.get("testReportExporter.pdf");
         assertTrue("PDF file was not created by the exporter.", Files.exists(path));
-
-        // Clean-up generated files
-        if (Files.exists(path) && Files.isWritable(path)) {
-            File f = path.toFile();
-            f.setWritable(true);
-            //f.delete();
-        }
     }
 
 }

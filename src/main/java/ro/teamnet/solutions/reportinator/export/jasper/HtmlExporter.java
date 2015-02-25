@@ -16,6 +16,11 @@ import java.io.OutputStream;
  */
 public class HtmlExporter implements Exporter<JasperPrint> {
 
+    /**
+     * Converts a JasperPrint to html format
+     * @param inputSource the JasperPrint object to be exported
+     * @param outputSource An output source
+     */
     @Override
     public void export(JasperPrint inputSource, OutputStream outputSource){
         if(inputSource == null || outputSource == null){
@@ -29,7 +34,7 @@ public class HtmlExporter implements Exporter<JasperPrint> {
         try {
             exporter.exportReport();
         } catch (JRException e) {
-            throw new ExporterException("Exception exporting report", e);
+            throw new ExporterException("Exception exporting report", e.getCause());
         }
 
     }

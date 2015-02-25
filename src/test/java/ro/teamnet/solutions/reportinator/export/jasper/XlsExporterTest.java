@@ -24,7 +24,8 @@ import java.util.Map;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by Bogdan.Iancu on 16-Feb-15.
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 2/6/2015
  */
 public class XlsExporterTest {
     private JasperPrint reportPrint;

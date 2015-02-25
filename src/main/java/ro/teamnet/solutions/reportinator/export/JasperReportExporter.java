@@ -7,7 +7,6 @@ import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
 import java.io.OutputStream;
 
 /**
- * TODO Improve documentation consistency and general/exception messages improvements
  * Class that exports a report to the given format
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
@@ -21,13 +20,16 @@ public class JasperReportExporter {
      * Converts a JasperPrint object to the desired format
      *
      * @param inputSource  the JasperPrint object to be exported
-     * @param outputSource
+     * @param outputSource An output source
      * @param type         desired format
      */
     public static void export(JasperPrint inputSource, OutputStream outputSource, ExportType type) throws ExporterException {
+        if(type == null){
+            throw new ExporterException("Export type must not be null");
+        }
         try {
             type.getExporter().export(inputSource, outputSource);
-        } catch (Exception e) {
+        } catch (ExporterException e) {
             throw new ExporterException("Exception exporting report", e.getCause());
         }
     }
@@ -38,7 +40,7 @@ public class JasperReportExporter {
      *
      * @param printGenerator The generator of the report print.
      * @param outputSource   An output source
-     * @param type
+     * @param type           desired format
      * @see ro.teamnet.solutions.reportinator.generation.JasperReportGenerator JasperReportGenerator
      */
     public static void export(ReportGenerator<JasperPrint> printGenerator, OutputStream outputSource, ExportType type) throws ExporterException {

@@ -12,7 +12,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
+/**
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 2/6/2015
+ */
 public class BeanCollectionJasperDataSourceConverterTest {
 
 
@@ -58,5 +61,14 @@ public class BeanCollectionJasperDataSourceConverterTest {
     public void testShouldPassIfBeanCollectionIsEmpty() throws Exception {
         BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(Collections.<String>emptyList());
         assertNull(bcConvertor);
+    }
+
+
+    @Test(expected = ConversionException.class)
+    public void testShouldPassIfNoSuchFieldIsFound() throws  Exception{
+        fields.add("ceva");
+        BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(fields);
+        JRDataSource dataSource = bcConvertor.convert(employees);
+
     }
 }
