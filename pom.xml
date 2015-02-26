@@ -117,5 +117,12 @@
             </plugin>
         </plugins>
     </build>
-
+    <!--Extra Repositories -->
+    <repositories>
+        <repository>
+            <id>tni-hq-artifact</id>
+            <name>tni-hq-artifact-releases</name>
+            <url>http://repo.teamnet.ro/tn-components</url>
+        </repository>
+    </repositories>
 </project>
