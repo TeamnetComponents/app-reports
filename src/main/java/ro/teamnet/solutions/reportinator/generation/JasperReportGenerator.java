@@ -375,7 +375,10 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
          * @return An anonymous instance of a {@code Runnable}, representing a build phase.
          */
-        private static Runnable createSynchronizedBuildPhase(CyclicBarrier syncBarrier, String phaseFailureMessage, BuildPhase buildPhase) {
+        private static Runnable createSynchronizedBuildPhase(final CyclicBarrier syncBarrier,
+                                                             final String phaseFailureMessage,
+                                                             final BuildPhase buildPhase) {
+
             return new Runnable() {
                 @Override
                 public void run() {

@@ -61,7 +61,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
 
         //We need to add an empty row because jasper reports jumps over the first row
         //FUTURE remove this (in case of jasper bug fix)
-        rows.add(new ArrayList<>());
+        rows.add(new ArrayList<String>());
 
         rows.add(row);
 
