@@ -6,14 +6,12 @@
  * written consent of Teamnet S.A.
  */
 
-package ro.teamnet.solutions.reportinator.load.jasper;
+package ro.teamnet.solutions.reportinator.load;
 
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Test;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
-import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
-import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 import java.io.FileInputStream;
