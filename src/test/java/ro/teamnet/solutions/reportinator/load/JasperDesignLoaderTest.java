@@ -6,7 +6,7 @@
  * written consent of Teamnet S.A.
  */
 
-package ro.teamnet.solutions.reportinator.load.jasper;
+package ro.teamnet.solutions.reportinator.load;
 
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
