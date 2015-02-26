@@ -6,14 +6,13 @@
  * written consent of Teamnet S.A.
  */
 
-package ro.teamnet.solutions.reportinator.load.jasper;
+package ro.teamnet.solutions.reportinator.load;
 
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
-import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
-import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +47,27 @@ public class JasperDesignLoaderTest {
         JRReport report = JasperDesignLoader.load(inputStream);
         assertNull("Report should be null", report);
     }
+
+    @Test
+    public void testShouldPassWhenLoadingWihValidClassPath() throws Exception {
+        JRReport report = JasperDesignLoader.load(new ClassPathResource("jasper_test_blank_portrait_template.jrxml"));
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldLoadDefaultWithInvalidClassPathAsInput() throws Exception {
+        JRReport report = JasperDesignLoader.load(new ClassPathResource(PATH_TO_JRXML_FILE));
+        assertNull("Report should be null", report);
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldLoadDefaultWithNullClassPathAsInput() throws Exception {
+        ClassPathResource classPathResource = null;
+        JRReport report = JasperDesignLoader.load(classPathResource);
+        assertNull("Report should be null", report);
+    }
+
 
     @Test
     public void testShouldPassWhenLoadingWithAValidFile() throws Exception {
