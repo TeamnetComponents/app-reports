@@ -52,12 +52,6 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito-all.version}</version>
         </dependency>
-        <!-- Spring Framework -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>4.1.5.RELEASE</version>
-        </dependency>
     </dependencies>
 
 </project>
