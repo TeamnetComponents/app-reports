@@ -67,6 +67,7 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito-all.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>
