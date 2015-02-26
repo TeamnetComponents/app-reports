@@ -7,9 +7,9 @@
  */
 
 /**
- * Contains classes related to component creation.
+ * Contains classes related to report exporting, for JasperReports API.
  *
- * @author Bogdan.Stefan
- * @version 1.0 Date: 2/18/2015
+ * @author Bogdan.Iancu
+ * @version 1.0 Date: 2/26/2015
  */
-package ro.teamnet.solutions.reportinator.create;
+package ro.teamnet.solutions.reportinator.export.jasper;

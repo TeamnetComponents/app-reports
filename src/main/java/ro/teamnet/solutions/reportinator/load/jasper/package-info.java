@@ -7,9 +7,9 @@
  */
 
 /**
- * Contains classes related to component creation.
+ * Contains loaders for JRXML templates.
  *
- * @author Bogdan.Stefan
- * @version 1.0 Date: 2/18/2015
+ * @author Andrei.Marica
+ * @version 1.0 Date: 2/26/2015
  */
-package ro.teamnet.solutions.reportinator.create;
+package ro.teamnet.solutions.reportinator.load.jasper;
