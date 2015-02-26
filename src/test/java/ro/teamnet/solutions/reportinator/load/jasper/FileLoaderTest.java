@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.load.jasper;
 
 
@@ -10,7 +18,7 @@ import ro.teamnet.solutions.reportinator.load.LoaderException;
 
 import java.io.File;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * Contract and minimal tests for the {@link ro.teamnet.solutions.reportinator.load.jasper.FileLoader} class
