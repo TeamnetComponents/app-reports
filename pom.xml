@@ -12,6 +12,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Parent(s) -->
+    <parent>
+        <groupId>ro.teamnet.bootstrap</groupId>
+        <artifactId>bootstrap-dependencies</artifactId>
+        <version>0.1</version>
+        <relativePath/>
+    </parent>
+
     <groupId>ro.teamnet.solutions</groupId>
     <artifactId>reportinator</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -22,9 +30,16 @@
         <jasperreports.version>6.0.2</jasperreports.version>
         <jasperreports-fonts.version>4.0.0</jasperreports-fonts.version>
         <apache.poi.version>3.11</apache.poi.version>
+        <spring-core.version>[3.0.0.RELEASE,)</spring-core.version>
     </properties>
     <!-- Dependencies -->
     <dependencies>
+        <!-- Spring Framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring-core.version}</version>
+        </dependency>
         <!-- JasperReports -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
