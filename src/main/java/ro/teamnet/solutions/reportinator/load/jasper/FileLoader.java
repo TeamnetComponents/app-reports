@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 
 /**
  * A {@link ro.teamnet.solutions.reportinator.load.Loader} implementation that loads a {@link java.io.File}
- * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a paramterer for the .load()
+ * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a parameter for the .load()
  * method in {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader}.
  * <p>
  * The File sent to this {@code .load()} method should have a ".jrxml" extension , our loadSource
