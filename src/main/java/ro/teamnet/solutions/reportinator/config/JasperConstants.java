@@ -36,7 +36,7 @@ public final class JasperConstants extends Constants {
     /**
      * A key used to create a parameter, as a placeholder, where to assign the report subtitle text at runtime.
      */
-    public static final String JASPER_SUBTITLE_IDENTIFIER_KEY = "ReportinatorReportTitle";
+    public static final String JASPER_SUBTITLE_IDENTIFIER_KEY = "ReportinatorReportSubTitle";
 
     /**
      * A key used to create a parameter, as a placeholder, where to assign the report data set at runtime.
