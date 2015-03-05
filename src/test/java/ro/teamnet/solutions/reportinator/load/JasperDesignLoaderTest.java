@@ -15,8 +15,9 @@ import org.springframework.core.io.ClassPathResource;
 import ro.teamnet.solutions.reportinator.config.JasperConstantsTest;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -83,10 +84,57 @@ public class JasperDesignLoaderTest {
     }
 
     @Test
-    public void testShouldPassWhenLoadingWithAValidInputStream() throws Exception {
-        JRReport report = JasperDesignLoader.load(new FileInputStream(PATH_TO_JRXML_FILE));
+    public void testShouldPassWhenLoadingWithAValidPath() throws Exception {
+        JRReport report = JasperDesignLoader.load(new File(JasperConstantsTest.JRXML_BLANK_LANDSCAPE_TEMPLATE_PATH).toPath());
         assertNotNull("Report should not be null", report);
         assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldPassWhenLoadingWithInvalidPath() throws Exception {
+        JRReport report = JasperDesignLoader.load(new File("/a/b/c").toPath());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test
+    public void testShouldPassWhenLoadingWithAValidFileName() throws Exception {
+        JasperDesignLoader jasperDesignLoader = new JasperDesignLoader();
+        JRReport report = jasperDesignLoader.load("default_template.jrxml");
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldPassWhenLoadingWithInvalidFileName() throws Exception {
+        JRReport report = JasperDesignLoader.load("invalid_file_name");
+        assertNull("Report should not be null", report);
+    }
+
+    @Test
+    public void testShouldPassWhenLoadingWithValidURI() throws Exception {
+        JRReport report = JasperDesignLoader.load(new File(JasperConstantsTest.JRXML_BLANK_LANDSCAPE_TEMPLATE_PATH).toURI());
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldPassWhenLoadingWithInvalidURI() throws Exception {
+        JRReport report = JasperDesignLoader.load(new URI("a/b/c"));
+        assertNull("Report should be null", report);
+    }
+
+    @Test
+    public void testShouldPassWhenLoadingWithValidURL() throws Exception {
+        JRReport report = JasperDesignLoader.load(new URL("file:" + JasperConstantsTest.JRXML_BLANK_LANDSCAPE_TEMPLATE_PATH));
+        assertNotNull("Report should not be null", report);
+        assertEquals("The generated report should be a JasperDesign", JasperDesign.class, report.getClass());
+    }
+
+    @Test(expected = LoaderException.class)
+    public void testShouldPassWhenLoadingWithInvalidURL() throws Exception {
+        JRReport report = JasperDesignLoader.load(new URL("file:a/b/c"));
+        assertNull("Report should  be null", report);
     }
 
 }

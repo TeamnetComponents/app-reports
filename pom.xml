@@ -22,7 +22,7 @@
 
     <groupId>ro.teamnet.solutions</groupId>
     <artifactId>reportinator</artifactId>
-    <version>1.0-BOOTSTRAP</version>
+    <version>1.0.1-BOOTSTRAP</version>
 
     <!-- Dependencies - versions -->
     <properties>
