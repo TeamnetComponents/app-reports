@@ -52,13 +52,13 @@ public class BeanCollectionJasperDataSourceConverterTest {
     }
 
     @Test(expected = ConversionException.class)
-    public void testShouldPassIfBeanCollectionIsNull() throws Exception {
+    public void testShouldPassIfFieldMetadataIsNull() throws Exception {
         BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(null);
         assertNull(bcConvertor);
     }
 
     @Test(expected = ConversionException.class)
-    public void testShouldPassIfBeanCollectionIsEmpty() throws Exception {
+    public void testShouldPassIfFieldMetadataIsEmpty() throws Exception {
         BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(Collections.<String>emptyList());
         assertNull(bcConvertor);
     }
@@ -71,4 +71,18 @@ public class BeanCollectionJasperDataSourceConverterTest {
         JRDataSource dataSource = bcConvertor.convert(employees);
 
     }
+
+    @Test(expected = ConversionException.class)
+    public void testShouldPassIfBeanCollectionIsNull() throws Exception{
+        BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(fields);
+        JRDataSource dataSource = bcConvertor.convert(null);
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testShouldPassIfBeanCollectionIsEmpty() throws Exception{
+        BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(fields);
+        JRDataSource dataSource = bcConvertor.convert(Collections.EMPTY_LIST);
+    }
+
+
 }
