@@ -22,11 +22,11 @@ import java.util.*;
  * Class that converts a collection of beans into a JRDataSource
  *
  * @author Bogdan.Iancu
+ * @author Bogdan.Stefan
  * @version 1.0.1 Date: 2015-03-10
  * @since 1.0 Date: 2015-02-06
  */
 public final class BeanCollectionJasperDataSourceConverter<B> implements DataSourceConverter<Collection<B>, JRDataSource> {
-
 
     private final List<String> fieldMetadata;
 
@@ -50,12 +50,12 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
      */
     @Override
     public JRDataSource convert(Collection<B> inputSource) {
+        if (inputSource == null || inputSource.isEmpty()) {
+            throw new ConversionException("The bean collection must not be null or empty.");
+        }
 
         List<List<String>> rows = new ArrayList<>();
         List<Field> fields = null;
-
-        if(inputSource == null || inputSource.isEmpty())
-            throw new ConversionException("The bean collection must not be null or empty");
 
         Iterator<B> iterator = inputSource.iterator();
         Object o1 = iterator.next();
