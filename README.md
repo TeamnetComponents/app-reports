@@ -1,5 +1,4 @@
 # Welcome to **Reportinator**!
-***
 ## Description:
 A generic report engine library offering really straightforward report generation capabilities and export to .PDF/.HTML/.XML.
 
@@ -11,9 +10,9 @@ We include support for:
 
 
 ## Authors (in alphabetical order):
-Bogdan Alexandru Iancu, (contact me directly via bogdan.iancu@teamnet.ro)
-Bogdan Adrian Stefan, (contact me directly via bogdan.stefan@teamnet.ro)
-Andrei Alexandru Marica, (contact me directly via andrei.marica@teamnet.ro)
+Bogdan Alexandru, Iancu, (contact me directly on Lync or via bogdan.iancu@teamnet.ro)
+Andrei Alexandru, Marica, (contact me directly on Lync or via andrei.marica@teamnet.ro)
+Bogdan Adrian, Stefan, (contact me directly on Lync or via bogdan.stefan@teamnet.ro)
 
 ## Links:
-Project on Git-components@Teamnet: [click here](http://git-components.teamnet.ro/summary/components%2Fjava%2Fapp-reports.git)
+Project on Git @ Teamnet is available: [here](http://git-components.teamnet.ro/summary/components%2Fjava%2Fapp-reports.git)
