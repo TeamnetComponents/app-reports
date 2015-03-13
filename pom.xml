@@ -23,6 +23,7 @@
     <groupId>ro.teamnet.solutions</groupId>
     <artifactId>reportinator</artifactId>
     <version>1.0.1-BOOTSTRAP</version>
+    <packaging>jar</packaging>
 
     <!-- Dependencies - versions -->
     <properties>
@@ -72,7 +73,6 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito-all.version}</version>
         </dependency>
-
     </dependencies>
     <!-- Build -->
     <build>
