@@ -8,6 +8,7 @@
 
 package ro.teamnet.solutions.reportinator.config;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,12 +65,19 @@ public class Constants {
     static {
         // A holder reference
         String property;
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
-        TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(property);
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
-        TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(property);
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_BORDER_WIDTH", DEFAULT_TABLE_BORDER_WIDTH);
-        TABLE_BORDER_WIDTH = Float.valueOf(property);
+        if(CONFIGURATION_PROPERTIES != null) {
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
+            TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(property);
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
+            TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(property);
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_BORDER_WIDTH", DEFAULT_TABLE_BORDER_WIDTH);
+            TABLE_BORDER_WIDTH = Float.valueOf(property);
+        }
+        else{
+            TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
+            TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
+            TABLE_BORDER_WIDTH = Float.valueOf(DEFAULT_TABLE_BORDER_WIDTH);
+        }
     }
 
     /**
@@ -81,13 +89,18 @@ public class Constants {
      */
     protected static Properties loadProperties(String pathToPropertiesFile) {
         Properties properties = new Properties();
-        try (InputStream fileInputStream = new FileInputStream(pathToPropertiesFile)) {
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            // Re-throw
-            throw new RuntimeException(e.getMessage(), e.getCause());
+        File file = new File(pathToPropertiesFile);
+        if(file.exists()) {
+            try (InputStream fileInputStream = new FileInputStream(file)) {
+                properties.load(fileInputStream);
+            } catch (IOException e) {
+                // Re-throw
+                throw new RuntimeException(e.getMessage(), e.getCause());
+            }
         }
-
+        else{
+            properties = null;
+        }
         return properties;
     }
 
