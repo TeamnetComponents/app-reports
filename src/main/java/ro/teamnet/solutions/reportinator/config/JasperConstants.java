@@ -16,7 +16,7 @@ import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
  * @version 1.0.1 Date: 2015-03-17
- * @since 1.0 Date: 2015-02-06
+ * @since 1.0 Date: 2015-02-11
  */
 public final class JasperConstants extends Constants {
 
@@ -141,11 +141,11 @@ public final class JasperConstants extends Constants {
     static {
         // A holder reference
         String property;
-        if(CONFIGURATION_PROPERTIES != null){
+        // Do we have external configuration properties, from base constants class?
+        if (CONFIGURATION_PROPERTIES != null) {
             property = CONFIGURATION_PROPERTIES.getProperty("JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT", DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT);
             JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(property);
-        }
-        else {
+        } else {
             JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT);
         }
 
