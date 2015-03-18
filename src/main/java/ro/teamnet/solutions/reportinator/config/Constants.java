@@ -54,7 +54,7 @@ public class Constants {
     /**
      * Path to a disk file where configuration properties can be loaded from.
      */
-    private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/test/resources/reportinator-config.properties";
+    private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/main/resources/reportinator-config.properties";
 
     /**
      * A dictionary containing configuration properties loaded from a disk {@code .properties} file.

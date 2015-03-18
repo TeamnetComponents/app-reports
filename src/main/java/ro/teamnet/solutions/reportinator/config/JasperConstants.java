@@ -10,6 +10,8 @@ package ro.teamnet.solutions.reportinator.config;
 
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 
+import java.awt.*;
+
 /**
  * A class containing various constants related to JasperReports API configuration, to be used internally.
  *
@@ -59,15 +61,6 @@ public final class JasperConstants extends Constants {
      * A key used to identify if a loaded template is a built-in one, or a custom one.
      */
     public static final String JASPER_REPORT_DESIGN_NAME_KEY = "ReportinatorBuilt-inLoadedDesign";
-    // TODO Physically create/add landscape and potrait default .JRXML templates below
-    /**
-     * Defines the path to the default, built-in, portrait JRXML template.
-     */
-    public static final String JASPER_JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
-    /**
-     * Defines the path to the default, built-in, landscape JRXML template.
-     */
-    public static final String JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
 
     /**
      * A key to be set as an internal identification means for the default table style.
@@ -125,10 +118,32 @@ public final class JasperConstants extends Constants {
     public static final Integer JASPER_TABLE_MINIMUM_HEADER_CELL_HEIGHT = 2 * JasperStyles.COLUMN_HEADER_STYLE.getStyle().getFontsize().intValue();
 
     /**
-     * A key storing the maximum number of columns, a report a can have, before switching from portrait to landscape
+     * A key storing the maximum number of columns a report can have, before switching from portrait to landscape
      * orientation, given the font size and style information.
      */
     public static final Integer JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT;
+
+    /**
+     * Defines the path to the portrait JRXML template that will be used in the application.
+     */
+    public static final String JASPER_JRXML_PORTRAIT_TEMPLATE_PATH ;
+
+    /**
+     * Defines the path to the landscape JRXML template that will be used in the application.
+     */
+    public static final String JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH ;
+
+
+    /**
+     * Defines the color of the header background
+     */
+    public static final Color JASPER_HEADER_BACKGROUND_COLOR;
+
+    /**
+     * Defines the color of the header text
+     */
+    public static final Color JASPER_HEADER_FONT_COLOR;
+
 
     /**
      * A default value for the maximum number of columns, before a report switches orientation.
@@ -138,15 +153,55 @@ public final class JasperConstants extends Constants {
      */
     public static final String DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = "8";
 
+    // TODO Physically create/add landscape and potrait default .JRXML templates below
+    /**
+     * Defines the path to the default, built-in, portrait JRXML template.
+     */
+    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
+    /**
+     * Defines the path to the default, built-in, landscape JRXML template.
+     */
+    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
+
+    /**
+     * Default value for the header background
+     */
+    public static final String DEFAULT_JASPER_HEADER_BACKGROUND_COLOR = "210,210,210";
+
+    /**
+     * Default value for the header text
+     */
+    public static final String DEFAULT_JASPER_HEADER_FONT_COLOR = "255,255,255";
+
     static {
         // A holder reference
         String property;
         if(CONFIGURATION_PROPERTIES != null){
             property = CONFIGURATION_PROPERTIES.getProperty("JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT", DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT);
             JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(property);
+            property = CONFIGURATION_PROPERTIES.getProperty("JASPER_JRXML_PORTRAIT_TEMPLATE_PATH", DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH);
+            JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = property;
+            property = CONFIGURATION_PROPERTIES.getProperty("JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH", DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH);
+            JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = property;
+            property = CONFIGURATION_PROPERTIES.getProperty("JASPER_HEADER_BACKGROUND_COLOR", DEFAULT_JASPER_HEADER_BACKGROUND_COLOR);
+            String[] rgb = property.split(",");
+            JASPER_HEADER_BACKGROUND_COLOR = new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
+
+            property = CONFIGURATION_PROPERTIES.getProperty("JASPER_HEADER_FONT_COLOR", DEFAULT_JASPER_HEADER_FONT_COLOR);
+            rgb = property.split(",");
+            JASPER_HEADER_FONT_COLOR = new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
+
         }
         else {
             JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = Integer.valueOf(DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT);
+            JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH;
+            JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH;
+
+            String[] rgb = DEFAULT_JASPER_HEADER_BACKGROUND_COLOR.split(",");
+            JASPER_HEADER_BACKGROUND_COLOR = new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
+
+            rgb =  DEFAULT_JASPER_HEADER_FONT_COLOR.split(",");
+            JASPER_HEADER_FONT_COLOR = new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]));
         }
 
     }
