@@ -132,7 +132,7 @@ public enum JasperStyles {
     private static JRStyle getTableHeaderStyle() {
         JRDesignStyle tableHeaderStyle = new JRDesignStyle();
         tableHeaderStyle.setName(JasperConstants.JASPER_TABLE_BOX_HEADER_STYLE_NAME_IDENTIFIER_KEY);
-        tableHeaderStyle.setBackcolor(new Color(153, 155, 152));
+        tableHeaderStyle.setBackcolor(JasperConstants.JASPER_HEADER_BACKGROUND_COLOR);
         tableHeaderStyle.setMode(ModeEnum.OPAQUE);
         setUpLineBox(tableHeaderStyle.getLineBox());
 
@@ -151,6 +151,7 @@ public enum JasperStyles {
         JRDesignStyle columnHeaderStyle = new JRDesignStyle();
         columnHeaderStyle.setParentStyle(getDefaultStyle());
         columnHeaderStyle.setName(JasperConstants.JASPER_TABLE_HEADER_STYLE_NAME_IDENTIFIER_KEY);
+        columnHeaderStyle.setForecolor(JasperConstants.JASPER_HEADER_FONT_COLOR);
         columnHeaderStyle.setBold(Boolean.TRUE);
         columnHeaderStyle.setFontSize(12.0f);
 
