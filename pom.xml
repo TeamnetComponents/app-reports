@@ -19,7 +19,7 @@
 
     <!-- Dependencies - versions -->
     <properties>
-        <java.version>1.7</java.version>
+        <java-compile.version>1.7</java-compile.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.9.5</mockito-all.version>
         <jasperreports.version>6.0.2</jasperreports.version>
@@ -67,8 +67,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${java-compile.version}</source>
+                    <target>${java-compile.version}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <fork>true</fork>
