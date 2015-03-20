@@ -8,11 +8,14 @@
 
 package ro.teamnet.solutions.reportinator.generation;
 
+import java.util.Map;
+
 /**
  * An interface for report generators.
  *
  * @author Bogdan.Stefan
- * @version 1.0 Date: 2/13/2015
+ * @version 1.0.1 Date: 2015-03-20
+ * @since 1.0 Date: 2015-02-06
  */
 public interface ReportGenerator<T> {
 
@@ -24,5 +27,16 @@ public interface ReportGenerator<T> {
      * @throws ReportGeneratorException If anything happened during report generation.
      */
     T generate() throws ReportGeneratorException;
+
+    /**
+     * Generates a report abstraction with extra parameters (i.e. for fine tuning the report based on
+     * specific requirements of the export type) specific to the underlying reporting engine (denoted by {@code T}),
+     * ready for exporting.
+     *
+     * @param parameters extra parameters required for fine tuning
+     * @return A report abstraction of the specified type.
+     * @throws ReportGeneratorException If anything happened during report generation.
+     */
+    T generate(Map<String, Object> parameters) throws ReportGeneratorException;
 
 }

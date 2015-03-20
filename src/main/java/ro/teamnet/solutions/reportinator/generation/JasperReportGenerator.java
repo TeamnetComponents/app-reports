@@ -34,7 +34,8 @@ import java.util.concurrent.CyclicBarrier;
  * which is the only way to create the generator with. The builder offers various methods to establish various report parameters.
  *
  * @author Bogdan.Stefan
- * @version 1.0 Date: 2/10/2015
+ * @version 1.0.1 Date: 2015-03-10
+ * @since 1.0 Date: 2015-02-06
  */
 public final class JasperReportGenerator implements ReportGenerator<JasperPrint> {
 
@@ -131,6 +132,18 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             throw new ReportGeneratorException(
                     MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JasperPrint generate(Map<String, Object> parameters) throws ReportGeneratorException {
+        if(parameters == null) {
+            throw new IllegalArgumentException("Parameters must not be null");
+        }
+        this.parameters.putAll(parameters);
+        return generate();
     }
 
     /**

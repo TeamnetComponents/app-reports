@@ -8,18 +8,22 @@
 
 package ro.teamnet.solutions.reportinator.export;
 
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import ro.teamnet.solutions.reportinator.export.jasper.type.ExportType;
 import ro.teamnet.solutions.reportinator.generation.ReportGenerator;
 
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that exports a report to the given format
  *
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
- * @version 1.0 Date: 20-Feb-15
+ * @version 1.0.1 Date: 2015-03-20
+ * @since 1.0 Date: 2015-02-06
  */
 
 
@@ -56,6 +60,11 @@ public class JasperReportExporter {
         if (printGenerator == null) {
             throw new ExporterException("Print generator must not be null.");
         }
-        export(printGenerator.generate(), outputSource, type);
+        if(type.getParameters().size() > 0){
+            export(printGenerator.generate(type.getParameters()), outputSource, type);
+        }
+        else {
+            export(printGenerator.generate(), outputSource, type);
+        }
     }
 }
