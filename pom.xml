@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   ~ Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
   ~
@@ -6,7 +7,6 @@
   ~ in whole or in part, in any form or for any reason, without the express
   ~ written consent of Teamnet S.A.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -19,7 +19,7 @@
 
     <!-- Dependencies - versions -->
     <properties>
-        <java.version>1.7</java.version>
+        <java-compile.version>1.7</java-compile.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.9.5</mockito-all.version>
         <jasperreports.version>6.0.2</jasperreports.version>
@@ -67,8 +67,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${java-compile.version}</source>
+                    <target>${java-compile.version}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <fork>true</fork>
@@ -102,5 +102,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
