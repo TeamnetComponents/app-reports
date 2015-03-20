@@ -23,7 +23,8 @@ import java.io.OutputStream;
  * Class that exports a report to xls format
  *
  * @author Bogdan.Iancu
- * @version 1.0 Date: 20-Feb-15
+ * @version 1.0.1 Date: 2015-03-20
+ * @since 1.0 Date: 2015-02-15
  */
 public class XlsExporter implements Exporter<JasperPrint> {
 
@@ -38,6 +39,7 @@ public class XlsExporter implements Exporter<JasperPrint> {
         if (inputSource == null || outputSource == null) {
             throw new ExporterException("input and output should not be null");
         }
+
         JRXlsExporter exporterXLS = new JRXlsExporter();
         exporterXLS.setExporterInput(new SimpleExporterInput(inputSource));
         exporterXLS.setExporterOutput(new SimpleOutputStreamExporterOutput(outputSource));
@@ -45,11 +47,12 @@ public class XlsExporter implements Exporter<JasperPrint> {
         SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
 
 
-        configuration.setOnePagePerSheet(true);
+        configuration.setOnePagePerSheet(false);
         configuration.setDetectCellType(true);
+        configuration.isAutoFitPageHeight();
         configuration.isRemoveEmptySpaceBetweenColumns();
         configuration.isRemoveEmptySpaceBetweenRows();
-        configuration.setCollapseRowSpan(false);
+        configuration.setCollapseRowSpan(true);
         configuration.setWhitePageBackground(false);
         configuration.setRemoveEmptySpaceBetweenRows(true);
 
