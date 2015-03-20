@@ -35,7 +35,7 @@ import java.util.concurrent.CyclicBarrier;
  *
  * @author Bogdan.Stefan
  * @version 1.0.1 Date: 2015-03-10
- * @since 1.0 Date: 2015-02-06
+ * @since 1.0 Date: 2015-02-10
  */
 public final class JasperReportGenerator implements ReportGenerator<JasperPrint> {
 
@@ -139,7 +139,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
      */
     @Override
     public JasperPrint generate(Map<String, Object> parameters) throws ReportGeneratorException {
-        if(parameters == null) {
+        if (parameters == null) {
             throw new IllegalArgumentException("Parameters must not be null");
         }
         this.parameters.putAll(parameters);
@@ -225,6 +225,33 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             }
         }
 
+        /**
+         * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
+         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.BuildPhase}
+         * implementation is used to define the algorithm to be ran, as the phase delimitation.
+         *
+         * @param syncBarrier         A barrier to synchronize to.
+         * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
+         * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
+         * @return An anonymous instance of a {@code Runnable}, representing a build phase.
+         */
+        private static Runnable createSynchronizedBuildPhase(final CyclicBarrier syncBarrier,
+                                                             final String phaseFailureMessage,
+                                                             final BuildPhase buildPhase) {
+
+            return new Runnable() {
+                @Override
+                public void run() {
+                    buildPhase.startPhase();
+                    try {
+                        syncBarrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
+                                " An exception occurred: {0}", e.getMessage()), e.getCause());
+                    }
+                }
+            };
+        }
 
         /**
          * Establishes the report's data source (as a runtime parameter), to be used by built-in templates..
@@ -255,6 +282,12 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             return this;
         }
 
+        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
+//        public Builder withEncoding(String encoding) {
+//
+//            return this;
+//        }
+
         /**
          * Establishes the report's runtime page header text.
          *
@@ -267,12 +300,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
 
             return this;
         }
-
-        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
-//        public Builder withEncoding(String encoding) {
-//
-//            return this;
-//        }
 
         /**
          * Establishes the report's runtime page footer text.
@@ -379,46 +406,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
-         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.BuildPhase}
-         * implementation is used to define the algorithm to be ran, as the phase delimitation.
-         *
-         * @param syncBarrier         A barrier to synchronize to.
-         * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
-         * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
-         * @return An anonymous instance of a {@code Runnable}, representing a build phase.
-         */
-        private static Runnable createSynchronizedBuildPhase(final CyclicBarrier syncBarrier,
-                                                             final String phaseFailureMessage,
-                                                             final BuildPhase buildPhase) {
-
-            return new Runnable() {
-                @Override
-                public void run() {
-                    buildPhase.startPhase();
-                    try {
-                        syncBarrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
-                                " An exception occurred: {0}", e.getMessage()), e.getCause());
-                    }
-                }
-            };
-        }
-
-        /**
-         * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
-         * a build phase (that must be ran as a separate thread).
-         */
-        private interface BuildPhase {
-
-            /**
-             * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
-             */
-            void startPhase();
-        }
-
-        /**
          * Uses the builder data, to create a report generator.
          *
          * @return A report generator, to return an instance.
@@ -506,6 +493,18 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private boolean usingBuiltInTemplates() {
             return this.reportDesign.getName().equals(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
+        }
+
+        /**
+         * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
+         * a build phase (that must be ran as a separate thread).
+         */
+        private interface BuildPhase {
+
+            /**
+             * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
+             */
+            void startPhase();
         }
 
 

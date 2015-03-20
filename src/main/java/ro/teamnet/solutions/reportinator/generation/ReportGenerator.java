@@ -15,13 +15,13 @@ import java.util.Map;
  *
  * @author Bogdan.Stefan
  * @version 1.0.1 Date: 2015-03-20
- * @since 1.0 Date: 2015-02-06
+ * @since 1.0 Date: 2015-02-13
  */
 public interface ReportGenerator<T> {
 
     /**
      * Generates a report abstraction, specific to the underlying reporting engine (denoted by {@code T}),
-     * ready for exporting.
+     * making it ready for exporting.
      *
      * @return A report abstraction of the specified type.
      * @throws ReportGeneratorException If anything happened during report generation.
@@ -29,9 +29,9 @@ public interface ReportGenerator<T> {
     T generate() throws ReportGeneratorException;
 
     /**
-     * Generates a report abstraction with extra parameters (i.e. for fine tuning the report based on
-     * specific requirements of the export type) specific to the underlying reporting engine (denoted by {@code T}),
-     * ready for exporting.
+     * Generates a report abstraction, with extra parameters (i.e. for fine tuning the report based on
+     * specific requirements of the export type), specific to the underlying reporting engine (denoted by {@code T}),
+     * making it ready for exporting.
      *
      * @param parameters extra parameters required for fine tuning
      * @return A report abstraction of the specified type.

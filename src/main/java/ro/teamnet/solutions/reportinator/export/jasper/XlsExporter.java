@@ -24,7 +24,7 @@ import java.io.OutputStream;
  *
  * @author Bogdan.Iancu
  * @version 1.0.1 Date: 2015-03-20
- * @since 1.0 Date: 2015-02-06
+ * @since 1.0 Date: 2015-02-15
  */
 public class XlsExporter implements Exporter<JasperPrint> {
 
