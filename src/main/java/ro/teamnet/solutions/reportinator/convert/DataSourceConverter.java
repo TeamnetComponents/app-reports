@@ -32,8 +32,11 @@ public interface DataSourceConverter<IN, OUT> {
      *
      * @param inputSource The original input source of data.
      * @return An source of data to be used by an report's dataset.
+     * @throws ro.teamnet.solutions.reportinator.convert.ConversionException If the input source contains
+     * no records.
+     * @throws java.lang.NullPointerException If the input source is null.
      */
-    OUT convert(IN inputSource) throws ConversionException;
+    OUT convert(IN inputSource) throws ConversionException, NullPointerException;
 
     /**
      * A collection of metadata representing a data source's field names, to be used as fields during binding, as

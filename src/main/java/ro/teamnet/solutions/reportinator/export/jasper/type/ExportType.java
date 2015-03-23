@@ -20,7 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Enum that returns an instance of the exporter class of the desired type.
+ * Enum that returns an instance of the exporter class of the desired type. This class also supports extra export
+ * customization, via the underlying {@link #parameters parameters} dictionary (i.e. one might not need pagination when
+ * exporting to <em>.XLS/X</em> or <em>.HTML</em> formats. This can be achieved by adding
+ * {@link net.sf.jasperreports.engine.JRParameter#IS_IGNORE_PAGINATION} to it via a instance-initialization block - see
+ * code).
  *
  * @author Bogdan.Iancu
  * @version 1.0.1 Date: 2015-03-20

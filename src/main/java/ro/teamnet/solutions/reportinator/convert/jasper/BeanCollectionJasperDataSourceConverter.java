@@ -43,21 +43,24 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
     }
 
     /**
-     * Method that converts a collection of beans to a JRDataSource
+     * Method that converts a collection of beans to a JRDataSource.
      *
-     * @param inputSource The collection of beans to be converted
+     * @param aBeanCollection The collection of beans to be converted.
      * @return A JRDataSource consisting of the selected fields in the bean collection
      */
     @Override
-    public JRDataSource convert(Collection<B> inputSource) {
-        if (inputSource == null || inputSource.isEmpty()) {
-            throw new ConversionException("The bean collection must not be null or empty.");
+    public JRDataSource convert(Collection<B> aBeanCollection) throws ConversionException, NullPointerException {
+        Collection<B> beanCollection = Collections.unmodifiableCollection(
+                Objects.requireNonNull(aBeanCollection, "Input bean collection must not be null!")
+        );
+        if (aBeanCollection.isEmpty()) {
+            throw new ConversionException("The bean collection must not be empty.");
         }
 
         List<List<String>> rows = new ArrayList<>();
         List<Field> fields = null;
 
-        Iterator<B> iterator = inputSource.iterator();
+        Iterator<B> iterator = beanCollection.iterator();
         Object o1 = iterator.next();
         fields = getSelectedFields(o1.getClass());
         List<String> row = parseRow(o1, fields);
