@@ -14,6 +14,7 @@ import ro.teamnet.solutions.reportinator.export.Exporter;
 import ro.teamnet.solutions.reportinator.export.jasper.HtmlExporter;
 import ro.teamnet.solutions.reportinator.export.jasper.PdfExporter;
 import ro.teamnet.solutions.reportinator.export.jasper.XlsExporter;
+import ro.teamnet.solutions.reportinator.export.jasper.XlsxExporter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,14 @@ public enum ExportType {
         }
         public Exporter<JasperPrint> getExporter() {
             return new XlsExporter();
+        }
+    },
+    XLSX {
+        {
+            getParameters().put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+        }
+        public Exporter<JasperPrint> getExporter() {
+            return new XlsxExporter();
         }
     },
     HTML {

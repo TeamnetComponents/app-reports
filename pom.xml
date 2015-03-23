@@ -12,14 +12,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Parent(s) -->
-    <parent>
-        <groupId>ro.teamnet.bootstrap</groupId>
-        <artifactId>bootstrap-dependencies</artifactId>
-        <version>0.1</version>
-        <relativePath/>
-    </parent>
-
     <groupId>ro.teamnet.solutions</groupId>
     <artifactId>reportinator</artifactId>
     <version>1.0.1-BOOTSTRAP</version>
@@ -27,7 +19,7 @@
 
     <!-- Dependencies - versions -->
     <properties>
-        <!--<java.version>1.7</java.version>--> <!-- Not needed, retrieved from parent -->
+        <java-compile.version>1.7</java-compile.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>1.9.5</mockito-all.version>
         <jasperreports.version>6.0.2</jasperreports.version>
@@ -82,8 +74,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${java-compile.version}</source>
+                    <target>${java-compile.version}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <fork>true</fork>
@@ -117,12 +109,5 @@
             </plugin>
         </plugins>
     </build>
-    <!--Extra Repositories -->
-    <repositories>
-        <repository>
-            <id>tni-hq-artifact</id>
-            <name>tni-hq-artifact-releases</name>
-            <url>http://repo.teamnet.ro/tn-components</url>
-        </repository>
-    </repositories>
+
 </project>
