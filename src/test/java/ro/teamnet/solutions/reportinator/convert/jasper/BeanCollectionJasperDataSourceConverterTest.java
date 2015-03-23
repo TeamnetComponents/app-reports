@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.convert.jasper;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -7,7 +15,6 @@ import ro.teamnet.solutions.reportinator.convert.ConversionException;
 import ro.teamnet.solutions.reportinator.utils.Employee;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +79,7 @@ public class BeanCollectionJasperDataSourceConverterTest {
 
     }
 
-    @Test(expected = ConversionException.class)
+    @Test(expected = NullPointerException.class)
     public void testShouldPassIfBeanCollectionIsNull() throws Exception{
         BeanCollectionJasperDataSourceConverter<Employee> bcConvertor = new BeanCollectionJasperDataSourceConverter<>(fields);
         JRDataSource dataSource = bcConvertor.convert(null);
