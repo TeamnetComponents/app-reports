@@ -20,6 +20,7 @@ import java.io.OutputStream;
  * Class that exports a report to pdf format
  *
  * @author Bogdan.Iancu
+ * @author Bogdan.Stefan
  * @version 1.0 Date: 20-Feb-15
  */
 public class PdfExporter implements Exporter<JasperPrint> {
@@ -31,14 +32,14 @@ public class PdfExporter implements Exporter<JasperPrint> {
      * @param outputSource An output source
      */
     @Override
-    public void export(JasperPrint inputSource, OutputStream outputSource) {
+    public void export(JasperPrint inputSource, OutputStream outputSource) throws ExporterException {
         if (inputSource == null || outputSource == null) {
             throw new ExporterException("input and output should not be null");
         }
         try {
             JasperExportManager.exportReportToPdfStream(inputSource, outputSource);
         } catch (JRException e) {
-            throw new ExporterException("Exception exporting report", e.getCause());
+            throw new ExporterException("Exception exporting report: " + e.getMessage(), e.getCause());
         }
     }
 }

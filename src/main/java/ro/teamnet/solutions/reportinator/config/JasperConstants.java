@@ -10,7 +10,7 @@ package ro.teamnet.solutions.reportinator.config;
 
 import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * A class containing various constants related to JasperReports API configuration, to be used internally.
@@ -153,15 +153,15 @@ public final class JasperConstants extends Constants {
      */
     public static final String DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = "8";
 
-    // TODO Physically create/add landscape and potrait default .JRXML templates below
+
     /**
      * Defines the path to the default, built-in, portrait JRXML template.
      */
-    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_portrait_template.jrxml"; // FUTURE Modify with correct path
+    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = "src/main/resources/default_jasper_jrxml_portrait_template.jrxml";
     /**
      * Defines the path to the default, built-in, landscape JRXML template.
      */
-    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = "src/test/resources/jasper_test_blank_landscape_template.jrxml"; // FUTURE Modify with correct path
+    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = "src/main/resources/default_jasper_jrxml_landscape_template.jrxml";
 
     /**
      * Default value for the header background

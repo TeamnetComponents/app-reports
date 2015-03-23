@@ -161,10 +161,14 @@ public final class TableComponentCreator implements ComponentCreator<JRComponent
     }
 
     /**
-     * A helper method which creates a {@link net.sf.jasperreports.engine.design.JRDesignTextField} as a holder box for
-     * the column content, using the given constraints. An expression is required to fill it with explicit content, during
+     * A helper method which creates a {@link net.sf.jasperreports.engine.design.JRDesignTextField} as a holder container box for
+     * the column content, using the given constraints. An {@code expression} is required to fill it with explicit content, during
      * the <em>filling process</em>. This holder box must also obey a maximum permitted {@code width}, given its
      * {@code style} (and left/right padding).
+     *
+     * @see net.sf.jasperreports.engine.JRExpression
+     * @see net.sf.jasperreports.engine.JRStyle
+     * @see ro.teamnet.solutions.reportinator.config.styles.JasperStyles
      *
      * @param columnExpressionText  An JasperReports expression, to be used during report filling for data binding.
      * @param columnStyle           A JasperReports style to be applied to the column element, during generation.

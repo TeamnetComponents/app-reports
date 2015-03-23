@@ -30,7 +30,7 @@ public class PathLoaderTest {
     public void testShouldPassWithValidPathToLoad() throws Exception {
         JRReport design = new PathLoader().load(new File(JasperConstantsTest.JRXML_BLANK_LANDSCAPE_TEMPLATE_PATH).toPath());
         assertNotNull("The resulted report should not be null", design);
-        assertEquals("Loaded design name did not match expected", design.getName(), "SiemPdfPrototype");
+        assertEquals("Loaded design name did not match expected", design.getName(), "jasper_test_blank_landscape_template");
         assertEquals("The resulted report should be a JasperDesign", JasperDesign.class, design.getClass());
     }
 

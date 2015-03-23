@@ -37,11 +37,7 @@ public class JasperReportExporter {
         if (type == null) {
             throw new ExporterException("Export type must not be null");
         }
-        try {
-            type.getExporter().export(inputSource, outputSource);
-        } catch (ExporterException e) {
-            throw new ExporterException("Exception exporting report", e.getCause());
-        }
+        type.getExporter().export(inputSource, outputSource);
     }
 
     /**
