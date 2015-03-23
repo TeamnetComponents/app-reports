@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author Bogdan.Iancu
  * @version 1.0.1 Date: 2015-03-20
- * @since 1.0 Date: 2015-02-06
+ * @since 1.0 Date: 2015-02-20
  */
 public enum ExportType {
 
@@ -34,6 +34,7 @@ public enum ExportType {
         }
     },
     XLS {
+        // Exporting to this format requires some extra parameters
         {
             getParameters().put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
         }
@@ -57,13 +58,31 @@ public enum ExportType {
             return new HtmlExporter();
         }
     };
+
     /**
-     * Parameters required by the print generator to give the jasper print extra properties
-     * for each type, if needed
+     * A dictionary to hold extra parameters.
+     *
+     * @see #getParameters()
      */
-    private Map<String, Object> parameters = new HashMap<String, Object>();
+    private final Map<String, Object> parameters = new HashMap<String, Object>();
+
+    /**
+     * A factory method which returns an {@link ro.teamnet.solutions.reportinator.export.Exporter} for the chosen type.
+     *
+     * @return A {@code Exporter} instance
+     */
     public abstract Exporter<JasperPrint> getExporter();
+
+    /**
+     * Retrieves a dictionary containing extra parameters required by a
+     * {@link ro.teamnet.solutions.reportinator.generation.ReportGenerator ReportGenerator},
+     * to fine tune the export if needed.
+     *
+     * @return Dictionary containing extra export parameters, which might be required when exporting to several types.
+     *
+     * @see ro.teamnet.solutions.reportinator.generation.ReportGenerator#generate(java.util.Map) ReportGenerator.generate(Map)
+     */
     public Map<String, Object> getParameters(){
-        return parameters;
+        return this.parameters;
     }
 }
