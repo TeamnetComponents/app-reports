@@ -54,14 +54,14 @@ public class Constants {
     /**
      * Path to a disk file where configuration properties can be loaded from.
      */
-    private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/main/resources/reportinator-config.properties";
+    public static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/main/resources/reportinator-config.properties";
 
     /**
      * A dictionary containing configuration properties loaded from a disk {@code .properties} file.
      *
      * @see ro.teamnet.solutions.reportinator.config.Constants#CONFIGURATION_PROPERTIES_FILE_PATH
      */
-    protected static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
+    public static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
 
     static {
         // A holder reference

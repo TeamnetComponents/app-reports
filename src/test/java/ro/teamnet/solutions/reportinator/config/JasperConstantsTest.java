@@ -1,12 +1,20 @@
 package ro.teamnet.solutions.reportinator.config;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JasperReport;
+import org.junit.Test;
 import ro.teamnet.solutions.reportinator.convert.jasper.MapCollectionDataSourceConverter;
 
+import java.awt.*;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Reusable constants, for various tests. Contains immutable objects.
@@ -92,4 +100,22 @@ public class JasperConstantsTest {
      * An eager generated data source, to be used in tests.
      */
     public static final JRDataSource JASPER_DATA_SOURCE_FROM_MAP_COLLECTION = new MapCollectionDataSourceConverter(COLUMNS_METADATA).convert(ROWS_MAP_COLLECTION);
+
+    @Test
+    public void testLoadProperties() throws Exception{
+        File file = new File(Constants.CONFIGURATION_PROPERTIES_FILE_PATH);
+        if (!file.exists()){
+            assertEquals(JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT, Integer.valueOf(JasperConstants.DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT));
+            assertEquals(JasperConstants.JASPER_JRXML_PORTRAIT_TEMPLATE_PATH, JasperConstants.DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH);
+            assertEquals(JasperConstants.JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH, JasperConstants.DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH);
+            assertEquals(JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT, Integer.valueOf(JasperConstants.DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT));
+            assertEquals(JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT, Integer.valueOf(JasperConstants.DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT));
+            String[] rgb = JasperConstants.DEFAULT_JASPER_HEADER_BACKGROUND_COLOR.split(",");
+            assertEquals(JasperConstants.JASPER_HEADER_BACKGROUND_COLOR,new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2])));
+            rgb =  JasperConstants.DEFAULT_JASPER_HEADER_FONT_COLOR.split(",");
+            assertEquals(JasperConstants.JASPER_HEADER_FONT_COLOR,new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2])));
+
+        }
+    }
+
 }
