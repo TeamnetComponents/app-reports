@@ -48,7 +48,7 @@ public final class FileLoader implements Loader<File, JRReport> {
                 jasperDesign = new InputStreamLoader().load(new FileInputStream(loadSource));
             } catch (FileNotFoundException e) {
                 //Re-throw
-                throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport",
+                throw new LoaderException("Could not load given file '" + loadSource.getName() + "' into a JRReport",
                         e.getCause());
             }
             return jasperDesign;
