@@ -144,6 +144,33 @@ public final class JasperConstants extends Constants {
      */
     public static final Color JASPER_HEADER_FONT_COLOR;
 
+    /**
+     * Path to module's resources folder.
+     */
+    private static final String MAIN_RESOURCES_ROOT = "src/main/resources/";
+
+    /**
+     * Portrait template file name.
+     *
+     * @see #DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH
+     */
+    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_NAME = "default_jasper_jrxml_portrait_template.jrxml";
+
+    /**
+     * Defines the path to the default, built-in, portrait JRXML template.
+     */
+    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = MAIN_RESOURCES_ROOT + DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_NAME;
+
+    /**
+     * Landscape template file name.
+     * @see #DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH
+     */
+    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_NAME = "default_jasper_jrxml_landscape_template.jrxml";
+
+    /**
+     * Defines the path to the default, built-in, landscape JRXML template.
+     */
+    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = MAIN_RESOURCES_ROOT + DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_NAME;
 
     /**
      * A default value for the maximum number of columns, before a report switches orientation.
@@ -152,16 +179,6 @@ public final class JasperConstants extends Constants {
      * @see ro.teamnet.solutions.reportinator.config.Constants#CONFIGURATION_PROPERTIES
      */
     public static final String DEFAULT_JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT = "8";
-
-
-    /**
-     * Defines the path to the default, built-in, portrait JRXML template.
-     */
-    public static final String DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_PATH = "src/main/resources/default_jasper_jrxml_portrait_template.jrxml";
-    /**
-     * Defines the path to the default, built-in, landscape JRXML template.
-     */
-    public static final String DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH = "src/main/resources/default_jasper_jrxml_landscape_template.jrxml";
 
     /**
      * Default value for the header background

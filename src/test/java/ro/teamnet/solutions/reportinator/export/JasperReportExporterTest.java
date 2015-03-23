@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
+ *
+ * This source file may not be copied, modified or redistributed,
+ * in whole or in part, in any form or for any reason, without the express
+ * written consent of Teamnet S.A.
+ */
+
 package ro.teamnet.solutions.reportinator.export;
 
 import net.sf.jasperreports.engine.JRDataSource;
@@ -131,4 +139,5 @@ public class JasperReportExporterTest {
         assertTrue("PDF file was not created by the exporter.", Files.exists(path));
     }
 
+    // TODO Separate exporter tests with both template paths and names
 }

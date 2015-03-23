@@ -191,10 +191,10 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
             try {
-                JRReport loadedDesign = JasperDesignLoader.load(
-                        new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JASPER_JRXML_PORTRAIT_TEMPLATE_PATH :
-                                absolutePathnameToJasperXml));
+                JRReport loadedDesign =
+                        absolutePathnameToJasperXml == null ?
+                                JasperDesignLoader.load(JasperConstants.DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_NAME) :
+                                JasperDesignLoader.load(new File(absolutePathnameToJasperXml));
                 // No path to a design was given; using built-in one
                 if (absolutePathnameToJasperXml == null) {
                     // Set an accessible name because a built-in template was loaded
@@ -205,7 +205,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file could be found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
+                        MessageFormat.format("No template design file could be loaded: {0}", e.getMessage()), e.getCause());
             }
         }
 
@@ -357,8 +357,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             // Columns cannot fit into portrait format?
             if (tableColumnsMetadata.keySet().size() > JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
                 // Load the landscape oriented template
-                JasperDesign reloadedDesign = (JasperDesign)
-                        JasperDesignLoader.load(new File(JasperConstants.JASPER_JRXML_LANDSCAPE_TEMPLATE_PATH));
+                JasperDesign reloadedDesign = (JasperDesign) JasperDesignLoader.load(JasperConstants.DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_NAME);
                 // Re-set the report design name, because a new design was loaded
                 reloadedDesign.setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
                 this.reportDesign = reloadedDesign;
