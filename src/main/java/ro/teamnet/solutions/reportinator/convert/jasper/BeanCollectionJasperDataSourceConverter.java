@@ -53,7 +53,7 @@ public final class BeanCollectionJasperDataSourceConverter<B> implements DataSou
         Collection<B> beanCollection = Collections.unmodifiableCollection(
                 Objects.requireNonNull(aBeanCollection, "Input bean collection must not be null!")
         );
-        if (aBeanCollection.isEmpty()) {
+        if (beanCollection.isEmpty()) {
             throw new ConversionException("The bean collection must not be empty.");
         }
 
