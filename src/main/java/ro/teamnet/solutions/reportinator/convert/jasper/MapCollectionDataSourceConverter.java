@@ -49,7 +49,7 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
      * {@inheritDoc}
      */
     @Override
-    public JRDataSource convert(Collection<Map<String, ?>> inputSource) throws ConversionException {
+    public JRDataSource convert(Collection<Map<String, ?>> inputSource) throws ConversionException, NullPointerException {
         this.rowsCollection = Collections.unmodifiableCollection(
                 Objects.requireNonNull(inputSource, "Input source collection must not be null!")
         );
@@ -60,7 +60,7 @@ public final class MapCollectionDataSourceConverter implements DataSourceConvert
                             "Jasper data source!", inputSource.size()));
         }
         // Collection lacking required metadata?
-        for (Map<String, ?> row : this.rowsCollection) { // Loops just once (on purpose)
+        for (Map<String, ?> row : this.rowsCollection) { // Loops just once (on purpose) to retrieve the first entry
             if (!row.keySet().containsAll(this.fieldMetadata)) {
                 throw new ConversionException(
                         MessageFormat.format("Input source metadata {0} does not contain all converter required " +
