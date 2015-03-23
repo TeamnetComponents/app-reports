@@ -73,7 +73,7 @@ public class JasperReportExporterTest {
 
         dataSource = new BeanCollectionJasperDataSourceConverter<Employee>(fields.keySet()).convert(employees);
         parameters = new HashMap<>();
-        parameters.put("REPORT_TITLE", "Employees");
+        parameters.put("ReportinatorReportTitle", "Employees");
 
     }
 
