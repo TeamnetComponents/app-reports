@@ -119,7 +119,9 @@ public final class JasperConstants extends Constants {
 
     /**
      * A key storing the maximum number of columns a report can have, before switching from portrait to landscape
-     * orientation, given the font size and style information.
+     * orientation, given the current font size and style information.
+     *
+     * @see ro.teamnet.solutions.reportinator.config.styles.JasperStyles
      */
     public static final Integer JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT;
 
