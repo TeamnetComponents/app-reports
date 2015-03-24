@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 
 /**
  * A {@link ro.teamnet.solutions.reportinator.load.Loader} implementation that loads a {@link java.io.File}
- * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a paramterer for the .load()
+ * into a {@link net.sf.jasperreports.engine.JRReport} using its {@link java.io.InputStream} as a parameter for the .load()
  * method in {@link ro.teamnet.solutions.reportinator.load.jasper.InputStreamLoader}.
  * <p>
  * The File sent to this {@code .load()} method should have a ".jrxml" extension , our loadSource
@@ -48,7 +48,7 @@ public final class FileLoader implements Loader<File, JRReport> {
                 jasperDesign = new InputStreamLoader().load(new FileInputStream(loadSource));
             } catch (FileNotFoundException e) {
                 //Re-throw
-                throw new LoaderException("Could not load the  " + loadSource.getClass().getCanonicalName() + " into a JRReport",
+                throw new LoaderException("Could not load given file '" + loadSource.getName() + "' into a JRReport",
                         e.getCause());
             }
             return jasperDesign;

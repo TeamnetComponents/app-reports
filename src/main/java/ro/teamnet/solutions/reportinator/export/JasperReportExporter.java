@@ -19,7 +19,8 @@ import java.io.OutputStream;
  *
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
- * @version 1.0 Date: 20-Feb-15
+ * @version 1.0.1 Date: 2015-03-20
+ * @since 1.0 Date: 2015-02-20
  */
 
 
@@ -36,11 +37,7 @@ public class JasperReportExporter {
         if (type == null) {
             throw new ExporterException("Export type must not be null");
         }
-        try {
-            type.getExporter().export(inputSource, outputSource);
-        } catch (ExporterException e) {
-            throw new ExporterException("Exception exporting report", e.getCause());
-        }
+        type.getExporter().export(inputSource, outputSource);
     }
 
     /**
@@ -56,6 +53,10 @@ public class JasperReportExporter {
         if (printGenerator == null) {
             throw new ExporterException("Print generator must not be null.");
         }
-        export(printGenerator.generate(), outputSource, type);
+        if (type.getParameters().size() > 0) {
+            export(printGenerator.generate(type.getParameters()), outputSource, type);
+        } else {
+            export(printGenerator.generate(), outputSource, type);
+        }
     }
 }

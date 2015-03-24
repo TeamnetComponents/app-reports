@@ -49,6 +49,14 @@ public class StylesDesignBinderTest {
     }
 
     @Test(expected = BindingException.class)
+    public void testShouldThrowExceptionWhenHavingListWithDuplicateStyles() throws Exception {
+        List<JRStyle> styleList = JasperStyles.asList();
+        styleList.add(JasperStyles.COLUMN_CONTENT_STYLE.getStyle());
+        assertNull("Returned JasperDesign must be null", stylesDesignBinder.bind(styleList));
+    }
+
+
+    @Test(expected = BindingException.class)
     public void testShouldThrowExceptionWhenBindingWithNullList() throws Exception {
         List<JRStyle> styles = null;
         assertNull("Returned JasperDesign must be null", stylesDesignBinder.bind(styles));

@@ -8,6 +8,7 @@
 
 package ro.teamnet.solutions.reportinator.config;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,8 @@ import java.util.Properties;
  *
  * @author Bogdan.Stefan
  * @author Bogdan.Iancu
- * @version 1.0 Date: 2/10/2015
+ * @version 1.0.1 Date: 2015-03-17
+ * @since 1.0 Date: 2015-02-10
  */
 public class Constants {
 
@@ -52,24 +54,31 @@ public class Constants {
     /**
      * Path to a disk file where configuration properties can be loaded from.
      */
-    private static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/test/resources/reportinator-config.properties";
+    public static final String CONFIGURATION_PROPERTIES_FILE_PATH = "src/main/resources/reportinator-config.properties";
 
     /**
      * A dictionary containing configuration properties loaded from a disk {@code .properties} file.
      *
      * @see ro.teamnet.solutions.reportinator.config.Constants#CONFIGURATION_PROPERTIES_FILE_PATH
      */
-    protected static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
+    public static final Properties CONFIGURATION_PROPERTIES = loadProperties(CONFIGURATION_PROPERTIES_FILE_PATH);
 
     static {
         // A holder reference
         String property;
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
-        TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(property);
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
-        TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(property);
-        property = CONFIGURATION_PROPERTIES.getProperty("TABLE_BORDER_WIDTH", DEFAULT_TABLE_BORDER_WIDTH);
-        TABLE_BORDER_WIDTH = Float.valueOf(property);
+        // Do we have external configuration properties?
+        if (CONFIGURATION_PROPERTIES != null) {
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_LANDSCAPE", DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
+            TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(property);
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_MAXIMUM_WIDTH_PORTRAIT", DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
+            TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(property);
+            property = CONFIGURATION_PROPERTIES.getProperty("TABLE_BORDER_WIDTH", DEFAULT_TABLE_BORDER_WIDTH);
+            TABLE_BORDER_WIDTH = Float.valueOf(property);
+        } else {
+            TABLE_MAXIMUM_WIDTH_LANDSCAPE = Integer.valueOf(DEFAULT_TABLE_MAXIMUM_WIDTH_LANDSCAPE);
+            TABLE_MAXIMUM_WIDTH_PORTRAIT = Integer.valueOf(DEFAULT_TABLE_MAXIMUM_WIDTH_PORTRAIT);
+            TABLE_BORDER_WIDTH = Float.valueOf(DEFAULT_TABLE_BORDER_WIDTH);
+        }
     }
 
     /**
@@ -81,13 +90,17 @@ public class Constants {
      */
     protected static Properties loadProperties(String pathToPropertiesFile) {
         Properties properties = new Properties();
-        try (InputStream fileInputStream = new FileInputStream(pathToPropertiesFile)) {
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            // Re-throw
-            throw new RuntimeException(e.getMessage(), e.getCause());
+        File file = new File(pathToPropertiesFile);
+        if (file.exists()) {
+            try (InputStream fileInputStream = new FileInputStream(file)) {
+                properties.load(fileInputStream);
+            } catch (IOException e) {
+                // Re-throw
+                throw new RuntimeException(e.getMessage(), e.getCause());
+            }
+        } else {
+            properties = null;
         }
-
         return properties;
     }
 

@@ -19,6 +19,7 @@ import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 import ro.teamnet.solutions.reportinator.create.jasper.TableComponentCreator;
 import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
+import ro.teamnet.solutions.reportinator.util.ExceptionUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -34,7 +35,8 @@ import java.util.concurrent.CyclicBarrier;
  * which is the only way to create the generator with. The builder offers various methods to establish various report parameters.
  *
  * @author Bogdan.Stefan
- * @version 1.0 Date: 2/10/2015
+ * @version 1.0.1 Date: 2015-03-10
+ * @since 1.0 Date: 2015-02-10
  */
 public final class JasperReportGenerator implements ReportGenerator<JasperPrint> {
 
@@ -129,8 +131,20 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             }
         } catch (JRException e) {
             throw new ReportGeneratorException(
-                    MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), e);
+                    MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JasperPrint generate(Map<String, Object> parameters) throws ReportGeneratorException {
+        if (parameters == null) {
+            throw new IllegalArgumentException("Parameters must not be null");
+        }
+        this.parameters.putAll(parameters);
+        return generate();
     }
 
     /**
@@ -178,10 +192,10 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
          */
         private Builder(String absolutePathnameToJasperXml) throws ReportGeneratorException {
             try {
-                JRReport loadedDesign = JasperDesignLoader.load(
-                        new File(absolutePathnameToJasperXml == null ?
-                                JasperConstants.JASPER_JRXML_DEFAULT_PORTRAIT_TEMPLATE_PATH :
-                                absolutePathnameToJasperXml));
+                JRReport loadedDesign =
+                        absolutePathnameToJasperXml == null ?
+                                JasperDesignLoader.load(JasperConstants.DEFAULT_JASPER_JRXML_PORTRAIT_TEMPLATE_NAME) :
+                                JasperDesignLoader.load(new File(absolutePathnameToJasperXml));
                 // No path to a design was given; using built-in one
                 if (absolutePathnameToJasperXml == null) {
                     // Set an accessible name because a built-in template was loaded
@@ -192,7 +206,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file could be found for given path: {0}", absolutePathnameToJasperXml), e.getCause());
+                        MessageFormat.format("No template design file could be loaded: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
         }
 
@@ -208,10 +222,37 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file could be found in given stream: {0}", jrxmlReportTemplate), e.getCause());
+                        MessageFormat.format("No template file could be found in given stream: {0}", jrxmlReportTemplate), ExceptionUtils.retrieveCauseOrActual(e));
             }
         }
 
+        /**
+         * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
+         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.BuildPhase}
+         * implementation is used to define the algorithm to be ran, as the phase delimitation.
+         *
+         * @param syncBarrier         A barrier to synchronize to.
+         * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
+         * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
+         * @return An anonymous instance of a {@code Runnable}, representing a build phase.
+         */
+        private static Runnable createSynchronizedBuildPhase(final CyclicBarrier syncBarrier,
+                                                             final String phaseFailureMessage,
+                                                             final BuildPhase buildPhase) {
+
+            return new Runnable() {
+                @Override
+                public void run() {
+                    buildPhase.startPhase();
+                    try {
+                        syncBarrier.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
+                                " An exception occurred: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
+                    }
+                }
+            };
+        }
 
         /**
          * Establishes the report's data source (as a runtime parameter), to be used by built-in templates..
@@ -233,14 +274,19 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (JRException e) {
                 throw new ReportGeneratorException(
                         MessageFormat.format("Failed to attach given data source as a parameter to the report design. An " +
-                                "exception occurred: \n{0}", e.getMessage()),
-                        e.getCause());
+                                "exception occurred: \n{0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
             // Add data source to runtime parameters dictionary, as well
             this.reportParameters.put(parameter.getName(), this.reportDataSource);
 
             return this;
         }
+
+        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
+//        public Builder withEncoding(String encoding) {
+//
+//            return this;
+//        }
 
         /**
          * Establishes the report's runtime page header text.
@@ -254,12 +300,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
 
             return this;
         }
-
-        // FUTURE Attach encoding handling mechanism (encoding must be attached to the Style)
-//        public Builder withEncoding(String encoding) {
-//
-//            return this;
-//        }
 
         /**
          * Establishes the report's runtime page footer text.
@@ -275,7 +315,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * Establishes the report's runtime title text, as a parameter.
+         * Establishes the report's runtime title text, received as a parameter.
          *
          * @param titleText The value of the report's title text.
          * @return The builder instance, having the title text attached.
@@ -303,11 +343,16 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         /**
          * Establishes a dictionary mapping at runtime, between a data source's rows metadata to a table's column and
          * column labels information.
-         * <p>The dictionary {@code keys} represent the field names to be used to extract data from the data source,
-         * thus they must be the same as the data source's fields.</p>
+         * <p>The dictionary {@code keys} represent the field names (which will be mapped to table columns) to be used
+         * to extract data from the data source, thus they must be the same as the data source's fields.</p>
+         * <p>Note: If the number of columns, corresponding to the dictionary's key set is greater than a pre-established
+         * maximum for portrait orientation, then this method switches the default portrait template with a
+         * landscape-oriented one. </p>
          *
          * @param tableColumnsMetadata A dictionary containing columns metadata and labels.
          * @return The builder instance, with assigned column metadata.
+         *
+         * @see ro.teamnet.solutions.reportinator.config.JasperConstants#JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
             if (!this.usingBuiltInTemplates()) {
@@ -317,8 +362,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             // Columns cannot fit into portrait format?
             if (tableColumnsMetadata.keySet().size() > JasperConstants.JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT) {
                 // Load the landscape oriented template
-                JasperDesign reloadedDesign = (JasperDesign)
-                        JasperDesignLoader.load(new File(JasperConstants.JASPER_JRXML_DEFAULT_LANDSCAPE_TEMPLATE_PATH));
+                JasperDesign reloadedDesign = (JasperDesign) JasperDesignLoader.load(JasperConstants.DEFAULT_JASPER_JRXML_LANDSCAPE_TEMPLATE_NAME);
                 // Re-set the report design name, because a new design was loaded
                 reloadedDesign.setName(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
                 this.reportDesign = reloadedDesign;
@@ -363,46 +407,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             this.fillConnection = Objects.requireNonNull(connection, "Connection must not be null.");
 
             return this;
-        }
-
-        /**
-         * A helper method which creates a {@link java.lang.Runnable} for a possible report build phase, and attaches it to a barrier
-         * synchronization mechanism. A {@link ro.teamnet.solutions.reportinator.generation.JasperReportGenerator.Builder.BuildPhase}
-         * implementation is used to define the algorithm to be ran, as the phase delimitation.
-         *
-         * @param syncBarrier         A barrier to synchronize to.
-         * @param phaseFailureMessage A message to be displayed in case of a failure (this could identify the phase goal).
-         * @param buildPhase          A callback implementation to be called by the {@code Runnable}'s {@code run()} method.
-         * @return An anonymous instance of a {@code Runnable}, representing a build phase.
-         */
-        private static Runnable createSynchronizedBuildPhase(final CyclicBarrier syncBarrier,
-                                                             final String phaseFailureMessage,
-                                                             final BuildPhase buildPhase) {
-
-            return new Runnable() {
-                @Override
-                public void run() {
-                    buildPhase.startPhase();
-                    try {
-                        syncBarrier.await();
-                    } catch (InterruptedException | BrokenBarrierException e) {
-                        throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
-                                " An exception occurred: {0}", e.getMessage()), e.getCause());
-                    }
-                }
-            };
-        }
-
-        /**
-         * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
-         * a build phase (that must be ran as a separate thread).
-         */
-        private interface BuildPhase {
-
-            /**
-             * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
-             */
-            void startPhase();
         }
 
         /**
@@ -456,7 +460,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 this.reportDesign = JasperCompileManager.compileReport((JasperDesign) this.reportDesign);
             } catch (InterruptedException | BrokenBarrierException | JRException e) {
                 throw new ReportGeneratorException(
-                        MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), e.getCause());
+                        MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
 
             return new JasperReportGenerator(this);
@@ -495,6 +499,17 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             return this.reportDesign.getName().equals(JasperConstants.JASPER_REPORT_DESIGN_NAME_KEY);
         }
 
+        /**
+         * An interface to be defined by callback implementations which implement some algorithmic logic pertaining to
+         * a build phase (that must be ran as a separate thread).
+         */
+        private interface BuildPhase {
+
+            /**
+             * This method ought to contain the callback execution code (algorithm) to be run by an encompassing thread.
+             */
+            void startPhase();
+        }
 
     }
 }

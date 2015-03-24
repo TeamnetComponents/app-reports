@@ -1,35 +1,27 @@
-/*
- * Copyright (c) 2015 Teamnet S.A. All Rights Reserved.
- *
- * This source file may not be copied, modified or redistributed,
- * in whole or in part, in any form or for any reason, without the express
- * written consent of Teamnet S.A.
- */
-
 package ro.teamnet.solutions.reportinator.export.jasper;
+
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import ro.teamnet.solutions.reportinator.export.Exporter;
 import ro.teamnet.solutions.reportinator.export.ExporterException;
 
 import java.io.OutputStream;
 
 /**
- * Class that exports a report to xls format
+ * Class that exports a report to xlsx format
  *
  * @author Bogdan.Iancu
- * @version 1.0.1 Date: 2015-03-20
- * @since 1.0 Date: 2015-02-15
+ * @version 1.0 Date: 2015-03-23
  */
-public class XlsExporter implements Exporter<JasperPrint> {
+public class XlsxExporter implements Exporter<JasperPrint> {
 
     /**
-     * Converts a JasperPrint to xls format
+     * Converts a JasperPrint to xlsx format
      *
      * @param inputSource  the JasperPrint object to be exported
      * @param outputSource An output source
@@ -40,11 +32,11 @@ public class XlsExporter implements Exporter<JasperPrint> {
             throw new ExporterException("input and output should not be null");
         }
 
-        JRXlsExporter exporterXLS = new JRXlsExporter();
-        exporterXLS.setExporterInput(new SimpleExporterInput(inputSource));
-        exporterXLS.setExporterOutput(new SimpleOutputStreamExporterOutput(outputSource));
+        JRXlsxExporter exporterXLSX = new JRXlsxExporter();
+        exporterXLSX.setExporterInput(new SimpleExporterInput(inputSource));
+        exporterXLSX.setExporterOutput(new SimpleOutputStreamExporterOutput(outputSource));
 
-        SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
 
 
         configuration.setOnePagePerSheet(false);
@@ -56,10 +48,10 @@ public class XlsExporter implements Exporter<JasperPrint> {
         configuration.setWhitePageBackground(false);
         configuration.setRemoveEmptySpaceBetweenRows(true);
 
-        exporterXLS.setConfiguration(configuration);
+        exporterXLSX.setConfiguration(configuration);
 
         try {
-            exporterXLS.exportReport();
+            exporterXLSX.exportReport();
         } catch (JRException e) {
             throw new ExporterException("Exception exporting report", e.getCause());
         }
