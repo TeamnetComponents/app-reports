@@ -19,6 +19,7 @@ import ro.teamnet.solutions.reportinator.config.styles.JasperStyles;
 import ro.teamnet.solutions.reportinator.create.jasper.TableComponentCreator;
 import ro.teamnet.solutions.reportinator.load.JasperDesignLoader;
 import ro.teamnet.solutions.reportinator.load.LoaderException;
+import ro.teamnet.solutions.reportinator.util.ExceptionUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -130,7 +131,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             }
         } catch (JRException e) {
             throw new ReportGeneratorException(
-                    MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), e);
+                    MessageFormat.format("Generating the print for the report failed. An exception occurred: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
         }
     }
 
@@ -205,7 +206,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template design file could be loaded: {0}", e.getMessage()), e.getCause());
+                        MessageFormat.format("No template design file could be loaded: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
         }
 
@@ -221,7 +222,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (LoaderException e) {
                 // Re-throw
                 throw new ReportGeneratorException(
-                        MessageFormat.format("No template file could be found in given stream: {0}", jrxmlReportTemplate), e.getCause());
+                        MessageFormat.format("No template file could be found in given stream: {0}", jrxmlReportTemplate), ExceptionUtils.retrieveCauseOrActual(e));
             }
         }
 
@@ -247,7 +248,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                         syncBarrier.await();
                     } catch (InterruptedException | BrokenBarrierException e) {
                         throw new ReportGeneratorException(MessageFormat.format(phaseFailureMessage +
-                                " An exception occurred: {0}", e.getMessage()), e.getCause());
+                                " An exception occurred: {0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
                     }
                 }
             };
@@ -273,8 +274,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
             } catch (JRException e) {
                 throw new ReportGeneratorException(
                         MessageFormat.format("Failed to attach given data source as a parameter to the report design. An " +
-                                "exception occurred: \n{0}", e.getMessage()),
-                        e.getCause());
+                                "exception occurred: \n{0}", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
             // Add data source to runtime parameters dictionary, as well
             this.reportParameters.put(parameter.getName(), this.reportDataSource);
@@ -315,7 +315,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         }
 
         /**
-         * Establishes the report's runtime title text, as a parameter.
+         * Establishes the report's runtime title text, received as a parameter.
          *
          * @param titleText The value of the report's title text.
          * @return The builder instance, having the title text attached.
@@ -343,11 +343,16 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
         /**
          * Establishes a dictionary mapping at runtime, between a data source's rows metadata to a table's column and
          * column labels information.
-         * <p>The dictionary {@code keys} represent the field names to be used to extract data from the data source,
-         * thus they must be the same as the data source's fields.</p>
+         * <p>The dictionary {@code keys} represent the field names (which will be mapped to table columns) to be used
+         * to extract data from the data source, thus they must be the same as the data source's fields.</p>
+         * <p>Note: If the number of columns, corresponding to the dictionary's key set is greater than a pre-established
+         * maximum for portrait orientation, then this method switches the default portrait template with a
+         * landscape-oriented one. </p>
          *
          * @param tableColumnsMetadata A dictionary containing columns metadata and labels.
          * @return The builder instance, with assigned column metadata.
+         *
+         * @see ro.teamnet.solutions.reportinator.config.JasperConstants#JASPER_MAXIMUM_NUMBER_OF_COLUMNS_FOR_PORTRAIT
          */
         public Builder withTableColumnsMetadata(Map<String, String> tableColumnsMetadata) {
             if (!this.usingBuiltInTemplates()) {
@@ -455,7 +460,7 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
                 this.reportDesign = JasperCompileManager.compileReport((JasperDesign) this.reportDesign);
             } catch (InterruptedException | BrokenBarrierException | JRException e) {
                 throw new ReportGeneratorException(
-                        MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), e.getCause());
+                        MessageFormat.format("Building failed. An exception occurred while compiling: \n{0} ", e.getMessage()), ExceptionUtils.retrieveCauseOrActual(e));
             }
 
             return new JasperReportGenerator(this);
@@ -505,7 +510,6 @@ public final class JasperReportGenerator implements ReportGenerator<JasperPrint>
              */
             void startPhase();
         }
-
 
     }
 }

@@ -93,7 +93,7 @@ public class JasperReportGeneratorTest {
 
     @Test(expected = ReportGeneratorException.class)
     public void testReportGeneratorBuilderMethodShouldThrowExceptionIfTemplateArgumentIsNull() throws Exception {
-        InputStream fakeTemplateStream = null; // Specially crafted, to distinguish between builder methods
+        InputStream fakeTemplateStream = null; // Specially crafted, to distinguish between tested builder methods
         JasperReportGenerator.Builder reportGeneratorBuilder =
                 JasperReportGenerator.builder(fakeTemplateStream);
         assertNull("Builder reference should have been null.", reportGeneratorBuilder);
