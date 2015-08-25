@@ -29,6 +29,7 @@
         <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
         <maven-javadoc-plugin.version>2.10.1</maven-javadoc-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
+        <maven-site-plugin.version>3.4</maven-site-plugin.version>
     </properties>
     <!-- Dependencies -->
     <dependencies>
@@ -101,6 +102,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven-site-plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
+    <!-- Reporting -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
